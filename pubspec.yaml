@@ -1,0 +1,54 @@
+name: music_download_youtube
+version: 1.0.0+1
+publish_to: none
+description: Music Downloader
+environment: 
+  sdk: '>=2.19.2 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.6.5
+  dio: 4.0.6
+  flutter_svg: 1.1.6
+  cached_network_image: 3.2.2
+  google_fonts: 3.0.1
+  lazy_load_scrollview: 1.3.0
+  sizer: 2.0.15
+  introduction_screen: 3.0.2
+  shared_preferences: 2.0.15
+  freezed_annotation: 2.2.0
+  retrofit: 3.3.1
+  json_annotation: 4.7.0
+  http: 0.13.5
+  intl: 0.17.0
+  path_provider: 2.0.11
+  audio_video_progress_bar: 0.11.0
+  just_audio: 0.9.31
+  lottie: 2.1.0
+  just_audio_background: 0.0.1-beta.9
+  change_app_package_name: 1.1.0
+  google_mobile_ads: 2.3.0
+  connectivity_plus: 3.0.3
+  fluttertoast: 8.2.1
+  in_app_review: 2.0.6
+  rating_dialog: 2.0.4
+  url_launcher: 6.1.10
+  receive_sharing_intent: 1.4.5
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: 2.0.1
+  build_runner: 2.3.2
+  assets_scanner: 2.0.0
+  freezed: 2.3.2
+  json_serializable: 6.5.4
+  retrofit_generator: 4.2.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - assets/
+  uses-material-design: true
+
