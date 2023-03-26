@@ -60,6 +60,11 @@ String listMusicFromApi = "listMusicFromApi";
 String adShowreward = "adShowreward";
 String adShowSimple = "adShowSimple";
 
+String appVersion = "appVersion";
+
+String appStoreId = 'com.offline.music.downloader';
+String microsoftStoreId = 'com.offline.music.downloader';
+
 double tabletBreakpointGlobal = 600.0;
 double desktopBreakpointGlobal = 720.0;
 
@@ -72,10 +77,10 @@ const fbInterstitialId =
     "IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617";
 const fbInterstitialIdIos = "";
 
-// String admobBanner = 'ca-app-pub-4673630797962511/2411201416';
-// String admobInterstitial = 'ca-app-pub-4673630797962511/3532711395';
-// String admobRewarded = 'ca-app-pub-4673630797962511/4111295893';
+String admobBanner = 'ca-app-pub-7779081722205902/6239850921';
+String admobInterstitial = 'ca-app-pub-7779081722205902/9764162963';
+String admobRewarded = 'ca-app-pub-7779081722205902/8451081294';
 
-String admobBannerFake = 'ca-app-pub-3940256099942544/6300978111';
-String admobInterstitialFake = 'ca-app-pub-3940256099942544/1033173712';
-String admobRewardedFake = 'ca-app-pub-3940256099942544/5224354917';
+// String admobBannerFake = 'ca-app-pub-3940256099942544/6300978111';
+// String admobInterstitialFake = 'ca-app-pub-3940256099942544/1033173712';
+// String admobRewardedFake = 'ca-app-pub-3940256099942544/5224354917';

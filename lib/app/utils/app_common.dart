@@ -250,7 +250,7 @@ extension DurationExtensions on Duration {
 }
 
 showDialogBox(context, title, subTitle,
-    {Color? btnConfirmColor, Function? onCall, onCancelCall}) {
+    {Color? btnConfirmColor, Function? onCall, Function? onCancelCall}) {
   return showDialog(
       context: context,
       builder: (context) {
@@ -271,27 +271,29 @@ showDialogBox(context, title, subTitle,
           actions: [
             Row(
               children: [
-                AppButtonWidget(
-                  elevation: 0,
-                  shapeBorder: RoundedRectangleBorder(
-                    borderRadius: radius(defaultAppButtonRadius),
-                    side: const BorderSide(color: viewLineColor),
-                  ),
-                  color: context.cardColor,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.close_rounded, size: 5.w),
-                      5.w.width,
-                      Text("cancel".capitalizeFirstLetter(),
-                          style: boldTextStyle()),
-                    ],
-                  ).fit(),
-                  onTap: () {
-                    onCancelCall.call();
-                  },
-                ).expand(),
-                5.w.width,
+                onCancelCall != null
+                    ? AppButtonWidget(
+                        elevation: 0,
+                        shapeBorder: RoundedRectangleBorder(
+                          borderRadius: radius(defaultAppButtonRadius),
+                          side: const BorderSide(color: viewLineColor),
+                        ),
+                        color: context.cardColor,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.close_rounded, size: 5.w),
+                            5.w.width,
+                            Text("cancel".capitalizeFirstLetter(),
+                                style: boldTextStyle()),
+                          ],
+                        ).fit(),
+                        onTap: () {
+                          onCancelCall.call();
+                        },
+                      ).expand()
+                    : SizedBox(),
+                onCancelCall != null ? 5.w.width : SizedBox(),
                 AppButtonWidget(
                   elevation: 0,
                   color: btnConfirmColor ?? primaryColor,

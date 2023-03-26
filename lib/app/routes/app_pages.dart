@@ -8,6 +8,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/like/bindings/like_binding.dart';
 import '../modules/like/views/like_view.dart';
+import '../modules/list_all_music/bindings/list_all_music_binding.dart';
+import '../modules/list_all_music/views/list_all_music_view.dart';
 import '../modules/playList/bindings/play_list_binding.dart';
 import '../modules/playList/views/play_list_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
@@ -57,6 +59,11 @@ class AppPages {
       name: _Paths.DOWNLOAD_PAGE,
       page: () => const DownloadPageView(),
       binding: DownloadPageBinding(),
+    ),
+    GetPage(
+      name: _Paths.LIST_ALL_MUSIC,
+      page: () => const ListAllMusicView(),
+      binding: ListAllMusicBinding(),
     ),
   ];
 }

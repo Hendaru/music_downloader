@@ -2,6 +2,7 @@ import 'package:music_download_youtube/app/core/modules/dio_modules.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
+import 'package:music_download_youtube/app/data/models/response/res_version_model/res_version_model.dart';
 
 class MusicRepository {
   final _service = DioModule().musicService;
@@ -16,6 +17,13 @@ class MusicRepository {
   EventManager getUrlVideoRepository(String id) {
     return NetworkOnlyResource<ResUrlVideoModel, ResUrlVideoModel>(
       createCall: () => _service.getUrlVideoService(id),
+      handleCallResult: (item) => Future.value(item),
+    );
+  }
+
+  EventManager getVersionRepository() {
+    return NetworkOnlyResource<ResVersionModel, ResVersionModel>(
+      createCall: () => _service.getVersionService(),
       handleCallResult: (item) => Future.value(item),
     );
   }

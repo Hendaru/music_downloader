@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager_ext.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_playlist_model/res_playlist_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
+import 'package:music_download_youtube/app/data/models/response/res_version_model/res_version_model.dart';
 import 'package:music_download_youtube/app/data/repository/music_repository.dart';
 import 'package:music_download_youtube/app/utils/admob.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
@@ -21,14 +23,20 @@ import 'package:music_download_youtube/app/utils/widgets/create_playlist_widget/
 import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/extensions/share_pref.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   TextEditingController downloadYoutube = TextEditingController();
+  final InAppReview _inAppReview = InAppReview.instance;
+
+  ScrollController scrollController = ScrollController();
+  TextEditingController searchYoutube = TextEditingController();
 
   final playlist = <ResPlaylistModel>[].obs;
   final listMusicHome = <ResMusicDataModel>[].obs;
+  final listMusicHomeSearch = <ResMusicDataModel>[].obs;
   final listMusicHomeNew = <ResMusicDataModel>[].obs;
   final musicGenre = <ResMusicDataModel>[].obs;
 
@@ -43,8 +51,10 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
 
   final _musicRepository = MusicRepository();
   final getUrlVideoEvent = InitializeEvent<ResUrlVideoModel>();
+  final getVersionEvent = InitializeEvent<ResVersionModel>();
 
   final loadingBtn = false.obs;
+  final clearSearchBtn = false.obs;
   String videoIdController = '';
 
   StreamSubscription? _intentDataStreamSubscription;
@@ -61,6 +71,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
     });
 
     init();
+
     super.onInit();
   }
 
@@ -98,11 +109,6 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
       print("getLinkStream error: $err");
     });
 
-    // // For sharing or opening urls/text coming from outside the app while the app is closed
-    // ReceiveSharingIntent.getInitialText().then((value) {
-    //   print("-------------------------Hore joss---------------------------");
-    //   print(value);
-    // });
     _getClipboardText();
   }
 
@@ -110,6 +116,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
     getPlaylist();
     getMusicList();
     observer();
+    getVersionController();
   }
 
   void observer() {
@@ -133,13 +140,48 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
         toast('Server error');
       }
     });
+    getVersionEvent.result.listen((p0) async {
+      if (p0.status == Status.SUCCESS) {
+        if (p0.data != null) {
+          if (p0.data!.data != null) {
+            getVersion(p0.data!.data!.nameVersion.validate());
+          }
+        }
+      } else if (p0.status == Status.LOADING) {
+      } else if (p0.status == Status.ERROR) {
+        loadingBtn.value = false;
+      }
+    });
   }
 
-  getMusicList() {
+  Future<void> getVersion(String version) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String versionInfo = packageInfo.version;
+
+    if (version.isNotEmpty) {
+      if (version != versionInfo) {
+        showDialogBox(
+          Get.context,
+          "Update app version",
+          "Please update app to version $version",
+          onCall: () {
+            openStoreListing();
+          },
+        );
+      }
+    }
+  }
+
+  Future<void> openStoreListing() => _inAppReview.openStoreListing(
+        appStoreId: appStoreId,
+        microsoftStoreId: microsoftStoreId,
+      );
+
+  void getMusicList() {
     listMusicHome.clear();
     listMusicHomeNew.clear();
     listMusicHome.value = getMusicListFromSharePref();
-    // listMusicHome.shuffle();
+    listMusicHomeSearch.value = listMusicHome;
     List<ResMusicDataModel> abc = listMusicHome.reversed.map((e) => e).toList();
 
     if (abc.length > 10) {
@@ -149,14 +191,27 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
     }
   }
 
-  void getPlaylist() {
-    String? getPlayListString = getStringAsync(playlistSharePref);
-    playlist.clear();
-    if (!getPlayListString.isEmptyOrNull) {
-      playlist.value = (jsonDecode(getPlayListString) as List<dynamic>)
-          .map<ResPlaylistModel>((e) => ResPlaylistModel.fromJson(e))
-          .toList();
+  void searchMusic(String v) {
+    listMusicHomeSearch.value = listMusicHome
+        .where((p0) =>
+            p0.judulLagu.validate().toLowerCase().contains(v.toLowerCase()))
+        .toList();
+    if (v.isNotEmpty) {
+      clearSearchBtn.value = true;
+    } else {
+      clearSearchBtn.value = false;
     }
+  }
+
+  void getPlaylist() {
+    // String? getPlayListString = getStringAsync(playlistSharePref);
+    playlist.clear();
+    playlist.value = getPlayListFromSharePref();
+    // if (!getPlayListString.isEmptyOrNull) {
+    //   playlist.value = (jsonDecode(getPlayListString) as List<dynamic>)
+    //       .map<ResPlaylistModel>((e) => ResPlaylistModel.fromJson(e))
+    //       .toList();
+    // }
   }
 
   void addPlaylist(BuildContext context) {
@@ -219,6 +274,10 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
     _musicRepository
         .getUrlVideoRepository(videoId)
         .addEvent(event: getUrlVideoEvent);
+  }
+
+  void getVersionController() {
+    _musicRepository.getVersionRepository().addEvent(event: getVersionEvent);
   }
 
   void downloadFile({

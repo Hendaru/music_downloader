@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/app_text_style.dart';
 import 'package:music_download_youtube/app/utils/extensions/share_pref.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
 import 'package:music_download_youtube/r.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 import 'package:sizer/sizer.dart';
 
@@ -21,7 +21,7 @@ class SettingsView extends GetView<SettingsController> {
     // controller.initAds();
     return Scaffold(
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           2.h.height,
           Text(
@@ -81,17 +81,13 @@ class SettingsView extends GetView<SettingsController> {
           Text(
             "Feedback",
             style: boldTextStyle(),
-          ).center().withSize(height: 4.h, width: 100.w).onTap(() {
+          ).center().withSize(height: 4.h, width: 100.w).onTap(() async {
             controller.openEmail();
           }),
-          // 3.h.height,
-          // Obx(() => controller.bannerReady.value
-          //     ? SizedBox(
-          //         width: controller.ad?.size.width.toDouble(),
-          //         height: controller.ad?.size.height.toDouble(),
-          //         child: AdWidget(ad: controller.ad!),
-          //       ).paddingSymmetric(vertical: 2.h).center()
-          //     : const SizedBox()),
+          Spacer(),
+          Obx(() =>
+              Text("v ${controller.vesion.value}", style: primaryTextStyle())),
+          3.h.height,
         ],
       ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
     );

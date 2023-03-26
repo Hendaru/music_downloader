@@ -112,24 +112,24 @@ void createRewardedAd() {
 
 String? getBannerAdUnitId() {
   if (Platform.isAndroid) {
-    return admobBannerFake;
+    return admobBanner;
   } else {
-    return admobBannerFake;
+    return admobBanner;
   }
 }
 
 String? getInterstitialAdUnitId() {
   if (Platform.isAndroid) {
-    return admobInterstitialFake;
+    return admobInterstitial;
   } else {
-    return admobInterstitialFake;
+    return admobInterstitial;
   }
 }
 
 String? rewardedAdUniId() {
   if (Platform.isAndroid) {
-    return admobRewardedFake;
+    return admobRewarded;
   } else {
-    return admobRewardedFake;
+    return admobRewarded;
   }
 }

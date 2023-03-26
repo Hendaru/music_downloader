@@ -43,7 +43,7 @@ class HomeMusicList extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.getMusicList();
+    // controller.getMusicList();
     controller.getPlaylist();
     controller.initAds();
     DasboardController controllerDasboard = Get.put(DasboardController());
@@ -126,7 +126,7 @@ class HomeMusicList extends GetView<HomeController> {
                 'Playlist',
                 style: boldTextStyle(weight: FontWeight.bold, size: 15.sp),
               ),
-              Obx(() => SvgPicture.asset(MainAssets.ic_plus2,
+              Obx(() => SvgPicture.asset(MainAssets.ic_add,
                           width: 7.w,
                           height: 7.w,
                           // ignore: unrelated_type_equality_checks
@@ -156,7 +156,7 @@ class HomeMusicList extends GetView<HomeController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
-                                MainAssets.ic_plus2,
+                                MainAssets.ic_add,
                                 width: 8.w,
                                 height: 8.w,
                                 color: Theme.of(context).iconTheme.color,
@@ -257,7 +257,7 @@ class HomeMusicList extends GetView<HomeController> {
                 style: boldTextStyle(weight: FontWeight.bold, size: 15.sp),
               ),
               Text(
-                'all',
+                'All Music',
                 style: secondaryTextStyle(size: 12.sp),
               ).onTap(() {
                 Get.to(const ListAllMusicView());

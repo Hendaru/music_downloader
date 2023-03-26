@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:music_download_youtube/app/modules/dasboard/controllers/dasboard_controller.dart';
-import 'package:music_download_youtube/app/modules/home/controllers/home_controller.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/enums.dart';
@@ -17,7 +16,9 @@ import 'package:music_download_youtube/app/utils/widgets/item_music_widget/view/
 import 'package:music_download_youtube/r.dart';
 import 'package:sizer/sizer.dart';
 
-class ListAllMusicView extends GetView<HomeController> {
+import '../controllers/list_all_music_controller.dart';
+
+class ListAllMusicView extends GetView<ListAllMusicController> {
   const ListAllMusicView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -45,48 +46,37 @@ class ListAllMusicView extends GetView<HomeController> {
               elevation: 0.0,
               flexibleSpace: FlexibleSpaceBar(
                 stretchModes: const [
-                  StretchMode.zoomBackground,
+                  StretchMode.blurBackground,
                 ],
                 collapseMode: CollapseMode.parallax,
-                background: Obx(() => AppTextField(
-                      controller: controller.searchYoutube,
-                      autoFocus: false,
-                      textFieldType: TextFieldType.NAME,
-                      keyboardType: TextInputType.name,
-                      enabled: true,
-                      decoration: inputDecoration(
-                        context,
-                        hintText: "Search Music",
-                        // prefixIcon: SvgPicture.asset(
-                        //   MainAssets.ic_download2,
-                        //   width: 1.w,
-                        //   height: 1.w,
-                        // ),
-                      ),
-                      onChanged: (e) {
-                        controller.searchMusic(e);
-                      },
-                      suffix: controller.clearSearchBtn.value
-                          ? SvgPicture.asset(
-                              MainAssets.ic_close,
-                              width: 5.w,
-                              height: 5.w,
-                            ).onTap(() {
-                              controller.searchYoutube.clear();
-                              controller.listMusicHomeSearch.value =
-                                  controller.listMusicHome;
-                              controller.clearSearchBtn.value = false;
-                              hideKeyboard();
-                            })
-                          : null,
-                    ).paddingSymmetric(
-                        horizontal: defaultPaddingHorizontalGlobal)),
+                background: AppTextField(
+                  controller: controller.searchYoutube,
+                  autoFocus: false,
+                  textFieldType: TextFieldType.NAME,
+                  keyboardType: TextInputType.name,
+                  enabled: true,
+                  decoration: inputDecoration(
+                    context,
+                    hintText: "Search Music",
+                    // prefixIcon: SvgPicture.asset(
+                    //   MainAssets.ic_download2,
+                    //   width: 1.w,
+                    //   height: 1.w,
+                    // ),
+                  ),
+                  suffix: SvgPicture.asset(
+                    MainAssets.ic_close,
+                    width: 5.w,
+                    height: 5.w,
+                  ).onTap(() {
+                    controller.searchYoutube.clear();
+                  }),
+                ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
               ),
             ),
             SliverToBoxAdapter(
               child: Obx(() => Column(
-                    children:
-                        controller.listMusicHomeSearch.asMap().entries.map((e) {
+                    children: controller.listMusicHome.asMap().entries.map((e) {
                       return ItemMusicWidget(
                         key: ValueKey<String>(e.value.id.validate()),
                         itemMusic: e.value,

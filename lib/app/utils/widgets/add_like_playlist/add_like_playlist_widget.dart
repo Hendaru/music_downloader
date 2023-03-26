@@ -46,12 +46,8 @@ class AddLikePlaylistWidget extends StatelessWidget {
           3.h.height,
           Text(
             detailMusic.judulLagu.validate(),
+            textAlign: TextAlign.center,
             style: boldTextStyle(),
-          ),
-          2.h.height,
-          Text(
-            "Hore 4",
-            style: secondaryTextStyle(),
           ),
           3.h.height,
           Row(

@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:music_download_youtube/app/modules/dasboard/controllers/dasboard_controller.dart';
-import 'package:music_download_youtube/app/modules/dasboard/views/player_dasboard_view.dart';
-import 'package:music_download_youtube/app/utils/admob.dart';
 import 'package:music_download_youtube/app/utils/enums.dart';
 import 'package:music_download_youtube/app/utils/widgets/item_playlist_widget.dart';
 import 'package:music_download_youtube/app/theme/app_colors.dart';
@@ -40,7 +37,7 @@ class PlayListView extends GetView<PlayListController> {
                       // controller
                       //     .showBannerAdsPlayList(adSize: AdSize.mediumRectangle)
                       //     .paddingOnly(bottom: 3.h),
-                      SvgPicture.asset(MainAssets.ic_plus2,
+                      SvgPicture.asset(MainAssets.ic_add,
                           width: 8.w,
                           height: 8.w,
                           // ignore: unrelated_type_equality_checks
@@ -59,17 +56,25 @@ class PlayListView extends GetView<PlayListController> {
               : Column(
                   children: [
                     2.h.height,
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: SvgPicture.asset(MainAssets.ic_plus2,
-                          width: 8.w,
-                          height: 8.w,
-                          // ignore: unrelated_type_equality_checks
-                          color: greyColor),
-                    ).onTap(() => controller.addPlaylist(context),
-                        splashColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Playlist',
+                          style: boldTextStyle(
+                              weight: FontWeight.bold, size: 15.sp),
+                        ),
+                        SvgPicture.asset(MainAssets.ic_add,
+                                width: 8.w,
+                                height: 8.w,
+                                // ignore: unrelated_type_equality_checks
+                                color: greyColor)
+                            .onTap(
+                          () => controller.addPlaylist(context),
+                        ),
+                      ],
+                    ),
+                    2.h.height,
                     SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: Column(

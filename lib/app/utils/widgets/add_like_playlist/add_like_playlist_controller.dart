@@ -93,16 +93,17 @@ class AddLikePlaylistController extends GetxController {
 
       Get.back();
 
-      Get.to(
-        PlayerViewDasboard(
-          // listSound: playlist[index].listMusic,
-          statusPlay: StatusToPlay.PLAYLIST,
-          id: playlist[index].idPlayList,
-          playlistModel: playlist[index],
-        ),
-        opaque: false,
-      );
+      // Get.to(
+      //   PlayerViewDasboard(
+      //     // listSound: playlist[index].listMusic,
+      //     statusPlay: StatusToPlay.PLAYLIST,
+      //     id: playlist[index].idPlayList,
+      //     playlistModel: playlist[index],
+      //   ),
+      //   opaque: false,
+      // );
       toast("Added to playlist");
+      Get.find<HomeController>().getPlaylist();
     }
   }
 

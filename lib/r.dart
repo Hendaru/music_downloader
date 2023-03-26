@@ -15,6 +15,8 @@ class MainAssets {
 
   static const ic_plus = 'assets/ic_plus.svg';
 
+  static const ic_add = 'assets/ic_add.svg';
+
   static const loading = 'assets/loading.json';
 
   static const ic_forward = 'assets/ic_forward.svg';

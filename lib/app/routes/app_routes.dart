@@ -12,6 +12,7 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const SETTINGS = _Paths.SETTINGS;
   static const DOWNLOAD_PAGE = _Paths.DOWNLOAD_PAGE;
+  static const LIST_ALL_MUSIC = _Paths.LIST_ALL_MUSIC;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const SETTINGS = '/settings';
   static const DOWNLOAD_PAGE = '/download-page';
+  static const LIST_ALL_MUSIC = '/list-all-music';
 }
