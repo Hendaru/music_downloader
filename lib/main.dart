@@ -29,6 +29,7 @@ Future<void> main() async {
       return GetMaterialApp(
         title: "Music Downloader",
         initialRoute: AppPages.INITIAL,
+        debugShowCheckedModeBanner: false,
         getPages: AppPages.routes,
         theme: lightThemeData(context),
         darkTheme: darkThemeData(context),
