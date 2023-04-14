@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:http/http.dart' as http;
 import 'package:in_app_review/in_app_review.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager_ext.dart';
@@ -58,6 +62,8 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   String videoIdController = '';
 
   StreamSubscription? _intentDataStreamSubscription;
+
+  ReceivePort _port = ReceivePort();
 
   @override
   void onInit() {
@@ -112,7 +118,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
     _getClipboardText();
   }
 
-  void init() {
+  Future<void> init() async {
     getPlaylist();
     getMusicList();
     observer();
@@ -291,28 +297,48 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
     File file = File('$dir/$idMusic.mp3');
     bool fileExists = await file.exists();
 
-    // DownloadProgressModel downloadProgress =
-    //     DownloadProgressModel(completeDownload: false, progresDownload: 0.0);
-
     if (fileExists) {
       toast("File already exists");
       loadingBtn.value = false;
     } else {
-      try {
-        await dio.download(
-          url.validate(),
-          file.path,
-          onReceiveProgress: (received, total) {
-            loadingBtn.value = false;
-            if (total != -1) {
-              progrees.value = (received / total * 100).toStringAsFixed(0);
+      print("-------------Masuk download---------------");
 
-              progreesDouble.value = (received / total * 1);
-            } else {
-              progreesDouble.value = null;
-            }
-          },
-        ).then((value) {
+      try {
+        // Download image
+        final http.Response response =
+            await http.get(Uri.parse(url.validate()));
+
+        // var timer = Stopwatch()..start();
+        // var timeTick = 1000;
+        // var downloadLength = 0;
+        // var contentLength = response.contentLength!;
+
+        // print(
+        //     "100.00 % -------- time: ${(timer.elapsedMilliseconds / 1000).toStringAsFixed(2)} sec");
+
+        //  await for (var newBytes in response.stream) {
+        //   downloadLength += newBytes.length;
+        //   var time = timer.elapsedMilliseconds;
+        //   if (time >= timeTick) {
+        //     timeTick += 1000;
+        //     var progress =
+        //         ((downloadLength / contentLength) * 100).toStringAsFixed(2);
+        //     print(
+        //         "${progress.padLeft(6)} % -------- time: ${(time / 1000).toInt()} sec");
+        //   }
+        // }
+
+        // Save to filesystem
+        // final file = File(filename);
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Ask the user to save it
+        final params = SaveFileDialogParams(sourceFilePath: file.path);
+        final finalPath = await FlutterFileDialog.saveFile(params: params);
+        print("-------------Masuk finalPath---------------");
+        print(finalPath);
+
+        if (finalPath != null) {
           downloadYoutube.clear();
           setCache(
               idMusic: idMusic.validate(),
@@ -322,8 +348,8 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
               duration: duration.validate());
           toast("Download Complate");
           progreesDouble.value = null;
-        });
-        loadingBtn.value = false;
+          loadingBtn.value = false;
+        }
       } catch (e) {
         downloadYoutube.clear();
         loadingBtn.value = false;
@@ -331,6 +357,119 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
             "Downlod error, please select another url, because some privacy from youtube");
         progreesDouble.value = null;
       }
+
+      // try {
+      //   final request = Request('GET', Uri.parse(url.validate()));
+      //   var client = await Client();
+      //   var response = await client.send(request);
+      //   var timer = Stopwatch()..start();
+      //   var timeTick = 1000;
+      //   var downloadLength = 0;
+
+      //   var contentLength = response.contentLength!;
+      //   await for (var newBytes in response.stream) {
+      //     downloadLength += newBytes.length;
+      //     var time = timer.elapsedMilliseconds;
+      //     if (time >= timeTick) {
+      //       timeTick += 1000;
+      //       var progress =
+      //           ((downloadLength / contentLength) * 100).toStringAsFixed(2);
+      //       print(
+      //           "${progress.padLeft(6)} % -------- time: ${(time / 1000).toInt()} sec");
+      //     }
+      //   }
+      //   print(
+      //       "100.00 % -------- time: ${(timer.elapsedMilliseconds / 1000).toStringAsFixed(2)} sec");
+      //   await file.writeAsBytes(request.bodyBytes);
+      //   client.close();
+
+      //   downloadYoutube.clear();
+      //   setCache(
+      //       idMusic: idMusic.validate(),
+      //       urlPath: file.path,
+      //       judulLagu: titleMusic.validate(),
+      //       imageLagu: imageLagu.validate(),
+      //       duration: duration.validate());
+      //   toast("Download Complate");
+      //   progreesDouble.value = null;
+      //   loadingBtn.value = false;
+      // } catch (e) {
+      //   downloadYoutube.clear();
+      //   loadingBtn.value = false;
+      //   toast(
+      //       "Downlod error, please select another url, because some privacy from youtube");
+      //   progreesDouble.value = null;
+      // }
+
+      // try {
+      //   await dio.get(
+      //     url.validate(),
+      //     options: Options(headers: {HttpHeaders.acceptEncodingHeader: "*"}),
+      //     onReceiveProgress: (received, total) {
+      //       loadingBtn.value = false;
+      //       if (total != -1) {
+      //         print("-------------------$received--------$total----------");
+      //         progrees.value = (received / total * 100).toStringAsFixed(0);
+      //         progreesDouble.value = (received / total * 1);
+      //       } else {
+      //         progreesDouble.value = null;
+      //       }
+      //     },
+      //   ).then((value) {
+      //     downloadYoutube.clear();
+      //     setCache(
+      //         idMusic: idMusic.validate(),
+      //         urlPath: file.path,
+      //         judulLagu: titleMusic.validate(),
+      //         imageLagu: imageLagu.validate(),
+      //         duration: duration.validate());
+      //     toast("Download Complate");
+      //     progreesDouble.value = null;
+      //   });
+      //   loadingBtn.value = false;
+      // } catch (e) {
+      //   downloadYoutube.clear();
+      //   loadingBtn.value = false;
+      //   toast(
+      //       "Downlod error, please select another url, because some privacy from youtube");
+      //   progreesDouble.value = null;
+      // }
+
+      // try {
+      //   await dio.download(
+      //     url.validate(),
+      //     file.path,
+      //     options: Options(headers: {HttpHeaders.acceptEncodingHeader: "*"}),
+      //     onReceiveProgress: (received, total) {
+      //       loadingBtn.value = false;
+      //       if (total != -1) {
+      //         print("-------------------$received-------$total-----------");
+      //         //  progrees.value = (received / total * 100).toStringAsFixed(0);
+
+      //         progreesDouble.value = (received / total * 1);
+      //       } else {
+      //         progreesDouble.value = null;
+      //       }
+      //     },
+      //   ).then((value) {
+      //     downloadYoutube.clear();
+      //     setCache(
+      //         idMusic: idMusic.validate(),
+      //         urlPath: file.path,
+      //         judulLagu: titleMusic.validate(),
+      //         imageLagu: imageLagu.validate(),
+      //         duration: duration.validate());
+      //     toast("Download Complate");
+      //     progreesDouble.value = null;
+      //   });
+      //   loadingBtn.value = false;
+      // } catch (e) {
+      //   downloadYoutube.clear();
+      //   loadingBtn.value = false;
+      //   toast(
+      //       "Downlod error, please select another url, because some privacy from youtube");
+      //   progreesDouble.value = null;
+      // }
     }
   }
 
@@ -361,6 +500,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   @override
   void onClose() {
     ad?.dispose();
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
     super.onClose();
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:music_download_youtube/app/data/service/music_service.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
@@ -10,15 +9,15 @@ class DioModule with DioMixin implements Dio {
   DioModule() {
     final newOptions = BaseOptions(
       contentType: 'application/json',
-      connectTimeout: 120000,
-      sendTimeout: 120000,
-      receiveTimeout: 120001,
+      connectTimeout: Duration(minutes: 3),
+      sendTimeout: Duration(minutes: 3),
+      receiveTimeout: Duration(minutes: 3),
       baseUrl: "$baseUrl/api/v1",
     );
 
     options = newOptions;
     interceptors.addAll([AppInterceptor()]);
-    httpClientAdapter = DefaultHttpClientAdapter();
+    httpClientAdapter = HttpClientAdapter();
   }
 
   MusicService get musicService => MusicService(this);

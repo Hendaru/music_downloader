@@ -74,6 +74,16 @@ class HomeMusicList extends GetView<HomeController> {
               2.w.width,
               Obx(() => AppButtonWidget(
                     onTap: () {
+                      // controller.downloadFile(
+                      //     url:
+                      //         "https://rr4---sn-2uuxa3vh-wvbl.googlevideo.com/videoplayback?c=WEB&clen=50634579&dur=3128.656&ei=wRU4ZJGQB7qSsfIP9qgC&expire=1681418785&fexp=24007246&gir=yes&id=o-AF7ybAjowJGvY4UHNeDs8DZiwk5yTfwawXEgHkQeLJiV&ip=47.251.37.12&itag=140&keepalive=yes&lmt=1543041885475251&mime=audio%2Fmp4&n=3ripMYI_BohDfD2HVJR&ns=iQAHhUlDZBkKZELM5ofgKIYM&requiressl=yes&sig=AOq0QJ8wRgIhAO5XVbABPu1L0Y0nBxWEI8cF--TLXvhE_GChzKdchToOAiEA2jKx0v2dUYyTlIEhRCABbAH3FA1ph32NQxzm0KkOSQc%3D&source=youtube&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cspc%2Cvprv%2Cmime%2Cns%2Cgir%2Cclen%2Cdur%2Clmt&spc=99c5CYccHfjq7mVPYcFP_PHhgv_h2ZHquCja7oErow&txp=5432432&vprv=1&redirect_counter=1&rm=sn-o09s77z&req_id=db46c5496e86a3ee&cms_redirect=yes&cmsv=e&ipbypass=yes&mh=Xo&mip=118.96.152.124&mm=31&mn=sn-2uuxa3vh-wvbl&ms=au&mt=1681396223&mv=u&mvi=4&pl=23&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pl&lsig=AG3C_xAwRgIhAKk0LdF5OfZDgHecJi-6DhcULbBlXSb0Px5NI-cPMEOGAiEAjyIXsz8mKJz5Jh9CgBFo8Z-U_gKh5zl6HaUTQ_-sOKw%3D",
+                      //     idMusic: "9lsfM68JM7M",
+                      //     titleMusic:
+                      //         "Klenengan Gamelan Karawitan Jawa Asli Klasik",
+                      //     imageLagu:
+                      //         "https://i.ytimg.com/vi/9lsfM68JM7M/hqdefault.jpg?sqp=-oaymwE8CKgBEF5IWvKriqkDLwgBFQAAAAAYASUAAMhCPQCAokN4AfABAfgB3gOAAugCigIMCAAQARhlIF4oPzAP&rs=AOn4CLB5lxgZPI5a4tnkcr83UUBlWr8DlQ",
+                      //     duration: "52m9s");
+
                       if (controller.downloadYoutube.text.isNotEmpty) {
                         if (controller.progreesDouble.value != null) {
                           toast('Please finish the download first');
@@ -93,7 +103,7 @@ class HomeMusicList extends GetView<HomeController> {
                       }
                     },
                     text: controller.progreesDouble.value != null
-                        ? "${controller.progrees.value}%"
+                        ? "${(controller.progreesDouble.value! * 100).toStringAsFixed(0)}%"
                         : "Download",
                     color: const Color(0xFF1F2633),
                     textStyle: boldTextStyle(color: Colors.white),

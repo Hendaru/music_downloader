@@ -101,7 +101,7 @@ class NetworkOnlyResource<ResultType, RequestType>
       }
 
       try {
-        if (e.type == DioErrorType.connectTimeout) {
+        if (e.type == DioErrorType.connectionTimeout) {
           message = 'Request time out';
         }
       } catch (e) {

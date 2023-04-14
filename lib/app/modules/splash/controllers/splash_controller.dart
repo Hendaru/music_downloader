@@ -34,15 +34,18 @@ class SplashController extends GetxController {
     String? listMusic = getStringAsync(musicListLocal);
 
     await Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-      if (listMusic.isEmptyOrNull) {
-        Get.offAndToNamed(
-          Routes.DOWNLOAD_PAGE,
-        );
-      } else {
-        Get.offAndToNamed(
-          Routes.DASBOARD,
-        );
-      }
+      Get.offAndToNamed(
+        Routes.DASBOARD,
+      );
+      // if (listMusic.isEmptyOrNull) {
+      //   Get.offAndToNamed(
+      //     Routes.DOWNLOAD_PAGE,
+      //   );
+      // } else {
+      //   Get.offAndToNamed(
+      //     Routes.DASBOARD,
+      //   );
+      // }
     });
   }
 
