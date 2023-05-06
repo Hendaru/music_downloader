@@ -16,6 +16,8 @@ import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/trending/bindings/trending_binding.dart';
+import '../modules/trending/views/trending_view.dart';
 
 part 'app_routes.dart';
 
@@ -64,6 +66,11 @@ class AppPages {
       name: _Paths.LIST_ALL_MUSIC,
       page: () => const ListAllMusicView(),
       binding: ListAllMusicBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRENDING,
+      page: () => const TrendingView(),
+      binding: TrendingBinding(),
     ),
   ];
 }

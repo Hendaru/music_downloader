@@ -3,14 +3,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
-
+import 'package:async/async.dart';
+import 'package:chunked_downloader/chunked_downloader.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:flutter_youtube_downloader/flutter_youtube_downloader.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:in_app_review/in_app_review.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager_ext.dart';
@@ -64,6 +66,10 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   StreamSubscription? _intentDataStreamSubscription;
 
   ReceivePort _port = ReceivePort();
+
+  CancelToken cancelToken = CancelToken();
+
+  ChunkedDownloader? chunkedDownloader;
 
   @override
   void onInit() {
@@ -302,54 +308,151 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
       loadingBtn.value = false;
     } else {
       print("-------------Masuk download---------------");
+      String? link;
+      try {
+        link = await FlutterYoutubeDownloader.extractYoutubeLink(
+            url.validate(), 140);
+      } on PlatformException {
+        link = 'Failed to Extract YouTube Video Link.';
+      }
+
+      // try {
+      //   int offset = 0;
+      //   var httpClient = http.Client();
+      //   String url =
+      //       "https://rr8---sn-2uuxa3vh-wvbz.googlevideo.com/videoplayback?expire=1683274898&ei=MmhUZPcL5cHi3g_qn5bwDA&ip=36.73.102.185&id=o-AK1nycIsWSm0KpT9yqMmS5KyPtYb-ObSr24y400TFNxT&itag=251&source=youtube&requiressl=yes&mh=mL&mm=31%2C29&mn=sn-2uuxa3vh-wvbz%2Csn-npoe7ns6&ms=au%2Crdu&mv=m&mvi=8&pl=20&initcwndbps=633750&vprv=1&svpuc=1&mime=audio%2Fwebm&gir=yes&clen=787272545&dur=47295.841&lmt=1682700588923209&mt=1683252791&fvip=2&keepalive=yes&fexp=24007246&c=ANDROID&txp=4532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAN32KFRAhagX4CHXB5_N6VpSKckuuc1tE6c1DoQLOYXyAiEAhV0z5A2vtmf9grY5RAi6-Fvr_5QafAcmg6flUgOiozw%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRQIhAPDOd4rztOtGFcrO3ZTSeEDAb34dhm-n2hNaogv2MlL9AiBIisetV3K3kruU70ozNZXUlq29OZ4svEIvgQE3UttQqw%3D%3D";
+      //   var request = http.Request('GET', Uri.parse(
+      //       // link.validate()
+      //       // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      //       // "http://47.251.37.12/music_asset/music-2Ma92WwbOoVgeiYVY52VcBaiDap-7-Relaxing Background Guitar Music - meditate, focus, study, think.mp3"
+      //       url));
+      //   var response = httpClient.send(request);
+
+      //   // Open file
+      //   File fileTmp = File('$dir/$idMusic.tmp');
+
+      //   response.asStream().listen((http.StreamedResponse r) async {
+      //     final reader = ChunkedStreamReader(r.stream);
+      //     try {
+      //       // Set buffer size to 64KB
+      //       int chunkSize = 1024 * 1024;
+      //       Uint8List buffer;
+      //       do {
+      //         buffer = await reader.readBytes(chunkSize);
+      //         // Add buffer to chunks list
+      //         offset += buffer.length;
+      //         print('Downloading  ${offset ~/ 1024 ~/ 1024}MB');
+      //         // Write buffer to disk
+      //         await fileTmp.writeAsBytes(buffer, mode: FileMode.append);
+      //       } while (buffer.length == chunkSize);
+
+      //       // Rename file from .tmp to non-tmp extension
+      //       await fileTmp.rename(file.path);
+      //     } catch (e) {
+      //       print(e);
+      //     } finally {
+      //       reader.cancel();
+      //       toast("Download Complate Finish1");
+      //     }
+      //   }).onDone(() async {
+      //     toast("Download Complate Finish2");
+      //     // do something when finished
+      //   });
+      // } catch (error) {
+      //   print('Error downloading: $error');
+      // }
+
+      // try {
+      //   List<List<int>> chunks = [];
+      //   int downloaded = 0;
+
+      //   var httpClient = http.Client();
+      //   var request = http.Request('GET', Uri.parse(link.validate()));
+      //   var response = httpClient.send(request);
+      //   loadingBtn.value = false;
+      //   response.asStream().listen((http.StreamedResponse r) async {
+      //     final reader = ChunkedStreamReader(r.stream);
+      //     try {
+      //       int chunkSize = 64 * 1024;
+      //       Uint8List buffer;
+      //       do {
+      //         buffer = await reader.readBytes(chunkSize);
+      //         chunks.add(buffer);
+      //         downloaded += buffer.length;
+      //         print('Downloading Hore ${downloaded ~/ 1024 ~/ 1024}MB');
+      //       } while (buffer.length == chunkSize);
+      //       // File file = File(downloadPath);
+      //       final Uint8List bytes = Uint8List(r.contentLength!);
+      //       int offset = 0;
+      //       for (List<int> chunk in chunks) {
+      //         bytes.setRange(offset, offset + chunk.length, chunk);
+      //         offset += chunk.length;
+      //       }
+      //       await file.writeAsBytes(bytes);
+      //     } catch (e) {
+      //       print(e);
+      //     } finally {
+      //       reader.cancel();
+      //       toast("Download Complate1");
+      //       downloadYoutube.clear();
+      //       setCache(
+      //           idMusic: idMusic.validate(),
+      //           urlPath: file.path,
+      //           judulLagu: titleMusic.validate(),
+      //           imageLagu: imageLagu.validate(),
+      //           duration: duration.validate());
+      //       progreesDouble.value = null;
+      //     }
+      //   }).onDone(() {
+      //     toast("Download Complate 2");
+      //     loadingBtn.value = false;
+      //   });
+      // } catch (e) {
+      //   downloadYoutube.clear();
+      //   loadingBtn.value = false;
+      //   toast(
+      //       "Downlod error, please select another url, because some privacy from youtube");
+      //   progreesDouble.value = null;
+      // }
 
       try {
-        // Download image
-        final http.Response response =
-            await http.get(Uri.parse(url.validate()));
-
-        // var timer = Stopwatch()..start();
-        // var timeTick = 1000;
-        // var downloadLength = 0;
-        // var contentLength = response.contentLength!;
-
-        // print(
-        //     "100.00 % -------- time: ${(timer.elapsedMilliseconds / 1000).toStringAsFixed(2)} sec");
-
-        //  await for (var newBytes in response.stream) {
-        //   downloadLength += newBytes.length;
-        //   var time = timer.elapsedMilliseconds;
-        //   if (time >= timeTick) {
-        //     timeTick += 1000;
-        //     var progress =
-        //         ((downloadLength / contentLength) * 100).toStringAsFixed(2);
-        //     print(
-        //         "${progress.padLeft(6)} % -------- time: ${(time / 1000).toInt()} sec");
-        //   }
-        // }
-
-        // Save to filesystem
-        // final file = File(filename);
-        await file.writeAsBytes(response.bodyBytes);
-
-        // Ask the user to save it
-        final params = SaveFileDialogParams(sourceFilePath: file.path);
-        final finalPath = await FlutterFileDialog.saveFile(params: params);
-        print("-------------Masuk finalPath---------------");
-        print(finalPath);
-
-        if (finalPath != null) {
-          downloadYoutube.clear();
-          setCache(
-              idMusic: idMusic.validate(),
-              urlPath: file.path,
-              judulLagu: titleMusic.validate(),
-              imageLagu: imageLagu.validate(),
-              duration: duration.validate());
-          toast("Download Complate");
-          progreesDouble.value = null;
-          loadingBtn.value = false;
-        }
+        chunkedDownloader = await ChunkedDownloader(
+            // url:
+            //     "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            url:
+                "https://rr1---sn-2uuxa3vh-wvbl.googlevideo.com/videoplayback?expire=1683318069&ei=1RBVZLLkNYW99QPWoLWQDw&ip=36.73.102.185&id=o-AJD0Nw8CLhzhPtRogkSYUr2QiOQNy6HJgzyR_6j-hL9A&itag=18&source=youtube&requiressl=yes&mh=Be&mm=31%2C29&mn=sn-2uuxa3vh-wvbl%2Csn-npoeenek&ms=au%2Crdu&mv=m&mvi=1&pl=20&initcwndbps=537500&vprv=1&svpuc=1&mime=video%2Fmp4&gir=yes&clen=180021276&ratebypass=yes&dur=3410.198&lmt=1683134373793007&mt=1683296007&fvip=4&fexp=24007246&c=ANDROID&txp=4438434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRAIgMzZN7zxo5VR3IJnH16AGByg3Y6tnFgyExKVD7njlCskCIDasMZLb7Cvkb82sBDejNO1c89n3hhnmzWUBG51n84-j&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRgIhAJtLTYzaSmkp9eEgClayleuUQTubAoZRQvxnyWrWb0CfAiEAyDQUwvgM7ZSezKJFzZzsnQqUHOPIEAngj6aBv214M5A%3D",
+            // url: link.validate(),
+            saveFilePath: file.path,
+            chunkSize: 1024 * 1024,
+            onError: (error) {
+              downloadYoutube.clear();
+              loadingBtn.value = false;
+              toast(
+                  "Downlod error, please select another url, because some privacy from youtube");
+              progreesDouble.value = null;
+            },
+            onProgress: (received, total, speed) {
+              print("Received: $received, Total: $total, Speed: $speed");
+              loadingBtn.value = false;
+              if (total != -1) {
+                progreesDouble.value = (received / total * 1);
+              } else {
+                progreesDouble.value = null;
+              }
+            },
+            onDone: (file2) {
+              print(file2.path);
+              downloadYoutube.clear();
+              setCache(
+                  idMusic: idMusic.validate(),
+                  urlPath: file.path,
+                  judulLagu: titleMusic.validate(),
+                  imageLagu: imageLagu.validate(),
+                  duration: duration.validate());
+              toast("Download Complate");
+              progreesDouble.value = null;
+            }).start();
+        loadingBtn.value = false;
       } catch (e) {
         downloadYoutube.clear();
         loadingBtn.value = false;
@@ -359,93 +462,23 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
       }
 
       // try {
-      //   final request = Request('GET', Uri.parse(url.validate()));
-      //   var client = await Client();
-      //   var response = await client.send(request);
-      //   var timer = Stopwatch()..start();
-      //   var timeTick = 1000;
-      //   var downloadLength = 0;
+      //   String url2 =
+      //       "https://rr1---sn-2uuxa3vh-wvbz.googlevideo.com/videoplayback?expire=1683312159&ei=v_lUZPHzFOux3LUPq9SloAo&ip=36.73.102.185&id=o-AAoOAa8drrlT-cgoGKOXFYTR0fA3IpC0iXkElWARl3ub&itag=140&source=youtube&requiressl=yes&mh=nD&mm=31%2C29&mn=sn-2uuxa3vh-wvbz%2Csn-npoe7ndl&ms=au%2Crdu&mv=m&mvi=1&pl=20&initcwndbps=626250&vprv=1&svpuc=1&mime=audio%2Fmp4&gir=yes&clen=50851209&dur=3142.031&lmt=1682495540687277&mt=1683290243&fvip=1&keepalive=yes&fexp=24007246&c=ANDROID&txp=5532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRAIgXTuCAqrpjSFNvQcdKnFFb-ORYJzCa2lFO5KOBqHME74CIHBMY5Tq9bv0GtNLUdpCZQn5jfORViM85YYNX_JuTzLg&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRQIhANa20LaWq5M01QDTdY_fdyL8VyLbwHO_qdM_QLITF9yNAiAxK0R-46giVG-kmzox3DSF2pisy0mDizdh9s0k618_vQ%3D%3D";
 
-      //   var contentLength = response.contentLength!;
-      //   await for (var newBytes in response.stream) {
-      //     downloadLength += newBytes.length;
-      //     var time = timer.elapsedMilliseconds;
-      //     if (time >= timeTick) {
-      //       timeTick += 1000;
-      //       var progress =
-      //           ((downloadLength / contentLength) * 100).toStringAsFixed(2);
-      //       print(
-      //           "${progress.padLeft(6)} % -------- time: ${(time / 1000).toInt()} sec");
-      //     }
-      //   }
-      //   print(
-      //       "100.00 % -------- time: ${(timer.elapsedMilliseconds / 1000).toStringAsFixed(2)} sec");
-      //   await file.writeAsBytes(request.bodyBytes);
-      //   client.close();
-
-      //   downloadYoutube.clear();
-      //   setCache(
-      //       idMusic: idMusic.validate(),
-      //       urlPath: file.path,
-      //       judulLagu: titleMusic.validate(),
-      //       imageLagu: imageLagu.validate(),
-      //       duration: duration.validate());
-      //   toast("Download Complate");
-      //   progreesDouble.value = null;
-      //   loadingBtn.value = false;
-      // } catch (e) {
-      //   downloadYoutube.clear();
-      //   loadingBtn.value = false;
-      //   toast(
-      //       "Downlod error, please select another url, because some privacy from youtube");
-      //   progreesDouble.value = null;
-      // }
-
-      // try {
-      //   await dio.get(
-      //     url.validate(),
-      //     options: Options(headers: {HttpHeaders.acceptEncodingHeader: "*"}),
-      //     onReceiveProgress: (received, total) {
-      //       loadingBtn.value = false;
-      //       if (total != -1) {
-      //         print("-------------------$received--------$total----------");
-      //         progrees.value = (received / total * 100).toStringAsFixed(0);
-      //         progreesDouble.value = (received / total * 1);
-      //       } else {
-      //         progreesDouble.value = null;
-      //       }
-      //     },
-      //   ).then((value) {
-      //     downloadYoutube.clear();
-      //     setCache(
-      //         idMusic: idMusic.validate(),
-      //         urlPath: file.path,
-      //         judulLagu: titleMusic.validate(),
-      //         imageLagu: imageLagu.validate(),
-      //         duration: duration.validate());
-      //     toast("Download Complate");
-      //     progreesDouble.value = null;
-      //   });
-      //   loadingBtn.value = false;
-      // } catch (e) {
-      //   downloadYoutube.clear();
-      //   loadingBtn.value = false;
-      //   toast(
-      //       "Downlod error, please select another url, because some privacy from youtube");
-      //   progreesDouble.value = null;
-      // }
-
-      // try {
-      //   await dio.download(
-      //     url.validate(),
+      //   await dio.downloadUri(
+      //     Uri.parse(
+      //         // link.validate()
+      //         url2),
       //     file.path,
-      //     options: Options(headers: {HttpHeaders.acceptEncodingHeader: "*"}),
+      //     options: Options(
+      //         responseType: ResponseType.stream,
+      //         followRedirects: true,
+      //         validateStatus: (status) {
+      //           return status! < 500;
+      //         }),
       //     onReceiveProgress: (received, total) {
       //       loadingBtn.value = false;
       //       if (total != -1) {
-      //         print("-------------------$received-------$total-----------");
-      //         //  progrees.value = (received / total * 100).toStringAsFixed(0);
-
       //         progreesDouble.value = (received / total * 1);
       //       } else {
       //         progreesDouble.value = null;
@@ -459,15 +492,14 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
       //         judulLagu: titleMusic.validate(),
       //         imageLagu: imageLagu.validate(),
       //         duration: duration.validate());
-      //     toast("Download Complate");
+      //     toast("Download Complete");
       //     progreesDouble.value = null;
       //   });
       //   loadingBtn.value = false;
       // } catch (e) {
       //   downloadYoutube.clear();
       //   loadingBtn.value = false;
-      //   toast(
-      //       "Downlod error, please select another url, because some privacy from youtube");
+      //   toast("Download error");
       //   progreesDouble.value = null;
       // }
     }

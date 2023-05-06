@@ -36,6 +36,10 @@ dependencies:
   receive_sharing_intent: 1.4.5
   package_info_plus: 3.0.3
   flutter_file_dialog: 3.0.0
+  chunked_downloader: 0.0.2
+  async: 2.10.0
+  flutter_youtube_downloader: 0.0.5
+  youtube_data_api: 1.0.4
   flutter: 
     sdk: flutter
 

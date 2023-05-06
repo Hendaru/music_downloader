@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
@@ -59,7 +60,7 @@ Widget commonCacheImageWidget(String? url,
     BoxFit? fit,
     double? height,
     required bool isSquere,
-    required String idcacheKey}) {
+    String? idcacheKey}) {
   if (url.toString().startsWith('http')) {
     return CachedNetworkImage(
       placeholder:

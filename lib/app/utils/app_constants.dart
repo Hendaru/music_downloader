@@ -81,6 +81,8 @@ String admobBanner = 'ca-app-pub-7779081722205902/6239850921';
 String admobInterstitial = 'ca-app-pub-7779081722205902/9764162963';
 String admobRewarded = 'ca-app-pub-7779081722205902/8451081294';
 
+String youtubeToken = 'AIzaSyAFGgqDSrGdE8SfBdvPcAzezz7jggktZXI';
+
 // String admobBannerFake = 'ca-app-pub-3940256099942544/6300978111';
 // String admobInterstitialFake = 'ca-app-pub-3940256099942544/1033173712';
 // String admobRewardedFake = 'ca-app-pub-3940256099942544/5224354917';

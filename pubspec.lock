@@ -42,7 +42,7 @@ packages:
     source: hosted
     version: "2.0.0"
   async:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: async
       sha256: bfe67ef28df125b7dddcea62755991f807aa39a2492a23e1550161692950bbe0
@@ -209,6 +209,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  chunked_downloader:
+    dependency: "direct main"
+    description:
+      name: chunked_downloader
+      sha256: "7fe3a37a0c7fb1d41f3f922c30937fdccae2647b6f6f71778bffcf4823048754"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   clock:
     dependency: transitive
     description:
@@ -265,6 +273,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      sha256: b36c7f7e24c0bdf1bf9a3da461c837d1de64b9f8beb190c9011d8c72a3dfd745
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -400,6 +416,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_youtube_downloader:
+    dependency: "direct main"
+    description:
+      name: flutter_youtube_downloader
+      sha256: "05bf83e36c7ebeef2929dba2cfc2f7b98c4d86a184e585bc72c543893dbd86cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   fluttertoast:
     dependency: "direct main"
     description:
@@ -472,6 +496,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  html:
+    dependency: transitive
+    description:
+      name: html
+      sha256: "58e3491f7bf0b6a4ea5110c0c688877460d1a6366731155c4a4580e7ded773e8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.3"
   http:
     dependency: "direct main"
     description:
@@ -1237,6 +1269,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.2"
+  xml2json:
+    dependency: transitive
+    description:
+      name: xml2json
+      sha256: c8cb35b83cce879c2ea86951fd257f4e765b0030a0298b35cf94f2b3d0f32095
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.3.6"
   yaml:
     dependency: transitive
     description:
@@ -1245,6 +1285,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  youtube_data_api:
+    dependency: "direct main"
+    description:
+      name: youtube_data_api
+      sha256: "8414841e9bbfa69d25d707cc8905babac28806beb51912b1cb67c8e3edf3a09a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
 sdks:
   dart: ">=2.19.2 <3.0.0"
   flutter: ">=3.3.0"

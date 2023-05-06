@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.offline.music.downloader">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.offline.music.downloader"
+    >
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -10,6 +12,8 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
+        tools:replace="android:label" 
+        android:requestLegacyExternalStorage="true"
         >
         <activity
             android:name="com.ryanheise.audioservice.AudioServiceActivity"
@@ -43,6 +47,9 @@
                <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
+
+       
+
         <service android:name="com.ryanheise.audioservice.AudioService"
             android:foregroundServiceType="mediaPlayback"
             android:exported="true">
@@ -61,6 +68,7 @@
               android:value="ca-app-pub-5481994517177265~7023634381"
              
               -->
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
@@ -69,5 +77,6 @@
             android:value="ca-app-pub-7779081722205902~8709530771"
            
             />
+       
     </application>
 </manifest>
