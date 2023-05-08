@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/dasboard/bindings/dasboard_binding.dart';
 import '../modules/dasboard/views/dasboard_view.dart';
+import '../modules/detail_video/bindings/detail_video_binding.dart';
+import '../modules/detail_video/views/detail_video_view.dart';
 import '../modules/download_page/bindings/download_page_binding.dart';
 import '../modules/download_page/views/download_page_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -71,6 +73,11 @@ class AppPages {
       name: _Paths.TRENDING,
       page: () => const TrendingView(),
       binding: TrendingBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_VIDEO,
+      page: () => const DetailVideoView(),
+      binding: DetailVideoBinding(),
     ),
   ];
 }

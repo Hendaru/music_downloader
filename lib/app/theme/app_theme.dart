@@ -26,6 +26,7 @@ ThemeData lightThemeData(BuildContext context) {
           onBackground: scaffoldLightColor,
           surface: btnLightColor,
           onSurface: primaryColor,
+          onTertiary: btnDarkColor,
           primaryVariant: Color(0xFF1F2633),
           secondaryVariant: Colors.white),
       // checkboxTheme: CheckboxThemeData(
@@ -68,6 +69,7 @@ ThemeData darkThemeData(BuildContext context) {
         onBackground: scaffoldDarkColor,
         surface: btnDarkColor,
         onSurface: whiteColor,
+        onTertiary: whiteColor,
         primaryVariant: Color(0xFFF5EBEB),
         secondaryVariant: Colors.black),
     appBarTheme: const AppBarTheme(backgroundColor: scaffoldDarkColor),

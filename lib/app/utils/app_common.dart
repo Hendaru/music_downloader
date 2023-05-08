@@ -38,15 +38,15 @@ Function(BuildContext, String) placeholderWidgetFn() =>
     (_, s) => placeholderWidget();
 
 Widget placeholderWidget() =>
-    // SizedBox(width: 1.w, height: 1.w, child: const CircularProgressIndicator());
-    SizedBox(
-        child: Image.asset(
-      MainAssets.image_kosong,
-      fit: BoxFit.fill,
-      width: 3.w,
-      height: 3.w,
-      color: shadowColorGlobal,
-    ));
+    SizedBox(width: 1.w, height: 1.w, child: const CircularProgressIndicator());
+// SizedBox(
+//     child: Image.asset(
+//   MainAssets.image_kosong,
+//   fit: BoxFit.fill,
+//   width: 3.w,
+//   height: 3.w,
+//   color: shadowColorGlobal,
+// ));
 
 Widget placeholderImageWidget({width, height}) => Image.asset(
       MainAssets.img_kosong,
@@ -64,7 +64,14 @@ Widget commonCacheImageWidget(String? url,
   if (url.toString().startsWith('http')) {
     return CachedNetworkImage(
       placeholder:
-          placeholderWidgetFn() as Widget Function(BuildContext, String)?,
+          // placeholderWidgetFn() as Widget Function(BuildContext, String)?,
+          (context, url) => SizedBox(
+              width: width,
+              height: isSquere ? width : height,
+              child: Center(
+                  child: const CircularProgressIndicator(
+                strokeWidth: 1,
+              ).withSize(width: 3.w, height: 3.w))),
       imageUrl: '$url',
       height: isSquere ? width : height,
       cacheKey: idcacheKey,
@@ -152,6 +159,7 @@ InputDecoration inputDecoration(BuildContext context,
     {String? label,
     String? hintText,
     Widget? prefixIcon,
+    Widget? suffixIcon,
     Color? fillColor,
     Color? borderColor}) {
   return InputDecoration(
@@ -188,6 +196,8 @@ InputDecoration inputDecoration(BuildContext context,
     hintText: hintText ?? "Sample Text",
     hintStyle: secondaryTextStyle(),
     prefixIcon: prefixIcon,
+    suffixIcon: suffixIcon,
+
     // labelText: label ?? "Sample Text",
     // labelStyle: secondaryTextStyle(size: 12.sp),
   );

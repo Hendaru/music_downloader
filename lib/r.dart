@@ -11,6 +11,8 @@ class MainAssets {
 
   static const repeat = 'assets/repeat.svg';
 
+  static const ic_fire = 'assets/ic_fire.svg';
+
   static const ic_backward = 'assets/ic_backward.svg';
 
   static const ic_plus = 'assets/ic_plus.svg';
