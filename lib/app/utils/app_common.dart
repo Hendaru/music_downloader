@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_playlist_model/res_playlist_model.dart';
 import 'package:music_download_youtube/app/theme/app_colors.dart';
@@ -400,6 +401,21 @@ List<ResMusicDataModel> getMusicListFromSharePref() {
     if (!getListMusicString.isEmptyOrNull) {
       listMusic = (jsonDecode(getListMusicString) as List<dynamic>)
           .map<ResMusicDataModel>((e) => ResMusicDataModel.fromJson(e))
+          .toList();
+    }
+  }
+
+  return listMusic;
+}
+
+List<ResDownloadedModel> getDownloadedListFromSharePref() {
+  List<ResDownloadedModel> listMusic = [];
+  String? getListMusicString = getStringAsync(downloadedListLocal);
+  if (getListMusicString.isNotEmpty) {
+    listMusic.clear();
+    if (!getListMusicString.isEmptyOrNull) {
+      listMusic = (jsonDecode(getListMusicString) as List<dynamic>)
+          .map<ResDownloadedModel>((e) => ResDownloadedModel.fromJson(e))
           .toList();
     }
   }

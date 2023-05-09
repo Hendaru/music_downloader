@@ -41,9 +41,9 @@ class DasboardView extends GetView<DasboardController> {
             children: [
               MenuDasboard(
                   pos: 0,
-                  icon: MainAssets.ic_home2,
+                  icon: MainAssets.ic_fire,
                   currentIndex: controller.currentIndex.value,
-                  name: "Home"),
+                  name: "Trending"),
               MenuDasboard(
                   pos: 1,
                   icon: MainAssets.ic_like2,
@@ -51,9 +51,9 @@ class DasboardView extends GetView<DasboardController> {
                   name: "Like"),
               MenuDasboard(
                   pos: 2,
-                  icon: MainAssets.ic_fire,
+                  icon: MainAssets.ic_downloaded,
                   currentIndex: controller.currentIndex.value,
-                  name: "Trending"),
+                  name: "Downloaded"),
               MenuDasboard(
                   pos: 3,
                   icon: MainAssets.ic_settings2,

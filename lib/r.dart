@@ -81,6 +81,8 @@ class MainAssets {
 
   static const ic_eye_on = 'assets/ic_eye_on.svg';
 
+  static const ic_download4 = 'assets/ic_download4.svg';
+
   static const ic_wave = 'assets/ic_wave.svg';
 
   static const ic_like2 = 'assets/ic_like2.svg';
@@ -114,6 +116,8 @@ class MainAssets {
   static const ic_settings2 = 'assets/ic_settings2.svg';
 
   static const ic_more = 'assets/ic_more.svg';
+
+  static const ic_downloaded = 'assets/ic_downloaded.svg';
 
 // ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,public_member_api_docs,constant_identifier_names,prefer_double_quotes
 }

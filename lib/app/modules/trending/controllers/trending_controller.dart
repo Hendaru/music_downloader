@@ -29,7 +29,6 @@ class TrendingController extends GetxController {
   }
 
   void init() async {
-    print("------------------------------");
     loadingTreading.value = true;
     videosTemporary.clear();
     var videosTrendingLocal = await youtubeDataApi.fetchTrendingVideo();
@@ -39,7 +38,6 @@ class TrendingController extends GetxController {
   }
 
   Future<void> searchResult(String value) async {
-    // YoutubeDataApi youtubeDataApi = YoutubeDataApi();
     hideKeyboard();
     loadingTreading.value = true;
 

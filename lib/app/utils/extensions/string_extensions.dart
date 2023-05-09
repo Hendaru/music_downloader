@@ -28,6 +28,15 @@ extension StringExtension on String? {
     }
   }
 
+  //Image url
+  String get imageUrlYoutube {
+    if (this == null) {
+      return "";
+    }
+
+    return 'https://img.youtube.com/vi/$this!/0.jpg';
+  }
+
   //add dust
   String get replacetoDash {
     if (this == null) {

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -7,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:music_download_youtube/app/data/models/models_commons/progress_bar_model/progress_bar_model.dart';
+import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_playlist_model/res_playlist_model.dart';
+import 'package:music_download_youtube/app/modules/downloaded/views/downloaded_view.dart';
 import 'package:music_download_youtube/app/modules/home/controllers/home_controller.dart';
 import 'package:music_download_youtube/app/modules/home/views/home_view.dart';
 import 'package:music_download_youtube/app/modules/like/views/like_view.dart';
@@ -28,6 +31,7 @@ import 'package:music_download_youtube/app/utils/widgets/create_playlist_widget/
 import 'package:music_download_youtube/app/utils/widgets/item_playlist_widget.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:sizer/sizer.dart';
 
@@ -61,6 +65,10 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
   late LockCachingAudioSource playCache;
 
   Dio dio = Dio();
+  final progreesDouble = Rxn<double>();
+  final progreesVideo = ''.obs;
+  final progreesAudio = ''.obs;
+  final loadingBtnVideo = false.obs;
 
   StatusToPlay? statusPlayNow;
   final idCurentDownload = "".obs;
@@ -84,9 +92,9 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
   }
 
   init() {
-    widgets.add(const HomeView());
-    widgets.add(const LikeView());
     widgets.add(const TrendingView());
+    widgets.add(const LikeView());
+    widgets.add(const DownloadedView());
     widgets.add(const SettingsView());
   }
 
@@ -537,6 +545,138 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       updateLike();
       // toast("Added to like song");
     }
+  }
+
+  void downloadFileVideo({
+    required String id,
+    required String url,
+    required String title,
+    // required String image,
+    required String duration,
+  }) async {
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = File('$dir/$id.mp4');
+    bool fileExists = await file.exists();
+
+    if (fileExists) {
+      toast("File already exists");
+      loadingBtnVideo.value = false;
+    } else {
+      print("-------------Masuk download---------------");
+
+      try {
+        await dio.downloadUri(
+          Uri.parse(url),
+          file.path,
+          options: Options(
+              responseType: ResponseType.stream,
+              followRedirects: true,
+              validateStatus: (status) {
+                return status! < 500;
+              }),
+          onReceiveProgress: (received, total) {
+            loadingBtnVideo.value = false;
+            if (total != -1) {
+              progreesVideo.value = (received / total * 100).toStringAsFixed(0);
+              progreesDouble.value = (received / total * 1);
+            } else {
+              progreesDouble.value = null;
+            }
+          },
+        ).then((value) {
+          setCacheDownload(
+              id: id.validate(),
+              path: file.path,
+              title: title.validate(),
+              image: id.validate().imageUrlYoutube,
+              duration: duration.validate());
+          toast("Download Complete");
+          progreesVideo.value = "";
+          progreesDouble.value = null;
+        });
+        loadingBtnVideo.value = false;
+      } catch (e) {
+        loadingBtnVideo.value = false;
+        toast("Download error");
+        progreesVideo.value = "";
+        progreesDouble.value = null;
+      }
+    }
+  }
+
+  void downloadFileAudio({
+    required String id,
+    required String url,
+    required String title,
+    // required String image,
+    required String duration,
+  }) async {
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = File('$dir/$id.mp3');
+    bool fileExists = await file.exists();
+
+    if (fileExists) {
+      toast("File already exists");
+      loadingBtnVideo.value = false;
+    } else {
+      print("-------------Masuk download---------------");
+
+      try {
+        await dio.downloadUri(
+          Uri.parse(url),
+          file.path,
+          options: Options(
+              responseType: ResponseType.stream,
+              followRedirects: true,
+              validateStatus: (status) {
+                return status! < 500;
+              }),
+          onReceiveProgress: (received, total) {
+            loadingBtnVideo.value = false;
+            if (total != -1) {
+              progreesAudio.value = (received / total * 100).toStringAsFixed(0);
+              progreesDouble.value = (received / total * 1);
+            } else {
+              progreesDouble.value = null;
+            }
+          },
+        ).then((value) {
+          setCacheDownload(
+              id: id.validate(),
+              path: file.path,
+              title: title.validate(),
+              image: id.validate().imageUrlYoutube,
+              duration: duration.validate());
+          toast("Download Complete");
+          progreesAudio.value = "";
+          progreesDouble.value = null;
+        });
+        loadingBtnVideo.value = false;
+      } catch (e) {
+        loadingBtnVideo.value = false;
+        toast("Download error");
+        progreesAudio.value = "";
+        progreesDouble.value = null;
+      }
+    }
+  }
+
+  void setCacheDownload({
+    required String id,
+    required String path,
+    required String title,
+    required String image,
+    required String duration,
+  }) async {
+    var listDownloaded = getDownloadedListFromSharePref();
+    // int indexMusic = listMusic.indexWhere(((e) => e.id == idMusic));
+    List<ResDownloadedModel> newlistDownloaded = listDownloaded;
+
+    var abc = ResDownloadedModel(
+        id: id, path: path, title: title, image: image, duration: duration);
+    newlistDownloaded.add(abc);
+
+    setValue(downloadedListLocal, jsonEncode(newlistDownloaded));
   }
 
   @override

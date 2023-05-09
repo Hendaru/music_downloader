@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:music_download_youtube/app/modules/downloaded/bindings/downloaded_binding.dart';
 import 'package:music_download_youtube/app/modules/home/bindings/home_binding.dart';
 import 'package:music_download_youtube/app/modules/like/bindings/like_binding.dart';
 import 'package:music_download_youtube/app/modules/playList/bindings/play_list_binding.dart';
@@ -15,11 +16,12 @@ class DasboardBinding extends Bindings {
       () => DasboardController(),
     );
 
-    HomeBinding().dependencies();
-    PlayListBinding().dependencies();
+    // HomeBinding().dependencies();
+    // PlayListBinding().dependencies();
     LikeBinding().dependencies();
     SettingsBinding().dependencies();
     TrendingBinding().dependencies();
+    DownloadedBinding().dependencies();
 
     Get.lazyPut<AddLikePlaylistController>(() => AddLikePlaylistController());
   }

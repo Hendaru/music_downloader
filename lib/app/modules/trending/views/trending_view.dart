@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:music_download_youtube/app/routes/app_pages.dart';
 import 'package:music_download_youtube/app/theme/app_colors.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
@@ -51,7 +52,7 @@ class TrendingView extends GetView<TrendingController> {
                                 focusNode, onFieldSubmitted) {
                               return TextField(
                                 decoration: inputDecoration(context,
-                                    hintText: "Search Video",
+                                    hintText: "Search all of video",
                                     prefixIcon: Icon(
                                       Icons.search,
                                       color: primaryColor,
@@ -67,10 +68,7 @@ class TrendingView extends GetView<TrendingController> {
                                                 // controller
                                                 //         .videosTemporary.value =
                                                 //     controller.videosTrending;
-                                                print(
-                                                    "----------hore1------------");
-                                                print(controller
-                                                    .videosTrending.length);
+
                                                 controller
                                                         .videosTemporary.value =
                                                     controller.videosTrending;
@@ -79,10 +77,6 @@ class TrendingView extends GetView<TrendingController> {
                                                     false;
                                                 textEditingController.clear();
 
-                                                print(
-                                                    "----------hore2------------");
-                                                print(controller
-                                                    .videosTrending[0].title);
                                                 hideKeyboard();
                                               })
                                             : SizedBox()),
@@ -184,7 +178,11 @@ class TrendingView extends GetView<TrendingController> {
                                                 color: greyColor)
                                             .withWidth(10.w)
                                       ],
-                                    ).marginOnly(bottom: 2.h),
+                                    ).marginOnly(bottom: 2.h).onTap(() {
+                                      Get.toNamed(
+                                        Routes.DETAIL_VIDEO,
+                                      );
+                                    }),
                                   )
                                   .toList(),
                             ).withScroll(

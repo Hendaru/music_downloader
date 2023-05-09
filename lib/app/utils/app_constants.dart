@@ -50,6 +50,7 @@ String playlistSharePref = "playlist";
 String idPlayNow = "idPlayNow";
 String statusEnumPlayFrom = "statusEnumPlayFrom";
 String musicListLocal = "musicListLocal";
+String downloadedListLocal = "downloadedListLocal";
 // String likeSharePref = "like";
 
 String listGenrePref = "listGenrePref";

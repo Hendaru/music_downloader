@@ -15,6 +15,7 @@ abstract class Routes {
   static const LIST_ALL_MUSIC = _Paths.LIST_ALL_MUSIC;
   static const TRENDING = _Paths.TRENDING;
   static const DETAIL_VIDEO = _Paths.DETAIL_VIDEO;
+  static const DOWNLOADED = _Paths.DOWNLOADED;
 }
 
 abstract class _Paths {
@@ -31,4 +32,5 @@ abstract class _Paths {
   static const LIST_ALL_MUSIC = '/list-all-music';
   static const TRENDING = '/trending';
   static const DETAIL_VIDEO = '/detail-video';
+  static const DOWNLOADED = '/downloaded';
 }
