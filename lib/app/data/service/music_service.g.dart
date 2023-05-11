@@ -65,6 +65,35 @@ class _MusicService implements MusicService {
   }
 
   @override
+  Future<ResUrlVideoModel> getUrlService(
+    id,
+    tag,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'id': id,
+      r'tag': tag,
+    };
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ResUrlVideoModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/geturl',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ResUrlVideoModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<ResVersionModel> getVersionService() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

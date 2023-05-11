@@ -57,7 +57,7 @@ class TrendingController extends GetxController {
       });
     } catch (e) {
       videosTemporary.value = videosTrending;
-      print("---------error------------");
+
       print(e);
     }
 

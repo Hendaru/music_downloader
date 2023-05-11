@@ -526,7 +526,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
 
     setValue(musicListLocal, jsonEncode(newlistMusic));
     getMusicList();
-    adShowrewardedAd();
+    // adShowrewardedAd();
   }
 
   @override

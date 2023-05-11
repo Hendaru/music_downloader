@@ -18,6 +18,12 @@ abstract class MusicService {
     @Path('id') String id,
   );
 
+  @GET("/geturl")
+  Future<ResUrlVideoModel> getUrlService(
+    @Query('id') String id,
+    @Query('tag') int tag,
+  );
+
   @GET("/versionyou")
   Future<ResVersionModel> getVersionService();
 }

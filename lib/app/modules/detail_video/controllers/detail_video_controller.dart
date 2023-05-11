@@ -1,24 +1,24 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:chewie/chewie.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
+import 'package:music_download_youtube/app/core/utils/event_manager.dart';
+import 'package:music_download_youtube/app/core/utils/event_manager_ext.dart';
+import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
+import 'package:music_download_youtube/app/data/repository/music_repository.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
-import 'package:music_download_youtube/app/utils/app_constants.dart';
-import 'package:music_download_youtube/app/utils/extensions/share_pref.dart';
+import 'package:music_download_youtube/app/utils/enums.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_data_api/models/video.dart';
 import 'package:youtube_data_api/youtube_data_api.dart';
 
 class DetailVideoController extends GetxController {
   YoutubeDataApi youtubeDataApi = YoutubeDataApi();
-  late VideoPlayerController videoPlayerController;
+  VideoPlayerController? videoPlayerController;
   Rxn<ChewieController>? chewieController = Rxn<ChewieController>();
+  final _musicRepository = MusicRepository();
+  final getUrlVideoEvent = InitializeEvent<ResUrlVideoModel>();
+  final getUrlAudioEvent = InitializeEvent<ResUrlVideoModel>();
 
   final errorVideo = false.obs;
 
@@ -27,6 +27,11 @@ class DetailVideoController extends GetxController {
   final videosTrending = <Video>[].obs;
   final loadingTranding = false.obs;
 
+  Video? detailVideoData;
+
+  Rxn<ResUrlVideoModel> resUrlVideoModel = Rxn<ResUrlVideoModel>();
+  Rxn<ResUrlVideoModel> resUrlAudioModel = Rxn<ResUrlVideoModel>();
+
   @override
   void onInit() {
     init();
@@ -34,8 +39,64 @@ class DetailVideoController extends GetxController {
   }
 
   void init() {
-    getDetailVideo();
-    getSuggestions();
+    getArgs();
+    if (detailVideoData != null) {
+      getUrlVideoController(detailVideoData!.videoId.validate(), 18);
+      getSuggestions();
+    }
+
+    observer();
+  }
+
+  void getArgs() {
+    final args = Get.arguments;
+
+    if (args != null) {
+      if (args["video"] != null) {
+        detailVideoData = args["video"];
+      }
+    }
+  }
+
+  void observer() {
+    getUrlVideoEvent.result.listen((p0) {
+      print("---------------Hore----------------");
+      print(p0.status);
+      if (p0.status == Status.SUCCESS) {
+        if (p0.data != null) {
+          if (p0.data?.data != null) {
+            getDetailVideo(p0.data!.data!.url.validate());
+          }
+        }
+      } else if (p0.status == Status.LOADING) {
+      } else if (p0.status == Status.ERROR) {
+        toast('Server error');
+      }
+    });
+    getUrlAudioEvent.result.listen((p0) {
+      if (p0.status == Status.SUCCESS) {
+        if (p0.data != null) {
+          if (p0.data?.data != null) {}
+        }
+      } else if (p0.status == Status.LOADING) {
+      } else if (p0.status == Status.ERROR) {
+        toast('Server error');
+      }
+    });
+  }
+
+  void getUrlVideoController(String id, int tag) {
+    print("-------------------id bro---------------------");
+    print(id);
+    _musicRepository
+        .getUrlRepository(id, tag)
+        .addEvent(event: getUrlVideoEvent);
+  }
+
+  void getUrlAudioController(String id, int tag) {
+    _musicRepository
+        .getUrlRepository(id, tag)
+        .addEvent(event: getUrlAudioEvent);
   }
 
   Future<void> getSuggestions() async {
@@ -47,14 +108,13 @@ class DetailVideoController extends GetxController {
     loadingTranding.value = false;
   }
 
-  void getDetailVideo() {
+  void getDetailVideo(String url) {
     try {
-      videoPlayerController = VideoPlayerController.network(
-          "https://rr2---sn-2uuxa3vh-wvbz.googlevideo.com/videoplayback?expire=1683684409&ei=2adaZM1zjby8BO-Bg6AI&ip=36.73.115.9&id=o-APpSFlxynt2w_qVy2I0rKXnJyzbTvhfBmtOzNEN_115b&itag=22&source=youtube&requiressl=yes&mh=ex&mm=31%2C29&mn=sn-2uuxa3vh-wvbz%2Csn-npoe7nsr&ms=au%2Crdu&mv=m&mvi=2&pl=21&initcwndbps=573750&vprv=1&svpuc=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=861.135&lmt=1649854319680150&mt=1683662472&fvip=4&fexp=24007246&c=ANDROID&txp=4532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Csvpuc%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRAIgVCNoodjpByQVhXcA0LWl2MdZ1pfHJu9IZSBD6qIAxWYCIGEWB5UN5M5vvcglfZjxI4L6JIff7ClIn212jXIA94s7&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRAIgWH0U8HBz-uIGbMyE3wjj0UJwGzbggvqm3AzX1DJu23cCIApSySsAxPYUMoSNKO1fxJuVq6mbmQ1pP-78cpoI0bKv",
+      videoPlayerController = VideoPlayerController.network(url,
           videoPlayerOptions: VideoPlayerOptions())
         ..initialize().then((value) {
           chewieController?.value = ChewieController(
-              videoPlayerController: videoPlayerController,
+              videoPlayerController: videoPlayerController!,
               autoPlay: false,
               looping: false,
               aspectRatio: 16 / 9,
@@ -80,7 +140,7 @@ class DetailVideoController extends GetxController {
               showOptions: false);
         }).catchError((e) {
           print("---------------error----------------");
-          print(videoPlayerController.value.errorDescription);
+
           errorVideo.value = true;
         });
     } catch (e) {
@@ -93,8 +153,11 @@ class DetailVideoController extends GetxController {
   @override
   void onClose() {
     // ytCtrl.dispose();
-    videoPlayerController.dispose();
-    chewieController?.value?.dispose();
+    if (videoPlayerController != null) {
+      videoPlayerController!.dispose();
+      chewieController?.value?.dispose();
+    }
+
     super.onClose();
   }
 }

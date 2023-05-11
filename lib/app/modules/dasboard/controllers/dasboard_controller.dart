@@ -122,11 +122,11 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
     listenForChangesInSequenceState();
   }
 
-  void delayImage() {
-    Future.delayed(const Duration(seconds: 7), () {
-      openAdShow();
-    });
-  }
+  // void delayImage() {
+  //   Future.delayed(const Duration(seconds: 7), () {
+  //     openAdShow();
+  //   });
+  // }
 
   Widget showBannerAdsDasboard({required AdSize adSize}) {
     return Center(

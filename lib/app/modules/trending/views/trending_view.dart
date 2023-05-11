@@ -9,11 +9,11 @@ import 'package:music_download_youtube/app/theme/app_colors.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/app_text_style.dart';
-import 'package:music_download_youtube/app/utils/extensions/app_text_field.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
 import 'package:music_download_youtube/r.dart';
 import 'package:sizer/sizer.dart';
+import 'package:youtube_data_api/models/video.dart';
 
 import '../controllers/trending_controller.dart';
 
@@ -181,6 +181,9 @@ class TrendingView extends GetView<TrendingController> {
                                     ).marginOnly(bottom: 2.h).onTap(() {
                                       Get.toNamed(
                                         Routes.DETAIL_VIDEO,
+                                        arguments: {
+                                          "video": e,
+                                        },
                                       );
                                     }),
                                   )

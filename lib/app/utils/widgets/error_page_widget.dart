@@ -43,13 +43,14 @@ class ErrorPageWidget extends StatelessWidget {
           Text(
             title ??
                 "sorry! An error has occured and we're fixing the problem. Please try again later.",
+            textAlign: TextAlign.center,
             style: boldTextStyle(size: 18.sp),
           ).visible(!titleBelowImage && !hideTitle),
           3.h.height,
           SvgPicture.asset(
             svgAsset ?? MainAssets.warning,
-            width: 50.w,
-            height: 50.w,
+            width: 30.w,
+            height: 30.w,
           ),
           Text(
             title ?? "Oops..",

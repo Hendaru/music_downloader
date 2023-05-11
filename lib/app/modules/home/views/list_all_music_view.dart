@@ -106,9 +106,9 @@ class ListAllMusicView extends GetView<HomeController> {
                                 id: e.value.id,
                                 statusPlay: StatusToPlay.SINGLE);
 
-                            Future.delayed(const Duration(seconds: 5), () {
-                              openAdShowReward();
-                            });
+                            // Future.delayed(const Duration(seconds: 5), () {
+                            //   openAdShowReward();
+                            // });
                           } else {
                             toast("Not internet connection");
                           }

@@ -53,9 +53,9 @@ class LikeView extends GetView<LikeController> {
                                 id: e.id, statusPlay: StatusToPlay.SINGLE);
                           }
 
-                          Future.delayed(const Duration(seconds: 5), () {
-                            openAdShowReward();
-                          });
+                          // Future.delayed(const Duration(seconds: 5), () {
+                          //   openAdShowReward();
+                          // });
                         } else {
                           toast("Not internet connection");
                         }
