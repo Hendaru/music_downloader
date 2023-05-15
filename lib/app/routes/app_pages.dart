@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/dasboard/bindings/dasboard_binding.dart';
 import '../modules/dasboard/views/dasboard_view.dart';
+import '../modules/detail_downloaded_video/bindings/detail_downloaded_video_binding.dart';
+import '../modules/detail_downloaded_video/views/detail_downloaded_video_view.dart';
 import '../modules/detail_video/bindings/detail_video_binding.dart';
 import '../modules/detail_video/views/detail_video_view.dart';
 import '../modules/download_page/bindings/download_page_binding.dart';
@@ -85,6 +87,11 @@ class AppPages {
       name: _Paths.DOWNLOADED,
       page: () => const DownloadedView(),
       binding: DownloadedBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_DOWNLOADED_VIDEO,
+      page: () => const DetailDownloadedVideoView(),
+      binding: DetailDownloadedVideoBinding(),
     ),
   ];
 }

@@ -75,10 +75,15 @@ class LikeView extends GetView<LikeController> {
                         errorBuilder: (context, error, stackTrace) => SizedBox(
                               child: Text(error.toString()),
                             )),
-                    3.h.height,
+                    6.h.height,
                     Text(
-                      "No favorite songs",
-                      style: boldTextStyle(size: 16.sp),
+                      "No favorite Video or Audio",
+                      style: boldTextStyle(),
+                    ),
+                    1.h.height,
+                    Text(
+                      "Add your favorite Video or Audio",
+                      style: secondaryTextStyle(),
                     ),
                   ],
                 ),

@@ -34,39 +34,53 @@ class DetailVideoView extends GetView<DetailVideoController> {
           title: "Detail Video",
           centerTitle: true,
         ),
-        body: BuilderWidget<ResUrlVideoModel>(
-            event: controller.getUrlVideoEvent.result,
-            onError: (code, message) => ErrorPageWidget(
-                  title: "Server Error or open other video",
-                  onPressed: () {
-                    controller.init();
-                  },
-                ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
-            onLoading: () => Column(
-                  children: [
-                    SkeletonWidget(height: 25.h, width: 100.w),
-                    3.h.height,
-                    SkeletonWidget(height: 5.h, width: 100.w),
-                    3.h.height,
-                    SkeletonWidget(height: 5.h, width: 100.w),
-                    3.h.height,
-                    SkeletonWidget(height: 5.h, width: 100.w),
-                  ],
-                ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
-            onSuccess: (res) {
-              if (res != null) {
-                if (res.data != null) {
-                  return contentWidget(res.data!, dasboardController, context);
-                }
-              }
-              return const SizedBox();
-            })
+        body: Obx(() => controller.initialLoading.value
+            ? Column(
+                children: [
+                  SkeletonWidget(height: 25.h, width: 100.w),
+                  3.h.height,
+                  SkeletonWidget(height: 5.h, width: 100.w),
+                  3.h.height,
+                  SkeletonWidget(height: 5.h, width: 100.w),
+                  3.h.height,
+                  SkeletonWidget(height: 5.h, width: 100.w),
+                ],
+              ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)
+            : contentWidget(dasboardController, context))
+        // BuilderWidget<ResUrlVideoModel>(
+        //     event: controller.getUrlVideoEvent.result,
+        //     onError: (code, message) => ErrorPageWidget(
+        //           title: "Server Error or open other video",
+        //           onPressed: () {
+        //             controller.init();
+        //           },
+        //         ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
+        //     onLoading: () =>
+        // Column(
+        //           children: [
+        //             SkeletonWidget(height: 25.h, width: 100.w),
+        //             3.h.height,
+        //             SkeletonWidget(height: 5.h, width: 100.w),
+        //             3.h.height,
+        //             SkeletonWidget(height: 5.h, width: 100.w),
+        //             3.h.height,
+        //             SkeletonWidget(height: 5.h, width: 100.w),
+        //           ],
+        //         ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
+        //     onSuccess: (res) {
+        //       if (res != null) {
+        //         if (res.data != null) {
+        //           return contentWidget(res.data!, dasboardController, context);
+        //         }
+        //       }
+        //       return const SizedBox();
+        //     })
 
         // contentWidget(),
         );
   }
 
-  Widget contentWidget(DataUrlVideoModel data,
+  Widget contentWidget(
       DasboardController dasboardController, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,20 +109,21 @@ class DetailVideoView extends GetView<DetailVideoController> {
                     horizontal: defaultPaddingHorizontalGlobal)),
         2.h.height,
         Text(
-          data.title.validate(),
+          controller.detailVideoData.value?.title.validate() ?? "",
           style: boldTextStyle(),
         ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
         2.h.height,
         Obx(() => controller.loadingTranding.value
                 ? Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor:
-                          const AlwaysStoppedAnimation<Color>(Colors.amber),
-                      backgroundColor:
-                          Platform.isAndroid ? Colors.transparent : null,
-                    ),
-                  ).expand()
+                    child: Column(
+                    children: [
+                      SkeletonWidget(height: 5.h, width: 100.w),
+                      3.h.height,
+                      SkeletonWidget(height: 5.h, width: 100.w),
+                      3.h.height,
+                      SkeletonWidget(height: 5.h, width: 100.w),
+                    ],
+                  ))
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -116,14 +131,13 @@ class DetailVideoView extends GetView<DetailVideoController> {
                         children: [
                           Obx(() => AppButtonWidget(
                                 onTap: () {
-                                  // dasboardController.downloadFileVideo(
-                                  //   id: "video-oXOTlM9n-_k",
-                                  //   url:
-                                  //       "https://rr2---sn-2uuxa3vh-wvbz.googlevideo.com/videoplayback?expire=1683684409&ei=2adaZM1zjby8BO-Bg6AI&ip=36.73.115.9&id=o-APpSFlxynt2w_qVy2I0rKXnJyzbTvhfBmtOzNEN_115b&itag=22&source=youtube&requiressl=yes&mh=ex&mm=31%2C29&mn=sn-2uuxa3vh-wvbz%2Csn-npoe7nsr&ms=au%2Crdu&mv=m&mvi=2&pl=21&initcwndbps=573750&vprv=1&svpuc=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=861.135&lmt=1649854319680150&mt=1683662472&fvip=4&fexp=24007246&c=ANDROID&txp=4532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Csvpuc%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRAIgVCNoodjpByQVhXcA0LWl2MdZ1pfHJu9IZSBD6qIAxWYCIGEWB5UN5M5vvcglfZjxI4L6JIff7ClIn212jXIA94s7&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRAIgWH0U8HBz-uIGbMyE3wjj0UJwGzbggvqm3AzX1DJu23cCIApSySsAxPYUMoSNKO1fxJuVq6mbmQ1pP-78cpoI0bKv",
-                                  //   title:
-                                  //       "why you understand English but CAN'T speak fluently",
-                                  //   duration: "1jam",
-                                  // );
+                                  if (dasboardController.progreesDouble.value ==
+                                      null) {
+                                    controller
+                                        .downloadVideo(dasboardController);
+                                  } else {
+                                    toast("Please wait download finish");
+                                  }
                                 },
                                 text: dasboardController
                                         .progreesVideo.value.isEmpty
@@ -140,21 +154,20 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                 padding: EdgeInsets.symmetric(vertical: 1.h),
                                 enableScaleAnimation: false,
                                 // loadingColor: primaryColor,
-                                loading: false,
+                                loading: controller.loadingVideo.value,
                                 shapeBorder: RoundedRectangleBorder(
                                     borderRadius: radius(defaultRadius)),
                               )).expand(),
                           2.w.width,
                           Obx(() => AppButtonWidget(
                                 onTap: () {
-                                  // dasboardController.downloadFileAudio(
-                                  //   id: "audio-oXOTlM9n-_k",
-                                  //   url:
-                                  //       "https://rr2---sn-2uuxa3vh-wvbz.googlevideo.com/videoplayback?expire=1683685801&ei=Sa1aZJPiNY2KvwTMkbToAw&ip=36.73.115.9&id=o-AB4HKDPsl2tbc0qF_4J1aNjp5lxcwkR3GVZGwc0o6py-&itag=140&source=youtube&requiressl=yes&mh=ex&mm=31%2C29&mn=sn-2uuxa3vh-wvbz%2Csn-npoe7nsr&ms=au%2Crdu&mv=m&mvi=2&pl=21&initcwndbps=697500&vprv=1&svpuc=1&mime=audio%2Fmp4&gir=yes&clen=13937736&dur=861.135&lmt=1649847092168307&mt=1683663908&fvip=4&keepalive=yes&fexp=24007246&c=ANDROID&txp=4532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRQIgAuXBbd27pNL6LtHx96yk4MyaaG1GaZsIEXslrZunebQCIQDS8td8NZ0787EN1tUex_-LkvYbwLH6nLr-OZ4OdqLa-w%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRAIgcEOjI8oQ5WrW3f832jDW-9apWp5vx90XYLIHu6TKMJACIExqTOmj_mkXCtB0lk4t8ZSQgaYaGixdVurM-JXFKgTa",
-                                  //   title:
-                                  //       "why you understand English but CAN'T speak fluently",
-                                  //   duration: "1jam",
-                                  // );
+                                  if (dasboardController.progreesDouble.value ==
+                                      null) {
+                                    controller
+                                        .downloadAudio(dasboardController);
+                                  } else {
+                                    toast("Please wait download finish");
+                                  }
                                 },
                                 text: dasboardController
                                         .progreesAudio.value.isEmpty
@@ -171,7 +184,7 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                 padding: EdgeInsets.symmetric(vertical: 1.h),
                                 enableScaleAnimation: false,
                                 // loadingColor: primaryColor,
-                                loading: false,
+                                loading: controller.loadingAudio.value,
                                 shapeBorder: RoundedRectangleBorder(
                                     borderRadius: radius(defaultRadius)),
                               )).expand(),
@@ -224,7 +237,16 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                           color: greyColor)
                                       .withWidth(10.w)
                                 ],
-                              ).marginOnly(bottom: 2.h).onTap(() {}),
+                              ).marginOnly(bottom: 2.h).onTap(() {
+                                if (controller.videoPlayerController != null) {
+                                  controller.videoPlayerController!.dispose();
+                                  controller.chewieController?.value?.dispose();
+                                }
+                                controller.chewieController?.value = null;
+                                controller.detailVideoData.value = e;
+                                controller.getUrlVideoController(
+                                    e.videoId.validate(), 18);
+                              }),
                             )
                             .toList(),
                       ),

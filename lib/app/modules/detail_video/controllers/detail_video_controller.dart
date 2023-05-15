@@ -5,6 +5,7 @@ import 'package:music_download_youtube/app/core/utils/event_manager.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager_ext.dart';
 import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
 import 'package:music_download_youtube/app/data/repository/music_repository.dart';
+import 'package:music_download_youtube/app/modules/dasboard/controllers/dasboard_controller.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/enums.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
@@ -26,11 +27,22 @@ class DetailVideoController extends GetxController {
 
   final videosTrending = <Video>[].obs;
   final loadingTranding = false.obs;
+  final loadingVideo = false.obs;
+  final loadingAudio = false.obs;
+  final downloadLoad = false.obs;
+  final initialLoading = false.obs;
 
-  Video? detailVideoData;
+  Rxn<Video> detailVideoData = Rxn<Video>();
 
   Rxn<ResUrlVideoModel> resUrlVideoModel = Rxn<ResUrlVideoModel>();
   Rxn<ResUrlVideoModel> resUrlAudioModel = Rxn<ResUrlVideoModel>();
+
+  String? urlVideo;
+  String? urlDownloaded;
+  String? idVideo;
+  final videoDownload = false.obs;
+
+  DasboardController? dasboardController;
 
   @override
   void onInit() {
@@ -40,37 +52,65 @@ class DetailVideoController extends GetxController {
 
   void init() {
     getArgs();
-    if (detailVideoData != null) {
-      getUrlVideoController(detailVideoData!.videoId.validate(), 18);
+    observer();
+    if (detailVideoData.value != null) {
+      initialLoading.value = true;
+      getUrlVideoController(
+          detailVideoData.value?.videoId.validate() ?? "", 18);
       getSuggestions();
     }
-
-    observer();
   }
 
   void getArgs() {
     final args = Get.arguments;
-
     if (args != null) {
       if (args["video"] != null) {
-        detailVideoData = args["video"];
+        detailVideoData.value = args["video"];
       }
     }
   }
 
   void observer() {
     getUrlVideoEvent.result.listen((p0) {
-      print("---------------Hore----------------");
-      print(p0.status);
       if (p0.status == Status.SUCCESS) {
         if (p0.data != null) {
           if (p0.data?.data != null) {
-            getDetailVideo(p0.data!.data!.url.validate());
+            initialLoading.value = false;
+            loadingVideo.value = false;
+            loadingAudio.value = false;
+
+            if (downloadLoad.value) {
+              urlDownloaded = p0.data!.data!.url.validate();
+              if (videoDownload.value) {
+                dasboardController!.downloadFileVideo(
+                  id: idVideo.validate(),
+                  url: urlDownloaded.validate(),
+                  image:
+                      detailVideoData.value?.thumbnails?.first.url.validate() ??
+                          "",
+                  title: detailVideoData.value?.title.validate() ?? "",
+                  duration: detailVideoData.value?.duration.validate() ?? "",
+                );
+              } else {
+                dasboardController!.downloadFileAudio(
+                  id: idVideo.validate(),
+                  url: urlDownloaded.validate(),
+                  image:
+                      detailVideoData.value?.thumbnails?.first.url.validate() ??
+                          "",
+                  title: detailVideoData.value?.title.validate() ?? "",
+                  duration: detailVideoData.value?.duration.validate() ?? "",
+                );
+              }
+            } else {
+              urlVideo = p0.data!.data!.url.validate();
+              getDetailVideo();
+            }
           }
         }
       } else if (p0.status == Status.LOADING) {
       } else if (p0.status == Status.ERROR) {
-        toast('Server error');
+        toast('Server error or select another video');
       }
     });
     getUrlAudioEvent.result.listen((p0) {
@@ -86,18 +126,16 @@ class DetailVideoController extends GetxController {
   }
 
   void getUrlVideoController(String id, int tag) {
-    print("-------------------id bro---------------------");
-    print(id);
     _musicRepository
         .getUrlRepository(id, tag)
         .addEvent(event: getUrlVideoEvent);
   }
 
-  void getUrlAudioController(String id, int tag) {
-    _musicRepository
-        .getUrlRepository(id, tag)
-        .addEvent(event: getUrlAudioEvent);
-  }
+  // void getUrlAudioController(String id, int tag) {
+  //   _musicRepository
+  //       .getUrlRepository(id, tag)
+  //       .addEvent(event: getUrlAudioEvent);
+  // }
 
   Future<void> getSuggestions() async {
     loadingTranding.value = true;
@@ -108,9 +146,9 @@ class DetailVideoController extends GetxController {
     loadingTranding.value = false;
   }
 
-  void getDetailVideo(String url) {
+  void getDetailVideo() {
     try {
-      videoPlayerController = VideoPlayerController.network(url,
+      videoPlayerController = VideoPlayerController.network(urlVideo.validate(),
           videoPlayerOptions: VideoPlayerOptions())
         ..initialize().then((value) {
           chewieController?.value = ChewieController(
@@ -148,6 +186,25 @@ class DetailVideoController extends GetxController {
 
       errorVideo.value = true;
     }
+  }
+
+  void downloadVideo(DasboardController dasboardControllerOk) {
+    downloadLoad.value = true;
+    loadingVideo.value = true;
+    videoDownload.value = true;
+    dasboardController = dasboardControllerOk;
+    idVideo = "video-${detailVideoData.value?.videoId.validate() ?? ""}";
+
+    getUrlVideoController(detailVideoData.value?.videoId.validate() ?? "", 22);
+  }
+
+  void downloadAudio(DasboardController dasboardControllerOk) {
+    downloadLoad.value = true;
+    loadingAudio.value = true;
+    videoDownload.value = false;
+    dasboardController = dasboardControllerOk;
+    idVideo = "audio-${detailVideoData.value?.videoId.validate() ?? ""}";
+    getUrlVideoController(detailVideoData.value?.videoId.validate() ?? "", 140);
   }
 
   @override

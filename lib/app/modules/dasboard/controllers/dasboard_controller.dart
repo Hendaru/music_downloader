@@ -551,7 +551,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
     required String id,
     required String url,
     required String title,
-    // required String image,
+    required String image,
     required String duration,
   }) async {
     String dir = (await getApplicationDocumentsDirectory()).path;
@@ -562,8 +562,6 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       toast("File already exists");
       loadingBtnVideo.value = false;
     } else {
-      print("-------------Masuk download---------------");
-
       try {
         await dio.downloadUri(
           Uri.parse(url),
@@ -588,7 +586,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
               id: id.validate(),
               path: file.path,
               title: title.validate(),
-              image: id.validate().imageUrlYoutube,
+              image: image.validate(),
               duration: duration.validate());
           toast("Download Complete");
           progreesVideo.value = "";
@@ -608,7 +606,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
     required String id,
     required String url,
     required String title,
-    // required String image,
+    required String image,
     required String duration,
   }) async {
     String dir = (await getApplicationDocumentsDirectory()).path;
@@ -619,8 +617,6 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       toast("File already exists");
       loadingBtnVideo.value = false;
     } else {
-      print("-------------Masuk download---------------");
-
       try {
         await dio.downloadUri(
           Uri.parse(url),
@@ -645,7 +641,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
               id: id.validate(),
               path: file.path,
               title: title.validate(),
-              image: id.validate().imageUrlYoutube,
+              image: image.validate(),
               duration: duration.validate());
           toast("Download Complete");
           progreesAudio.value = "";

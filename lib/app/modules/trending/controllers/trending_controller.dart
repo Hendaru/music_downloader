@@ -57,6 +57,7 @@ class TrendingController extends GetxController {
       });
     } catch (e) {
       videosTemporary.value = videosTrending;
+      toast("Please search with another keyword");
 
       print(e);
     }

@@ -11,9 +11,9 @@ import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/app_text_style.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
+import 'package:music_download_youtube/app/utils/widgets/shimmer/skeleton_widget.dart';
 import 'package:music_download_youtube/r.dart';
 import 'package:sizer/sizer.dart';
-import 'package:youtube_data_api/models/video.dart';
 
 import '../controllers/trending_controller.dart';
 
@@ -28,7 +28,7 @@ class TrendingView extends GetView<TrendingController> {
                 SliverAppBar(
                   leading: const SizedBox(),
                   excludeHeaderSemantics: true,
-                  expandedHeight: 10.h,
+                  expandedHeight: 17.h,
                   pinned: false,
                   stretch: true,
                   floating: true,
@@ -50,15 +50,22 @@ class TrendingView extends GetView<TrendingController> {
                             },
                             fieldViewBuilder: (context, textEditingController,
                                 focusNode, onFieldSubmitted) {
-                              return TextField(
-                                decoration: inputDecoration(context,
-                                    hintText: "Search all of video",
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                      color: primaryColor,
-                                    ),
-                                    suffixIcon: Obx(
-                                        () => controller.clearText.value == true
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Find your favorite video",
+                                      style: extraBoldTextStyle(size: 17.sp)),
+                                  2.h.height,
+                                  TextField(
+                                    decoration: inputDecoration(context,
+                                        hintText: "Search all of videos",
+                                        prefixIcon: Icon(
+                                          Icons.search,
+                                          color: primaryColor,
+                                        ),
+                                        suffixIcon: Obx(() => controller
+                                                    .clearText.value ==
+                                                true
                                             ? Icon(
                                                 Icons.close,
                                                 color: primaryColor,
@@ -80,13 +87,15 @@ class TrendingView extends GetView<TrendingController> {
                                                 hideKeyboard();
                                               })
                                             : SizedBox()),
-                                    fillColor: Theme.of(context)
-                                        .colorScheme
-                                        .onTertiary,
-                                    borderColor: whiteColor),
-                                controller: textEditingController,
-                                focusNode: focusNode,
-                                onSubmitted: (String value) {},
+                                        fillColor: Theme.of(context)
+                                            .colorScheme
+                                            .onTertiary,
+                                        borderColor: whiteColor),
+                                    controller: textEditingController,
+                                    focusNode: focusNode,
+                                    onSubmitted: (String value) {},
+                                  ),
+                                ],
                               ).marginOnly(top: 3.h);
                             },
                             optionsViewBuilder: (context, onSelected, options) {
@@ -127,14 +136,23 @@ class TrendingView extends GetView<TrendingController> {
                 SliverToBoxAdapter(
                   child: controller.loadingTreading.value
                       ? Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.amber),
-                            backgroundColor:
-                                Platform.isAndroid ? Colors.transparent : null,
-                          ),
-                        ).withHeight(90.h)
+                          child: Column(
+                          children: [
+                            3.h.height,
+                            SkeletonWidget(height: 8.h, width: 100.w),
+                            3.h.height,
+                            SkeletonWidget(height: 8.h, width: 100.w),
+                            3.h.height,
+                            SkeletonWidget(height: 8.h, width: 100.w),
+                            3.h.height,
+                            SkeletonWidget(height: 8.h, width: 100.w),
+                            3.h.height,
+                            SkeletonWidget(height: 8.h, width: 100.w),
+                            3.h.height,
+                            SkeletonWidget(height: 8.h, width: 100.w),
+                            3.h.height,
+                          ],
+                        )).withHeight(90.h)
                       : Obx(() => controller.videosTemporary.isEmpty
                           ? Center(
                               child: Column(
