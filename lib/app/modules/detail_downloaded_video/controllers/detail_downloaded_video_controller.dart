@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:music_download_youtube/app/utils/app_common.dart';
+import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
 import 'package:video_player/video_player.dart';
 
 class DetailDownloadedVideoController extends GetxController {
   Rxn<ChewieController>? chewieController = Rxn<ChewieController>();
   VideoPlayerController? videoPlayerController;
+
+  ResDownloadedModel? detailVideoData;
 
   int? bufferDelay;
   @override
@@ -16,15 +18,29 @@ class DetailDownloadedVideoController extends GetxController {
     // var listDownloaded = getDownloadedListFromSharePref();
     // print("---------------------------------");
     // print(listDownloaded);
-    getDetailVideo();
+
+    init();
     super.onInit();
+  }
+
+  void init() {
+    getArgs();
+    getDetailVideo();
+  }
+
+  void getArgs() {
+    final args = Get.arguments;
+    if (args != null) {
+      if (args["video_detail"] != null) {
+        detailVideoData = args["video_detail"];
+      }
+    }
   }
 
   void getDetailVideo() {
     try {
       videoPlayerController = VideoPlayerController.file(
-          File(
-              "/data/user/0/com.offline.music.downloader/app_flutter/video-ynOtYmpZxak.mp4"),
+          File(detailVideoData?.path ?? ""),
           videoPlayerOptions: VideoPlayerOptions())
         ..initialize().then((value) {
           chewieController?.value = ChewieController(

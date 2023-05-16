@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:music_download_youtube/app/modules/downloaded/bindings/downloaded_binding.dart';
+import 'package:music_download_youtube/app/modules/downloaded_audio/bindings/downloaded_audio_binding.dart';
+import 'package:music_download_youtube/app/modules/downloaded_video/bindings/downloaded_video_binding.dart';
 import 'package:music_download_youtube/app/modules/home/bindings/home_binding.dart';
 import 'package:music_download_youtube/app/modules/like/bindings/like_binding.dart';
 import 'package:music_download_youtube/app/modules/playList/bindings/play_list_binding.dart';
@@ -18,7 +20,9 @@ class DasboardBinding extends Bindings {
 
     // HomeBinding().dependencies();
     // PlayListBinding().dependencies();
-    LikeBinding().dependencies();
+    // LikeBinding().dependencies();
+    DownloadedAudioBinding().dependencies();
+    DownloadedVideoBinding().dependencies();
     SettingsBinding().dependencies();
     TrendingBinding().dependencies();
     DownloadedBinding().dependencies();

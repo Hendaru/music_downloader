@@ -46,14 +46,14 @@ class DasboardView extends GetView<DasboardController> {
                   name: "Trending"),
               MenuDasboard(
                   pos: 1,
-                  icon: MainAssets.ic_like2,
+                  icon: MainAssets.ic_video_downloaded,
                   currentIndex: controller.currentIndex.value,
-                  name: "Like"),
+                  name: "Video"),
               MenuDasboard(
                   pos: 2,
-                  icon: MainAssets.ic_downloaded,
+                  icon: MainAssets.ic_audio_downloaded,
                   currentIndex: controller.currentIndex.value,
-                  name: "Downloaded"),
+                  name: "Audio"),
               MenuDasboard(
                   pos: 3,
                   icon: MainAssets.ic_settings2,

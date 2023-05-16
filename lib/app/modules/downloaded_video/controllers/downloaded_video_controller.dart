@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
 
-class DownloadedController extends GetxController {
+class DownloadedVideoController extends GetxController {
   final newlistVideoDownloaded = <ResDownloadedModel>[].obs;
-  final newlistAudioDownloaded = <ResDownloadedModel>[].obs;
+
   @override
   void onInit() {
     init();
@@ -16,9 +16,6 @@ class DownloadedController extends GetxController {
     // int indexMusic = listMusic.indexWhere(((e) => e.id == idMusic));
     newlistVideoDownloaded.value = listDownloaded
         .where((element) => element.id!.contains("video"))
-        .toList();
-    newlistAudioDownloaded.value = listDownloaded
-        .where((element) => element.id!.contains("audio"))
         .toList();
   }
 }

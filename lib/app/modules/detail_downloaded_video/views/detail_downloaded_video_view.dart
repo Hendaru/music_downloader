@@ -1,11 +1,16 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
+import 'package:music_download_youtube/app/utils/app_text_style.dart';
+import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
 import 'package:music_download_youtube/app/utils/widgets/app_bar_custom_widget.dart';
 import 'package:music_download_youtube/app/utils/widgets/shimmer/skeleton_widget.dart';
+import 'package:music_download_youtube/r.dart';
 import 'package:sizer/sizer.dart';
 
 import '../controllers/detail_downloaded_video_controller.dart';
@@ -20,14 +25,64 @@ class DetailDownloadedVideoView
         title: "Detail Video downloaded",
         centerTitle: true,
       ),
-      body: Obx(() => controller.chewieController?.value != null
-          ? Chewie(
-              controller: controller.chewieController!.value!,
-            ).withSize(height: 30.h, width: 100.w)
-          : SkeletonWidget(
-              height: 25.h,
-              width: 100.w,
-            ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Obx(() => controller.chewieController?.value != null
+              ? Chewie(
+                  controller: controller.chewieController!.value!,
+                ).withSize(height: 30.h, width: 100.w)
+              : SkeletonWidget(
+                  height: 25.h,
+                  width: 100.w,
+                ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)),
+          1.h.height,
+          Row(
+            children: [
+              Row(
+                children: [
+                  SvgPicture.asset(MainAssets.ic_share,
+                      width: 6.w, height: 6.w),
+                  1.w.width,
+                  Text(
+                    "Share",
+                    style: primaryTextStyle(),
+                  ),
+                ],
+              ),
+              3.w.width,
+              Row(
+                children: [
+                  SvgPicture.asset(MainAssets.ic_like2,
+                      width: 5.w, height: 5.w),
+                  1.w.width,
+                  Text(
+                    "Like",
+                    style: primaryTextStyle(),
+                  ),
+                ],
+              ),
+            ],
+          ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
+          2.h.height,
+          Text(
+            controller.detailVideoData?.title.validate() ?? "",
+            style: boldTextStyle(),
+          ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
+          1.h.height,
+          const Divider(
+            thickness: 4.0,
+          ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
+          1.h.height,
+          Text(
+            "Favorite downloaded video",
+            style: extraBoldTextStyle(),
+          ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
+          Column(
+            children: [],
+          )
+        ],
+      ),
     );
   }
 }

@@ -17,6 +17,8 @@ abstract class Routes {
   static const DETAIL_VIDEO = _Paths.DETAIL_VIDEO;
   static const DOWNLOADED = _Paths.DOWNLOADED;
   static const DETAIL_DOWNLOADED_VIDEO = _Paths.DETAIL_DOWNLOADED_VIDEO;
+  static const DOWNLOADED_VIDEO = _Paths.DOWNLOADED_VIDEO;
+  static const DOWNLOADED_AUDIO = _Paths.DOWNLOADED_AUDIO;
 }
 
 abstract class _Paths {
@@ -35,4 +37,6 @@ abstract class _Paths {
   static const DETAIL_VIDEO = '/detail-video';
   static const DOWNLOADED = '/downloaded';
   static const DETAIL_DOWNLOADED_VIDEO = '/detail-downloaded-video';
+  static const DOWNLOADED_VIDEO = '/downloaded-video';
+  static const DOWNLOADED_AUDIO = '/downloaded-audio';
 }

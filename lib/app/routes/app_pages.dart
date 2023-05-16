@@ -10,6 +10,10 @@ import '../modules/download_page/bindings/download_page_binding.dart';
 import '../modules/download_page/views/download_page_view.dart';
 import '../modules/downloaded/bindings/downloaded_binding.dart';
 import '../modules/downloaded/views/downloaded_view.dart';
+import '../modules/downloaded_audio/bindings/downloaded_audio_binding.dart';
+import '../modules/downloaded_audio/views/downloaded_audio_view.dart';
+import '../modules/downloaded_video/bindings/downloaded_video_binding.dart';
+import '../modules/downloaded_video/views/downloaded_video_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/like/bindings/like_binding.dart';
@@ -92,6 +96,16 @@ class AppPages {
       name: _Paths.DETAIL_DOWNLOADED_VIDEO,
       page: () => const DetailDownloadedVideoView(),
       binding: DetailDownloadedVideoBinding(),
+    ),
+    GetPage(
+      name: _Paths.DOWNLOADED_VIDEO,
+      page: () => const DownloadedVideoView(),
+      binding: DownloadedVideoBinding(),
+    ),
+    GetPage(
+      name: _Paths.DOWNLOADED_AUDIO,
+      page: () => const DownloadedAudioView(),
+      binding: DownloadedAudioBinding(),
     ),
   ];
 }

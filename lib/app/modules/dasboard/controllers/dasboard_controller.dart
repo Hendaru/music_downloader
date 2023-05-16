@@ -12,6 +12,8 @@ import 'package:music_download_youtube/app/data/models/response/res_downloaded_m
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_playlist_model/res_playlist_model.dart';
 import 'package:music_download_youtube/app/modules/downloaded/views/downloaded_view.dart';
+import 'package:music_download_youtube/app/modules/downloaded_audio/views/downloaded_audio_view.dart';
+import 'package:music_download_youtube/app/modules/downloaded_video/views/downloaded_video_view.dart';
 import 'package:music_download_youtube/app/modules/home/controllers/home_controller.dart';
 import 'package:music_download_youtube/app/modules/home/views/home_view.dart';
 import 'package:music_download_youtube/app/modules/like/views/like_view.dart';
@@ -93,8 +95,8 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
 
   init() {
     widgets.add(const TrendingView());
-    widgets.add(const LikeView());
-    widgets.add(const DownloadedView());
+    widgets.add(const DownloadedVideoView());
+    widgets.add(const DownloadedAudioView());
     widgets.add(const SettingsView());
   }
 

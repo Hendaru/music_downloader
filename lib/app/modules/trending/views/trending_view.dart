@@ -53,8 +53,8 @@ class TrendingView extends GetView<TrendingController> {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Find your favorite video",
-                                      style: extraBoldTextStyle(size: 17.sp)),
+                                  Text("Find Your Favorite",
+                                      style: extraBoldTextStyle(size: 18.sp)),
                                   2.h.height,
                                   TextField(
                                     decoration: inputDecoration(context,
