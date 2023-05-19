@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,6 +26,7 @@ import 'package:music_download_youtube/r.dart';
 
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -514,3 +516,66 @@ String getThumbnail({
     webp
         ? 'https://i3.ytimg.com/vi_webp/$videoId/$quality.webp'
         : 'https://i3.ytimg.com/vi/$videoId/$quality.jpg';
+
+void copyFileVideo(ResDownloadedModel detailVideoData) async {
+  var statusForder = await Permission.storage.status;
+
+  if (statusForder.isDenied) {
+    await Permission.storage.request();
+  } else if (statusForder.isGranted) {
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+    if (selectedDirectory != null) {
+      // String fileName = detailVideoData!.path!.split('/').last;
+      File(detailVideoData.path ?? "")
+          .copy(selectedDirectory +
+              "/" +
+              detailVideoData.title.validate() +
+              ".mp4")
+          .then((value) => toast("File copied"));
+    }
+  } else if (statusForder.isPermanentlyDenied) {
+    await openAppSettings();
+  }
+}
+
+void copyFileAudio(ResDownloadedModel detailVideoData) async {
+  var statusForder = await Permission.storage.status;
+  if (statusForder.isDenied) {
+    await Permission.storage.request();
+  } else if (statusForder.isGranted) {
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+    if (selectedDirectory != null) {
+      // String fileName = detailVideoData!.path!.split('/').last;
+      File(detailVideoData.path ?? "")
+          .copy(selectedDirectory +
+              "/" +
+              detailVideoData.title.validate() +
+              ".mp3")
+          .then((value) => toast("File copied"));
+    }
+  } else if (statusForder.isPermanentlyDenied) {
+    await openAppSettings();
+  }
+}
+
+void delFileAudioVideo(ResDownloadedModel detailVideoData) async {
+  var statusForder = await Permission.storage.status;
+  if (statusForder.isDenied) {
+    await Permission.storage.request();
+  } else if (statusForder.isGranted) {
+    File(detailVideoData.path ?? "").delete().then((value) {
+      toast("File deleted");
+      deleteDataCache(detailVideoData);
+    });
+  } else if (statusForder.isPermanentlyDenied) {
+    await openAppSettings();
+  }
+}
+
+void deleteDataCache(ResDownloadedModel detailVideoData) {
+  var listDownloaded = getDownloadedListFromSharePref();
+  listDownloaded.removeWhere((element) => element.id == detailVideoData.id);
+  setValue(downloadedListLocal, jsonEncode(listDownloaded));
+}

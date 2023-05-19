@@ -111,53 +111,12 @@ class PlayerViewDasboard extends GetView<DasboardController> {
                       )
                           .withSize(width: 100.w, height: 5.h)
                           .paddingOnly(left: 2.w),
-                      1.h.height,
+                      2.h.height,
                       Text(
                         controller.currentSongDurationNotifier.value,
                         style: secondaryTextStyle(size: 15.sp),
                       ),
-                      3.h.height,
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Obx(() => Row(
-                                children: [
-                                  SvgPicture.asset(MainAssets.ic_like2,
-                                      width: 7.w,
-                                      height: 7.w,
-                                      // ignore: unrelated_type_equality_checks
-                                      color: controller.curentMusicIdLike.value
-                                          ? Colors.amber
-                                          : greyColor),
-                                ],
-                              ).onTap(() {
-                                controller.setLikeMusicDasboard();
-                              })),
-                          5.w.width,
-                          Row(
-                            children: [
-                              SvgPicture.asset(MainAssets.ic_list_music,
-                                  width: 7.w,
-                                  height: 7.w,
-                                  // ignore: unrelated_type_equality_checks
-                                  color: greyColor),
-                            ],
-                          ).onTap(() {
-                            List<ResPlaylistModel> getPlayListString =
-                                getPlayListFromSharePref();
-
-                            if (getPlayListString.isEmpty) {
-                              controller.addPlaylist(context);
-                            } else {
-                              controller
-                                  .openBottomSheetDasboardPlayList(context);
-                            }
-                          }).visible(
-                              controller.statusPlayNow != StatusToPlay.PLAYLIST)
-                        ],
-                      ),
-                      3.h.height,
+                      2.h.height,
                       ProgressBar(
                         progress: controller.progressNotifier.value.current,
                         buffered: controller.progressNotifier.value.buffered,
@@ -218,76 +177,6 @@ class PlayerViewDasboard extends GetView<DasboardController> {
                   ).paddingSymmetric(
                       horizontal: defaultPaddingHorizontalGlobal),
                 )),
-                controller.playlist.length >= 2
-                    ? Column(
-                        children: [
-                          SizedBox(
-                              width: 30.w,
-                              height: 5.h,
-                              child: const Divider(
-                                thickness: 4.0,
-                              )),
-                          2.h.height,
-                          SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: defaultPaddingHorizontalGlobal),
-                            child: Obx(
-                              () => Column(
-                                  children: controller.listMusic.map((e) {
-                                return ItemMusicWidget(
-                                    itemMusic: e,
-                                    liked: false,
-                                    //liked(e),
-                                    isPlay: Get.find<DasboardController>()
-                                            .currentSongIdNotifier
-                                            .value ==
-                                        e.id,
-                                    onTapPlay: () async {
-                                      if (await isNetworkAvailable() ||
-                                          !e.localLagu.isEmptyOrNull) {
-                                        var index =
-                                            controller.listMusic.indexOf(e);
-
-                                        controller.audioPlayer
-                                            .seek(Duration.zero, index: index)
-                                            .whenComplete(
-                                                // ignore: unrelated_type_equality_checks
-                                                () => controller
-                                                            .playButtonNotifier ==
-                                                        ButtonState.paused
-                                                    ? controller.audioPlayer
-                                                        .play()
-                                                    : null);
-
-                                        // Future.delayed(
-                                        //     const Duration(seconds: 5), () {
-                                        //   openAdShowReward();
-                                        // });
-                                      } else {
-                                        toast("Not internet connection");
-                                      }
-                                    },
-                                    onDelete: controller.statusPlayNow ==
-                                            StatusToPlay.PLAYLIST
-                                        ? () async {
-                                            await showDialogBox(
-                                                context,
-                                                "Delete Music in Playlist",
-                                                "Are you sure you want to delete?",
-                                                onCall: () {
-                                              controller.deleteItemMusic(e);
-                                            }, onCancelCall: () {
-                                              Get.back();
-                                            });
-                                          }
-                                        : null);
-                              }).toList()),
-                            ),
-                          ).expand(),
-                        ],
-                      )
-                    : const SizedBox()
               ],
             ),
           )),

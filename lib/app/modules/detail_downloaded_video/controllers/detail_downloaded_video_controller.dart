@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
 
 class DetailDownloadedVideoController extends GetxController {
@@ -13,6 +15,7 @@ class DetailDownloadedVideoController extends GetxController {
   ResDownloadedModel? detailVideoData;
 
   int? bufferDelay;
+
   @override
   void onInit() {
     // var listDownloaded = getDownloadedListFromSharePref();
@@ -34,6 +37,24 @@ class DetailDownloadedVideoController extends GetxController {
       if (args["video_detail"] != null) {
         detailVideoData = args["video_detail"];
       }
+    }
+  }
+
+  void shareFileVideo() async {
+    var statusForder = await Permission.storage.status;
+
+    if (statusForder.isDenied) {
+      await Permission.storage.request();
+    } else if (statusForder.isGranted) {
+      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+      if (selectedDirectory != null) {
+        // String fileName = detailVideoData!.path!.split('/').last;
+        File(detailVideoData?.path ?? "")
+            .copy(selectedDirectory + "/" + detailVideoData!.title! + ".mp4");
+      }
+    } else if (statusForder.isPermanentlyDenied) {
+      await openAppSettings();
     }
   }
 

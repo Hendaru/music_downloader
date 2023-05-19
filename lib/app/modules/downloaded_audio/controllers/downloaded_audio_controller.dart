@@ -6,12 +6,12 @@ class DownloadedAudioController extends GetxController {
   final newlistAudioDownloaded = <ResDownloadedModel>[].obs;
   @override
   void onInit() {
+    init();
     super.onInit();
   }
 
   void init() {
     var listDownloaded = getDownloadedListFromSharePref();
-    // int indexMusic = listMusic.indexWhere(((e) => e.id == idMusic));
     newlistAudioDownloaded.value = listDownloaded
         .where((element) => element.id!.contains("audio"))
         .toList();

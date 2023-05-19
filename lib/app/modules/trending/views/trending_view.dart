@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
@@ -170,40 +171,74 @@ class TrendingView extends GetView<TrendingController> {
                           : Column(
                               children: controller.videosTemporary
                                   .map(
-                                    (e) => Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        commonCacheImageWidget(
-                                                e.thumbnails?[0].url.validate(),
-                                                width: 30.w,
-                                                // idcacheKey: element.idPlayList.validate(),
-                                                fit: BoxFit.cover,
-                                                isSquere: false)
-                                            .cornerRadiusWithClipRRect(3.w),
-                                        3.w.width,
-                                        Text(
-                                          e.title.validate(),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                          style: boldTextStyle(),
-                                        ).expand(),
-                                        SvgPicture.asset(
-                                                MainAssets.ic_more_more,
-                                                width: 4.w,
-                                                height: 4.w,
-                                                // ignore: unrelated_type_equality_checks
-                                                color: greyColor)
-                                            .withWidth(10.w)
-                                      ],
-                                    ).marginOnly(bottom: 2.h).onTap(() {
-                                      Get.toNamed(
-                                        Routes.DETAIL_VIDEO,
-                                        arguments: {
-                                          "video": e,
-                                        },
-                                      );
-                                    }),
+                                    (e) => Slidable(
+                                      endActionPane: ActionPane(
+                                        motion: const ScrollMotion(),
+                                        dismissible:
+                                            DismissiblePane(onDismissed: () {}),
+                                        dragDismissible: false,
+                                        extentRatio: 0.4,
+                                        children: [
+                                          Container(
+                                            color: Colors.amber,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  MainAssets.ic_downloaded,
+                                                  color: whiteColor,
+                                                ),
+                                                0.5.h.height,
+                                                Text("Download Video",
+                                                    style: boldTextStyle(
+                                                        color: whiteColor,
+                                                        size: 10.sp)),
+                                              ],
+                                            ),
+                                          ).expand(),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          commonCacheImageWidget(
+                                                  e.thumbnails?[0].url
+                                                      .validate(),
+                                                  width: 30.w,
+                                                  // idcacheKey: element.idPlayList.validate(),
+                                                  fit: BoxFit.cover,
+                                                  isSquere: false)
+                                              .cornerRadiusWithClipRRect(3.w),
+                                          3.w.width,
+                                          Text(
+                                            e.title.validate(),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: boldTextStyle(),
+                                          ).expand(),
+                                          SvgPicture.asset(
+                                                  MainAssets.ic_more_more,
+                                                  width: 4.w,
+                                                  height: 4.w,
+                                                  // ignore: unrelated_type_equality_checks
+                                                  color: greyColor)
+                                              .withWidth(10.w)
+                                        ],
+                                      ).onTap(() {
+                                        Get.toNamed(
+                                          Routes.DETAIL_VIDEO,
+                                          arguments: {
+                                            "video": e,
+                                          },
+                                        );
+                                      }),
+                                    ).marginOnly(bottom: 1.h),
                                   )
                                   .toList(),
                             ).withScroll(

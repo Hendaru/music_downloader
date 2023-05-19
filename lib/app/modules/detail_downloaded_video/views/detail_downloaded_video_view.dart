@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -39,31 +41,18 @@ class DetailDownloadedVideoView
           1.h.height,
           Row(
             children: [
-              Row(
-                children: [
-                  SvgPicture.asset(MainAssets.ic_share,
-                      width: 6.w, height: 6.w),
-                  1.w.width,
-                  Text(
-                    "Share",
-                    style: primaryTextStyle(),
-                  ),
-                ],
-              ),
-              3.w.width,
-              Row(
-                children: [
-                  SvgPicture.asset(MainAssets.ic_like2,
-                      width: 5.w, height: 5.w),
-                  1.w.width,
-                  Text(
-                    "Like",
-                    style: primaryTextStyle(),
-                  ),
-                ],
+              SvgPicture.asset(MainAssets.ic_share, width: 6.w, height: 6.w),
+              1.w.width,
+              Text(
+                "Copy Video",
+                style: primaryTextStyle(),
               ),
             ],
-          ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
+          )
+              .paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)
+              .onTap(() {
+            controller.shareFileVideo();
+          }),
           2.h.height,
           Text(
             controller.detailVideoData?.title.validate() ?? "",
@@ -78,9 +67,9 @@ class DetailDownloadedVideoView
             "Favorite downloaded video",
             style: extraBoldTextStyle(),
           ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
-          Column(
-            children: [],
-          )
+          // Column(
+          //   children: [],
+          // )
         ],
       ),
     );

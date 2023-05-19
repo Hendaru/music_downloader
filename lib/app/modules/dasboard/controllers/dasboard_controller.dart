@@ -12,7 +12,9 @@ import 'package:music_download_youtube/app/data/models/response/res_downloaded_m
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_playlist_model/res_playlist_model.dart';
 import 'package:music_download_youtube/app/modules/downloaded/views/downloaded_view.dart';
+import 'package:music_download_youtube/app/modules/downloaded_audio/controllers/downloaded_audio_controller.dart';
 import 'package:music_download_youtube/app/modules/downloaded_audio/views/downloaded_audio_view.dart';
+import 'package:music_download_youtube/app/modules/downloaded_video/controllers/downloaded_video_controller.dart';
 import 'package:music_download_youtube/app/modules/downloaded_video/views/downloaded_video_view.dart';
 import 'package:music_download_youtube/app/modules/home/controllers/home_controller.dart';
 import 'package:music_download_youtube/app/modules/home/views/home_view.dart';
@@ -46,9 +48,10 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
 //player
 
   final playlistLocal = <ResPlaylistModel>[].obs;
-  final listMusic = <ResMusicDataModel>[].obs;
+  final listMusic = <ResDownloadedModel>[].obs;
   final curentMusic = Rxn<ResMusicDataModel>();
   final curentMusicIdLike = false.obs;
+  final downloadFrom = false.obs;
 
   final progressNotifier = ProgressBarModel().obs;
   final playButtonNotifier = ButtonState.paused.obs;
@@ -58,7 +61,6 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
   final currentSongIdNotifier = ''.obs;
   final currentSongDurationNotifier = ''.obs;
   final currentSongImageNotifier = ''.obs;
-  final currentSongArtistNotifier = ''.obs;
   final playlistNotifier = <String>[].obs;
   final isShuffleModeEnabledNotifier = false.obs;
   final isFirstSongNotifier = true.obs;
@@ -70,6 +72,9 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
   final progreesDouble = Rxn<double>();
   final progreesVideo = ''.obs;
   final progreesAudio = ''.obs;
+  final titleDownload = ''.obs;
+  final idDownload = ''.obs;
+  final imageDownload = ''.obs;
   final loadingBtnVideo = false.obs;
 
   StatusToPlay? statusPlayNow;
@@ -167,7 +172,6 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
     setValue(musicListLocal, jsonEncode(newlistMusic)).whenComplete(() {
       listMusic.removeWhere((element) => element.id == musicItem.id);
       playlist.removeAt(indexMusic).whenComplete(() async {
-        // setPlayList(listMusic);
         await audioPlayer.setAudioSource(playlist,
             initialIndex: audioPlayer.currentIndex != indexMusic
                 ? audioPlayer.currentIndex
@@ -181,7 +185,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
     });
   }
 
-  setPlayList(List<ResMusicDataModel> listSound) {
+  setPlayList(List<ResDownloadedModel> listSound) {
     playlist = ConcatenatingAudioSource(
         children: listSound.map((e) {
       Map<String, dynamic> dataExtras = <String, dynamic>{};
@@ -194,13 +198,13 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
           // id: e.localLagu.isEmptyOrNull
           //     ? e.localLagu.validate()
           //     : e.id.validate(),
-          album: e.idArtist,
-          title: e.judulLagu.validate(),
-          artist: 'Hore',
+          album: "Audio downloaded",
+          title: e.title.validate(),
+          artist: 'Audio Downloaded',
           extras: dataExtras,
-          artUri: Uri.parse(e.imageLagu.validate()));
+          artUri: Uri.parse(e.image.validate()));
 
-      return AudioSource.uri(Uri.file(e.localLagu!), tag: mediaItemTag);
+      return AudioSource.uri(Uri.file(e.path.validate()), tag: mediaItemTag);
       // return AudioSource.uri(Uri.parse(e.assetLagu!), tag: mediaItemTag);
     }).toList());
   }
@@ -210,43 +214,18 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       //  List<ResMusicDataModel>? listSound,
       String? id,
       StatusToPlay? statusPlay}) async {
-    var listMusicNew = getMusicListFromSharePref().reversed;
+    // var listMusicNew = getMusicListFromSharePref().reversed;
+    var listMusicNew = <ResDownloadedModel>[];
+    var listDownloaded = getDownloadedListFromSharePref();
+    listMusicNew = listDownloaded
+        .where((element) => element.id!.contains("audio"))
+        .toList();
     var idPlay = getStringAsync(idPlayNow);
-    // var statusFromPlay = getStringAsync(idPlayNow);
 
     if (id != null) {
-      if (id.contains("playlist")) {
-        listMusic.value =
-            listMusicNew.where((e) => e.idPlayList == id).toList();
-      } else {
-        listMusic.value = listMusicNew.where((e) => e.id == id).toList();
-      }
-    } else {
-      if (!idPlay.isEmptyOrNull) {
-        if (idPlay.contains("playlist")) {
-          listMusic.value =
-              listMusicNew.where((e) => e.idPlayList == idPlay).toList();
-        } else {
-          listMusic.value = listMusicNew.where((e) => e.id == id).toList();
-          // if (idPlay.contains("music")) {
-          //   listMusic.value = listMusic.value =
-          //       listMusicNew.where((e) => e.id == id).toList();
-          // } else {
-          //   listMusic.value = [];
-          // }
-        }
-      } else {
-        listMusic.value = [];
-        // if (listSound != null) {
-        //   listMusic.value = listSound;
-        // }
-      }
-    }
-
-    if (id != null) {
-      setValue(idPlayNow, id.validate());
-
+      listMusic.value = listMusicNew.where((e) => e.id == id).toList();
       statusPlayNow = statusPlay;
+      setValue(idPlayNow, id.validate());
     }
 
     setPlayList(listMusic);
@@ -270,14 +249,6 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
                     initialPosition: progressNotifier.value.current)
                 .whenComplete(() => audioPlayer.play());
           }
-        } else {
-          // if (listSound != null) {
-          //   await audioPlayer
-          //       .setAudioSource(
-          //         playlist,
-          //       )
-          //       .whenComplete(() => audioPlayer.play());
-          // }
         }
       }
     } on PlayerException catch (e) {
@@ -353,17 +324,17 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
     });
   }
 
-  void updateLike() {
-    var listMusic = getMusicListFromSharePref();
-    ResMusicDataModel item = listMusic
-        .firstWhere(((e) => e.id == currentSongIdNotifier.value.validate()));
+  // void updateLike() {
+  //   var listMusic = getMusicListFromSharePref();
+  //   ResMusicDataModel item = listMusic
+  //       .firstWhere(((e) => e.id == currentSongIdNotifier.value.validate()));
 
-    if (item.idLike == "1") {
-      curentMusicIdLike.value = true;
-    } else {
-      curentMusicIdLike.value = false;
-    }
-  }
+  //   if (item.idLike == "1") {
+  //     curentMusicIdLike.value = true;
+  //   } else {
+  //     curentMusicIdLike.value = false;
+  //   }
+  // }
 
   void addPlaylist(BuildContext context) {
     Get.bottomSheet(
@@ -441,26 +412,21 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       // // update current song title
       final currentItem = sequenceState.currentSource;
 
-      ResMusicDataModel tagData =
-          ResMusicDataModel.fromJson(currentItem?.tag.extras);
+      ResDownloadedModel tagData =
+          ResDownloadedModel.fromJson(currentItem?.tag.extras);
 
-      currentSongTitleNotifier.value = tagData.judulLagu.validate();
-      currentSongArtistNotifier.value = tagData.idArtist.validate();
+      currentSongTitleNotifier.value = tagData.title.validate();
+      // currentSongArtistNotifier.value = tagData..validate();
       currentSongDurationNotifier.value = tagData.duration.validate();
-      currentSongImageNotifier.value =
-          //tagData.imageLagu.validate();
-          tagData.imageLagu.validate();
+      currentSongImageNotifier.value = tagData.image.validate();
       currentSongIdNotifier.value = tagData.id.validate();
-      updateLike();
-
-      // print("--------------tagData------------------");
-      // print(tagData.imageLagu.validate());
 
       // // update playlist
       final playlist = sequenceState.effectiveSequence;
       List<String> titles = playlist.map((item) {
-        ResMusicDataModel tagData = ResMusicDataModel.fromJson(item.tag.extras);
-        return tagData.judulLagu.validate();
+        ResDownloadedModel tagData =
+            ResDownloadedModel.fromJson(item.tag.extras);
+        return tagData.title.validate();
       }).toList();
 
       // List<ResMusicDataModel> listAbc = playlist.map((item) {
@@ -544,13 +510,14 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       List<ResMusicDataModel> newlistMusic = listMusic;
       newlistMusic[indexMusic] = newlistMusic[indexMusic].copyWith(idLike: "1");
       setValue(musicListLocal, jsonEncode(newlistMusic));
-      updateLike();
+      // updateLike();
       // toast("Added to like song");
     }
   }
 
   void downloadFileVideo({
     required String id,
+    required String idOriginal,
     required String url,
     required String title,
     required String image,
@@ -564,6 +531,9 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       toast("File already exists");
       loadingBtnVideo.value = false;
     } else {
+      titleDownload.value = title;
+      imageDownload.value = image;
+      idDownload.value = idOriginal;
       try {
         await dio.downloadUri(
           Uri.parse(url),
@@ -584,6 +554,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
             }
           },
         ).then((value) {
+          downloadFrom.value = true;
           setCacheDownload(
               id: id.validate(),
               path: file.path,
@@ -606,6 +577,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
 
   void downloadFileAudio({
     required String id,
+    required String idOriginal,
     required String url,
     required String title,
     required String image,
@@ -619,6 +591,9 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       toast("File already exists");
       loadingBtnVideo.value = false;
     } else {
+      titleDownload.value = title;
+      imageDownload.value = image;
+      idDownload.value = idOriginal;
       try {
         await dio.downloadUri(
           Uri.parse(url),
@@ -639,6 +614,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
             }
           },
         ).then((value) {
+          downloadFrom.value = false;
           setCacheDownload(
               id: id.validate(),
               path: file.path,
@@ -675,6 +651,15 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
     newlistDownloaded.add(abc);
 
     setValue(downloadedListLocal, jsonEncode(newlistDownloaded));
+    if (downloadFrom.value) {
+      DownloadedVideoController controllerVideo =
+          Get.put(DownloadedVideoController());
+      controllerVideo.init();
+    } else {
+      DownloadedAudioController controllerAudio =
+          Get.put(DownloadedAudioController());
+      controllerAudio.init();
+    }
   }
 
   @override

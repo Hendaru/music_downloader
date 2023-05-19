@@ -139,10 +139,14 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                     toast("Please wait download finish");
                                   }
                                 },
-                                text: dasboardController
-                                        .progreesVideo.value.isEmpty
+                                text: dasboardController.idDownload !=
+                                        controller
+                                            .detailVideoData.value?.videoId
                                     ? "Download Video"
-                                    : "${dasboardController.progreesVideo.value}%",
+                                    : dasboardController
+                                            .progreesVideo.value.isEmpty
+                                        ? "Download Video"
+                                        : "${dasboardController.progreesVideo.value}%",
                                 color: Theme.of(context)
                                     .colorScheme
                                     .primaryVariant,
@@ -169,10 +173,14 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                     toast("Please wait download finish");
                                   }
                                 },
-                                text: dasboardController
-                                        .progreesAudio.value.isEmpty
+                                text: dasboardController.idDownload !=
+                                        controller
+                                            .detailVideoData.value?.videoId
                                     ? "Download Audio"
-                                    : "${dasboardController.progreesAudio.value}%",
+                                    : dasboardController
+                                            .progreesAudio.value.isEmpty
+                                        ? "Download Audio"
+                                        : "${dasboardController.progreesAudio.value}%",
                                 color: Theme.of(context)
                                     .colorScheme
                                     .primaryVariant,
@@ -192,17 +200,25 @@ class DetailVideoView extends GetView<DetailVideoController> {
                       ),
                       1.h.height,
                       Obx(
-                        () => dasboardController.progreesDouble.value == null
+                        () => dasboardController.idDownload !=
+                                controller.detailVideoData.value?.videoId
                             ? Divider(
                                 thickness: 4.0,
                               )
-                            : LinearProgressIndicator(
-                                value: dasboardController.progreesDouble.value,
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Colors.amber),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.background,
-                              ),
+                            : dasboardController.progreesDouble.value == null
+                                ? Divider(
+                                    thickness: 4.0,
+                                  )
+                                : LinearProgressIndicator(
+                                    value:
+                                        dasboardController.progreesDouble.value,
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                            Colors.amber),
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
                       ),
                       1.h.height,
                       Text(

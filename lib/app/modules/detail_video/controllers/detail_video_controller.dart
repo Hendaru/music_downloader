@@ -40,6 +40,7 @@ class DetailVideoController extends GetxController {
   String? urlVideo;
   String? urlDownloaded;
   String? idVideo;
+  String? idOriginal;
   final videoDownload = false.obs;
 
   DasboardController? dasboardController;
@@ -84,6 +85,7 @@ class DetailVideoController extends GetxController {
               if (videoDownload.value) {
                 dasboardController!.downloadFileVideo(
                   id: idVideo.validate(),
+                  idOriginal: idOriginal.validate(),
                   url: urlDownloaded.validate(),
                   image:
                       detailVideoData.value?.thumbnails?.first.url.validate() ??
@@ -94,6 +96,7 @@ class DetailVideoController extends GetxController {
               } else {
                 dasboardController!.downloadFileAudio(
                   id: idVideo.validate(),
+                  idOriginal: idOriginal.validate(),
                   url: urlDownloaded.validate(),
                   image:
                       detailVideoData.value?.thumbnails?.first.url.validate() ??
@@ -193,6 +196,7 @@ class DetailVideoController extends GetxController {
     loadingVideo.value = true;
     videoDownload.value = true;
     dasboardController = dasboardControllerOk;
+    idOriginal = detailVideoData.value?.videoId.validate() ?? "";
     idVideo = "video-${detailVideoData.value?.videoId.validate() ?? ""}";
 
     getUrlVideoController(detailVideoData.value?.videoId.validate() ?? "", 22);
@@ -203,6 +207,8 @@ class DetailVideoController extends GetxController {
     loadingAudio.value = true;
     videoDownload.value = false;
     dasboardController = dasboardControllerOk;
+    idOriginal = detailVideoData.value?.videoId.validate() ?? "";
+
     idVideo = "audio-${detailVideoData.value?.videoId.validate() ?? ""}";
     getUrlVideoController(detailVideoData.value?.videoId.validate() ?? "", 140);
   }

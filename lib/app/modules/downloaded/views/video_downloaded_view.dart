@@ -70,11 +70,21 @@ class VideoDownloadedView extends GetView<DownloadedController> {
                                       isSquere: false)
                                   .cornerRadiusWithClipRRect(3.w),
                               3.w.width,
-                              Text(
-                                e.title.validate(),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: boldTextStyle(),
+                              Column(
+                                children: [
+                                  Text(
+                                    e.title.validate(),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: boldTextStyle(),
+                                  ),
+                                  Text(
+                                    e.duration.validate(),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: secondaryTextStyle(),
+                                  ),
+                                ],
                               ).expand(),
                               SvgPicture.asset(MainAssets.ic_more_more,
                                       width: 4.w,
