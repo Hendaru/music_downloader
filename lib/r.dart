@@ -9,17 +9,25 @@ class MainAssets {
 
   static const ic_more_more = 'assets/ic_more_more.svg';
 
+  static const ic_share = 'assets/ic_share.svg';
+
+  static const empty_video = 'assets/empty_video.svg';
+
   static const repeat = 'assets/repeat.svg';
 
   static const ic_fire = 'assets/ic_fire.svg';
 
   static const ic_backward = 'assets/ic_backward.svg';
 
+  static const empty_search = 'assets/empty_search.svg';
+
   static const ic_plus = 'assets/ic_plus.svg';
 
   static const ic_add = 'assets/ic_add.svg';
 
   static const loading = 'assets/loading.json';
+
+  static const ic_audio_downloaded = 'assets/ic_audio_downloaded.svg';
 
   static const ic_forward = 'assets/ic_forward.svg';
 
@@ -89,6 +97,8 @@ class MainAssets {
 
   static const ic_like2 = 'assets/ic_like2.svg';
 
+  static const ic_video_downloaded = 'assets/ic_video_downloaded.svg';
+
   static const ic_downloaded = 'assets/ic_downloaded.svg';
 
   static const ic_play = 'assets/ic_play.svg';
@@ -120,16 +130,6 @@ class MainAssets {
   static const ic_settings2 = 'assets/ic_settings2.svg';
 
   static const ic_more = 'assets/ic_more.svg';
-
-  static const empty_video = 'assets/empty_video.svg';
-
-  static const empty_search = 'assets/empty_search.svg';
-
-  static const ic_share = 'assets/ic_share.svg';
-
-  static const ic_audio_downloaded = 'assets/ic_audio_downloaded.svg';
-
-  static const ic_video_downloaded = 'assets/ic_video_downloaded.svg';
 
 // ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,public_member_api_docs,constant_identifier_names,prefer_double_quotes
 }

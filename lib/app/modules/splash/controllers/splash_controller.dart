@@ -2,16 +2,11 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager.dart';
-import 'package:music_download_youtube/app/core/utils/event_manager_ext.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/repository/music_repository.dart';
 import 'package:music_download_youtube/app/routes/app_pages.dart';
-import 'package:music_download_youtube/app/utils/admob.dart';
-import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
-import 'package:music_download_youtube/app/utils/enums.dart';
 import 'package:music_download_youtube/app/utils/extensions/share_pref.dart';
-import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 
 class SplashController extends GetxController {
   final _musicRepository = MusicRepository();
@@ -27,8 +22,8 @@ class SplashController extends GetxController {
   void init() async {
     // observe();
     // getMusic();
-    createInterstitialAd();
-    createRewardedAd();
+    // createInterstitialAd();
+    // createRewardedAd();
     setValue("rating", false);
     // setValue(musicListLocal, jsonEncode([]));
     String? listMusic = getStringAsync(musicListLocal);

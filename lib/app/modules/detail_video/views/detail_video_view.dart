@@ -46,38 +46,7 @@ class DetailVideoView extends GetView<DetailVideoController> {
                   SkeletonWidget(height: 5.h, width: 100.w),
                 ],
               ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)
-            : contentWidget(dasboardController, context))
-        // BuilderWidget<ResUrlVideoModel>(
-        //     event: controller.getUrlVideoEvent.result,
-        //     onError: (code, message) => ErrorPageWidget(
-        //           title: "Server Error or open other video",
-        //           onPressed: () {
-        //             controller.init();
-        //           },
-        //         ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
-        //     onLoading: () =>
-        // Column(
-        //           children: [
-        //             SkeletonWidget(height: 25.h, width: 100.w),
-        //             3.h.height,
-        //             SkeletonWidget(height: 5.h, width: 100.w),
-        //             3.h.height,
-        //             SkeletonWidget(height: 5.h, width: 100.w),
-        //             3.h.height,
-        //             SkeletonWidget(height: 5.h, width: 100.w),
-        //           ],
-        //         ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
-        //     onSuccess: (res) {
-        //       if (res != null) {
-        //         if (res.data != null) {
-        //           return contentWidget(res.data!, dasboardController, context);
-        //         }
-        //       }
-        //       return const SizedBox();
-        //     })
-
-        // contentWidget(),
-        );
+            : contentWidget(dasboardController, context)));
   }
 
   Widget contentWidget(
@@ -133,6 +102,10 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                 onTap: () {
                                   if (dasboardController.progreesDouble.value ==
                                       null) {
+                                    Future.delayed(const Duration(seconds: 1),
+                                        () {
+                                      openAdShowReward();
+                                    });
                                     controller
                                         .downloadVideo(dasboardController);
                                   } else {
@@ -157,6 +130,7 @@ class DetailVideoView extends GetView<DetailVideoController> {
 
                                 padding: EdgeInsets.symmetric(vertical: 1.h),
                                 enableScaleAnimation: false,
+                                enabled: !controller.errorVideo.value,
                                 // loadingColor: primaryColor,
                                 loading: controller.loadingVideo.value,
                                 shapeBorder: RoundedRectangleBorder(
@@ -167,6 +141,10 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                 onTap: () {
                                   if (dasboardController.progreesDouble.value ==
                                       null) {
+                                    Future.delayed(const Duration(seconds: 1),
+                                        () {
+                                      openAdShowReward();
+                                    });
                                     controller
                                         .downloadAudio(dasboardController);
                                   } else {
@@ -188,10 +166,9 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .secondaryVariant),
-
                                 padding: EdgeInsets.symmetric(vertical: 1.h),
                                 enableScaleAnimation: false,
-                                // loadingColor: primaryColor,
+                                enabled: !controller.errorVideo.value,
                                 loading: controller.loadingAudio.value,
                                 shapeBorder: RoundedRectangleBorder(
                                     borderRadius: radius(defaultRadius)),
@@ -262,6 +239,7 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                 controller.detailVideoData.value = e;
                                 controller.getUrlVideoController(
                                     e.videoId.validate(), 18);
+                                controller.errorVideo.value = false;
                               }),
                             )
                             .toList(),

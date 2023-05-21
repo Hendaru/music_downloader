@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
+import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
 
@@ -15,6 +16,8 @@ class DetailDownloadedVideoController extends GetxController {
   ResDownloadedModel? detailVideoData;
 
   int? bufferDelay;
+
+  final newlistVideoDownloaded = <ResDownloadedModel>[].obs;
 
   @override
   void onInit() {
@@ -29,6 +32,20 @@ class DetailDownloadedVideoController extends GetxController {
   void init() {
     getArgs();
     getDetailVideo();
+    var listDownloaded = getDownloadedListFromSharePref();
+    // int indexMusic = listMusic.indexWhere(((e) => e.id == idMusic));
+
+    List<ResDownloadedModel> abc = listDownloaded
+        .where((element) => element.id!.contains("video"))
+        .toList();
+    abc.shuffle();
+    if (abc.length < 5) {
+      newlistVideoDownloaded.value = abc;
+    } else {
+      for (var i = 0; i < 5; i++) {
+        newlistVideoDownloaded.add(abc[i]);
+      }
+    }
   }
 
   void getArgs() {

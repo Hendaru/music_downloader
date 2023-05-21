@@ -48,7 +48,7 @@ class SettingsView extends GetView<SettingsController> {
                 ),
                 // your app's logo?
                 image: SvgPicture.asset(
-                  MainAssets.logo_music,
+                  MainAssets.ic_start,
                   width: 40.w,
                   height: 40.w,
                   color: Theme.of(Get.context!).colorScheme.onSurface,

@@ -63,8 +63,8 @@ String adShowSimple = "adShowSimple";
 
 String appVersion = "appVersion";
 
-String appStoreId = 'com.offline.music.downloader';
-String microsoftStoreId = 'com.offline.music.downloader';
+String appStoreId = 'com.video.music.downloader';
+String microsoftStoreId = 'com.video.music.downloader';
 
 double tabletBreakpointGlobal = 600.0;
 double desktopBreakpointGlobal = 720.0;

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_playlist_model/res_playlist_model.dart';
 import 'package:music_download_youtube/app/utils/admob.dart';
@@ -15,7 +14,7 @@ class PlayListController extends GetxController {
   final playlist = <ResPlaylistModel>[].obs;
   final listMusic = <ResMusicDataModel>[].obs;
 
-  BannerAd? _ad;
+  // BannerAd? _ad;
 
   @override
   void onInit() {
@@ -26,36 +25,36 @@ class PlayListController extends GetxController {
   @override
   void onClose() {
     super.onInit();
-    _ad?.dispose();
+    // _ad?.dispose();
   }
 
   init() {
     getPlaylist();
   }
 
-  Widget showBannerAdsPlayList({required AdSize adSize}) {
-    return Center(
-      child: SizedBox(
-        height: adSize.height.toDouble(),
-        width: adSize.width.toDouble(),
-        child: AdWidget(
-          ad: BannerAd(
-            adUnitId: getBannerAdUnitId()!,
-            size: adSize,
-            request: const AdRequest(),
-            listener: BannerAdListener(
-              onAdLoaded: ((ad) {
-                _ad = ad as BannerAd;
-              }),
-              onAdFailedToLoad: (ad, error) {
-                ad.dispose();
-              },
-            ),
-          )..load(),
-        ),
-      ),
-    );
-  }
+  // Widget showBannerAdsPlayList({required AdSize adSize}) {
+  //   return Center(
+  //     child: SizedBox(
+  //       height: adSize.height.toDouble(),
+  //       width: adSize.width.toDouble(),
+  //       child: AdWidget(
+  //         ad: BannerAd(
+  //           adUnitId: getBannerAdUnitId()!,
+  //           size: adSize,
+  //           request: const AdRequest(),
+  //           listener: BannerAdListener(
+  //             onAdLoaded: ((ad) {
+  //               _ad = ad as BannerAd;
+  //             }),
+  //             onAdFailedToLoad: (ad, error) {
+  //               ad.dispose();
+  //             },
+  //           ),
+  //         )..load(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void getPlaylist() {
     String? getPlayListString = getStringAsync(playlistSharePref);

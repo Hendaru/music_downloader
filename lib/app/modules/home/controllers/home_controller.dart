@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_youtube_downloader/flutter_youtube_downloader.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:in_app_review/in_app_review.dart';
@@ -46,7 +45,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   final listMusicHomeNew = <ResMusicDataModel>[].obs;
   final musicGenre = <ResMusicDataModel>[].obs;
 
-  late BannerAd? ad;
+  // late BannerAd? ad;
   final bannerReady = false.obs;
   final musicList = false.obs;
 
@@ -248,24 +247,24 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
         listMusicHome.where((element) => element.idGenre == idGenre).toList();
   }
 
-  void initAds() {
-    ad = BannerAd(
-      adUnitId: getBannerAdUnitId()!,
-      size: AdSize.largeBanner,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: ((add) {
-          bannerReady.value = true;
-          // ad = add as BannerAd;
-        }),
-        onAdFailedToLoad: (ad, error) {
-          bannerReady.value = false;
-          ad.dispose();
-        },
-      ),
-    );
-    ad?.load();
-  }
+  // void initAds() {
+  //   ad = BannerAd(
+  //     adUnitId: getBannerAdUnitId()!,
+  //     size: AdSize.largeBanner,
+  //     request: const AdRequest(),
+  //     listener: BannerAdListener(
+  //       onAdLoaded: ((add) {
+  //         bannerReady.value = true;
+  //         // ad = add as BannerAd;
+  //       }),
+  //       onAdFailedToLoad: (ad, error) {
+  //         bannerReady.value = false;
+  //         ad.dispose();
+  //       },
+  //     ),
+  //   );
+  //   ad?.load();
+  // }
 
   void _getClipboardText() async {
     final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
@@ -531,7 +530,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
 
   @override
   void onClose() {
-    ad?.dispose();
+    // ad?.dispose();
     IsolateNameServer.removePortNameMapping('downloader_send_port');
     super.onClose();
   }

@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:music_download_youtube/app/utils/admob.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/enums.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -14,7 +13,7 @@ class SettingsController extends GetxController {
   final InAppReview _inAppReview = InAppReview.instance;
   Availability availability = Availability.loading;
 
-  late BannerAd? ad;
+  // late BannerAd? ad;
   final bannerReady = false.obs;
   final vesion = "".obs;
 
@@ -27,7 +26,7 @@ class SettingsController extends GetxController {
 
   @override
   void onClose() {
-    ad?.dispose();
+    // ad?.dispose();
     super.onClose();
   }
 
@@ -37,24 +36,24 @@ class SettingsController extends GetxController {
     vesion.value = versionInfo;
   }
 
-  void initAds() {
-    ad = BannerAd(
-      adUnitId: getBannerAdUnitId()!,
-      size: AdSize.mediumRectangle,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: ((add) {
-          bannerReady.value = true;
-          // ad = add as BannerAd;
-        }),
-        onAdFailedToLoad: (ad, error) {
-          bannerReady.value = false;
-          ad.dispose();
-        },
-      ),
-    );
-    ad?.load();
-  }
+  // void initAds() {
+  //   ad = BannerAd(
+  //     adUnitId: getBannerAdUnitId()!,
+  //     size: AdSize.mediumRectangle,
+  //     request: const AdRequest(),
+  //     listener: BannerAdListener(
+  //       onAdLoaded: ((add) {
+  //         bannerReady.value = true;
+  //         // ad = add as BannerAd;
+  //       }),
+  //       onAdFailedToLoad: (ad, error) {
+  //         bannerReady.value = false;
+  //         ad.dispose();
+  //       },
+  //     ),
+  //   );
+  //   ad?.load();
+  // }
 
   initAppReview() {
     (<T>(T? o) => o!)(WidgetsBinding.instance).addPostFrameCallback((_) async {
@@ -79,7 +78,7 @@ class SettingsController extends GetxController {
 
   Future<void> openEmail() async {
     String email = Uri.encodeComponent("hendarutiga@gmail.com");
-    String subject = Uri.encodeComponent("Offline Music Download Feedback");
+    String subject = Uri.encodeComponent("Video Mp3 Downloader Feedback");
     String body = Uri.encodeComponent("");
     Uri mail = Uri.parse("mailto:$email?subject=$subject&body=$body");
     if (await launchUrl(mail)) {

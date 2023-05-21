@@ -85,7 +85,7 @@ class DasboardView extends GetView<DasboardController> {
                                 commonCacheImageWidget(
                                         controller.imageDownload.value,
                                         width: 12.w,
-                                        idcacheKey: "joko",
+                                        idcacheKey: controller.idDownload.value,
                                         fit: BoxFit.cover,
                                         isSquere: true)
                                     .cornerRadiusWithClipRRect(10.w),
@@ -127,6 +127,7 @@ class DasboardView extends GetView<DasboardController> {
                             const ColoredBox(color: Colors.transparent),
                         onDismissed: (direction) {
                           controller.audioPlayer.stop();
+                          controller.currentSongTitleNotifier.value = "";
                         },
                         child: Container(
                           color: Theme.of(context).scaffoldBackgroundColor,

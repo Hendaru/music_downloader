@@ -2,9 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:music_download_youtube/app/core/utils/event_manager.dart';
+import 'package:music_download_youtube/app/core/utils/event_manager_ext.dart';
+import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
+import 'package:music_download_youtube/app/data/models/response/res_version_download_model/res_version_download_model.dart';
+import 'package:music_download_youtube/app/data/repository/music_repository.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
+import 'package:music_download_youtube/app/utils/enums.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:youtube_data_api/models/channel.dart';
 import 'package:youtube_data_api/models/playlist.dart';
 import 'package:youtube_data_api/models/video.dart';
@@ -13,6 +21,11 @@ import 'package:http/http.dart' as http;
 
 class TrendingController extends GetxController {
   YoutubeDataApi youtubeDataApi = YoutubeDataApi();
+
+  final _musicRepository = MusicRepository();
+  final getUrlVideoAudioEvent = InitializeEvent<ResUrlVideoModel>();
+  final getVersionDownloadEvent = InitializeEvent<ResVersionDownloadModel>();
+  final InAppReview _inAppReview = InAppReview.instance;
 
   List<Video> videosTrending = [];
   final videosTemporary = <Video>[].obs;
@@ -29,12 +42,68 @@ class TrendingController extends GetxController {
   }
 
   void init() async {
+    observer();
+    getVersionDownloadController();
     loadingTreading.value = true;
     videosTemporary.clear();
     var videosTrendingLocal = await youtubeDataApi.fetchTrendingVideo();
     videosTrending = videosTrendingLocal;
     videosTemporary.value = videosTrendingLocal;
     loadingTreading.value = false;
+  }
+
+  void observer() {
+    getUrlVideoAudioEvent.result.listen((p0) {
+      if (p0.status == Status.SUCCESS) {
+        if (p0.data != null) {
+          if (p0.data?.data != null) {
+            // print(p0.data?.data.);
+          }
+        }
+      } else if (p0.status == Status.LOADING) {
+      } else if (p0.status == Status.ERROR) {
+        toast('Server error');
+      }
+    });
+    getVersionDownloadEvent.result.listen((p0) async {
+      if (p0.status == Status.SUCCESS) {
+        if (p0.data != null) {
+          if (p0.data!.data != null) {
+            getVersion(p0.data?.data?.first.versionName.validate() ?? "");
+          }
+        }
+      } else if (p0.status == Status.LOADING) {
+      } else if (p0.status == Status.ERROR) {}
+    });
+  }
+
+  Future<void> getVersion(String version) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String versionInfo = packageInfo.version;
+
+    if (version.isNotEmpty) {
+      if (version != versionInfo) {
+        showDialogBox(
+          Get.context,
+          "Update app version",
+          "Please update app to version $version",
+          onCall: () {
+            openStoreListing();
+          },
+        );
+      }
+    }
+  }
+
+  Future<void> openStoreListing() => _inAppReview.openStoreListing(
+        appStoreId: appStoreId,
+        microsoftStoreId: microsoftStoreId,
+      );
+
+  void getVersionDownloadController() {
+    _musicRepository
+        .getVersionDownloadRepository()
+        .addEvent(event: getVersionDownloadEvent);
   }
 
   Future<void> searchResult(String value) async {
@@ -88,9 +157,10 @@ class TrendingController extends GetxController {
     return suggestions;
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void getUrlVideoController(String id, int tag) {
+    _musicRepository
+        .getUrlRepository(id, tag)
+        .addEvent(event: getUrlVideoAudioEvent);
   }
 
   @override

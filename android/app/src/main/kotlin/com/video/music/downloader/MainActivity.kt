@@ -1,4 +1,4 @@
-package com.offline.music.downloader
+package com.video.music.downloader
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -90,10 +90,16 @@ class DownloadedVideoView extends GetView<DownloadedVideoController> {
                               ).onTap(() {
                                 showDialogBox(
                                   Get.context,
-                                  "Detete video",
+                                  "Delete video",
                                   "Are you sure want to delete this video?",
                                   onCall: () {
-                                    delFileAudioVideo(e);
+                                    delFileAudioVideo(e,
+                                        deleteFileAudioCallback: (e) {
+                                      if (e) {
+                                        Get.back();
+                                        controller.init();
+                                      }
+                                    });
                                   },
                                   onCancelCall: () {
                                     Get.back();
@@ -160,6 +166,9 @@ class DownloadedVideoView extends GetView<DownloadedVideoController> {
                                   .withWidth(10.w)
                             ],
                           ).onTap(() {
+                            Future.delayed(const Duration(seconds: 1), () {
+                              openAdShowReward();
+                            });
                             Get.toNamed(
                               Routes.DETAIL_DOWNLOADED_VIDEO,
                               arguments: {

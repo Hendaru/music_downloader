@@ -114,6 +114,7 @@ class DetailVideoController extends GetxController {
       } else if (p0.status == Status.LOADING) {
       } else if (p0.status == Status.ERROR) {
         toast('Server error or select another video');
+        Get.back();
       }
     });
     getUrlAudioEvent.result.listen((p0) {

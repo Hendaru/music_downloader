@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
+import 'package:music_download_youtube/app/data/models/response/res_version_download_model/res_version_download_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_version_model/res_version_model.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -26,4 +27,7 @@ abstract class MusicService {
 
   @GET("/versionyou")
   Future<ResVersionModel> getVersionService();
+
+  @GET("/versiondownloadapp")
+  Future<ResVersionDownloadModel> getVersionDownloadService();
 }

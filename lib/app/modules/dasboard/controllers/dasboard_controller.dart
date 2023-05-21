@@ -6,7 +6,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:music_download_youtube/app/data/models/models_commons/progress_bar_model/progress_bar_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
@@ -79,7 +79,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
 
   StatusToPlay? statusPlayNow;
   final idCurentDownload = "".obs;
-  BannerAd? ad;
+  // BannerAd? ad;
   final imageDelay = false.obs;
   final adsDelay = false.obs;
 
@@ -111,7 +111,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       if (e == ConnectivityResult.none) {
         toast('No internet connection.');
       } else {
-        toast('Internet is connected.');
+        // toast('Internet is connected.');
       }
     });
   }
@@ -135,31 +135,31 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
   //   });
   // }
 
-  Widget showBannerAdsDasboard({required AdSize adSize}) {
-    return Center(
-      child: SizedBox(
-        height: adSize.height.toDouble(),
-        width: adSize.width.toDouble(),
-        child: AdWidget(
-          ad: BannerAd(
-            adUnitId: getBannerAdUnitId()!,
-            size: adSize,
-            request: const AdRequest(),
-            listener: BannerAdListener(
-              onAdLoaded: ((ads) {
-                ad = ads as BannerAd;
-                toast(ads.toString());
-              }),
-              onAdClosed: (adsh) {},
-              onAdFailedToLoad: (ad, error) {
-                ad.dispose();
-              },
-            ),
-          )..load(),
-        ),
-      ),
-    );
-  }
+  // Widget showBannerAdsDasboard({required AdSize adSize}) {
+  //   return Center(
+  //     child: SizedBox(
+  //       height: adSize.height.toDouble(),
+  //       width: adSize.width.toDouble(),
+  //       child: AdWidget(
+  //         ad: BannerAd(
+  //           adUnitId: getBannerAdUnitId()!,
+  //           size: adSize,
+  //           request: const AdRequest(),
+  //           listener: BannerAdListener(
+  //             onAdLoaded: ((ads) {
+  //               ad = ads as BannerAd;
+  //               toast(ads.toString());
+  //             }),
+  //             onAdClosed: (adsh) {},
+  //             onAdFailedToLoad: (ad, error) {
+  //               ad.dispose();
+  //             },
+  //           ),
+  //         )..load(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void deleteItemMusic(ResMusicDataModel musicItem) {
     var listMusicFromSharePref = getMusicListFromSharePref();
@@ -534,6 +534,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       titleDownload.value = title;
       imageDownload.value = image;
       idDownload.value = idOriginal;
+      downloadFrom.value = true;
       try {
         await dio.downloadUri(
           Uri.parse(url),
@@ -554,7 +555,6 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
             }
           },
         ).then((value) {
-          downloadFrom.value = true;
           setCacheDownload(
               id: id.validate(),
               path: file.path,
@@ -594,6 +594,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
       titleDownload.value = title;
       imageDownload.value = image;
       idDownload.value = idOriginal;
+      downloadFrom.value = false;
       try {
         await dio.downloadUri(
           Uri.parse(url),
@@ -614,7 +615,6 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
             }
           },
         ).then((value) {
-          downloadFrom.value = false;
           setCacheDownload(
               id: id.validate(),
               path: file.path,
@@ -665,7 +665,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     super.onClose();
-    ad?.dispose();
+    // ad?.dispose();
     _connectivitySubscription.cancel();
     audioPlayer.dispose();
     WidgetsBinding.instance.removeObserver(this);

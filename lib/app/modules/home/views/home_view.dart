@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -46,7 +44,6 @@ class HomeMusicList extends GetView<HomeController> {
   Widget build(BuildContext context) {
     // controller.getMusicList();
     controller.getPlaylist();
-    controller.initAds();
     DasboardController controllerDasboard = Get.put(DasboardController());
 
     return SingleChildScrollView(

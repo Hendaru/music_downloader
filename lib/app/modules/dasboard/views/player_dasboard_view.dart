@@ -15,13 +15,13 @@ import 'package:music_download_youtube/app/utils/app_text_style.dart';
 import 'package:music_download_youtube/app/utils/enums.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
-import 'package:music_download_youtube/app/utils/network_utils.dart';
+import 'package:music_download_youtube/app/utils/unity_ads.dart';
 import 'package:music_download_youtube/app/utils/widgets/app_bar_custom_widget.dart';
-import 'package:music_download_youtube/app/utils/widgets/item_music_widget/view/item_music_widget.dart';
 import 'package:music_download_youtube/app/utils/widgets/running_text_widget.dart';
 import 'package:music_download_youtube/r.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class PlayerViewDasboard extends GetView<DasboardController> {
   const PlayerViewDasboard(
@@ -48,7 +48,11 @@ class PlayerViewDasboard extends GetView<DasboardController> {
         id: id,
         statusPlay: statusPlay);
 
-    // controller.delayImage();
+    UnityInitializerController controllerUnity =
+        Get.put(UnityInitializerController());
+    Future.delayed(Duration(seconds: 2), () {
+      controllerUnity.bannerProgressDetailvisible.value = true;
+    });
 
     return WillPopScope(
       onWillPop: () async {
@@ -61,7 +65,6 @@ class PlayerViewDasboard extends GetView<DasboardController> {
           secondaryBackground: const ColoredBox(color: Colors.transparent),
           key: UniqueKey(),
           onDismissed: (direction) {
-            controller.ad = null;
             Get.back();
           },
           child: Scaffold(
@@ -111,12 +114,17 @@ class PlayerViewDasboard extends GetView<DasboardController> {
                       )
                           .withSize(width: 100.w, height: 5.h)
                           .paddingOnly(left: 2.w),
-                      2.h.height,
+                      1.h.height,
                       Text(
                         controller.currentSongDurationNotifier.value,
                         style: secondaryTextStyle(size: 15.sp),
                       ),
-                      2.h.height,
+                      Spacer(),
+                      Obx(() => controllerUnity
+                          .banner2(BannerSize.iabStandard)
+                          .visible(controllerUnity
+                              .bannerProgressDetailvisible.value)),
+                      1.h.height,
                       ProgressBar(
                         progress: controller.progressNotifier.value.current,
                         buffered: controller.progressNotifier.value.buffered,

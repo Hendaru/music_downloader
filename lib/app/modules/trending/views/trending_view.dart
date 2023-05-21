@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
@@ -12,6 +9,7 @@ import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/app_text_style.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
+import 'package:music_download_youtube/app/utils/network_utils.dart';
 import 'package:music_download_youtube/app/utils/widgets/shimmer/skeleton_widget.dart';
 import 'package:music_download_youtube/r.dart';
 import 'package:sizer/sizer.dart';
@@ -171,74 +169,61 @@ class TrendingView extends GetView<TrendingController> {
                           : Column(
                               children: controller.videosTemporary
                                   .map(
-                                    (e) => Slidable(
-                                      endActionPane: ActionPane(
-                                        motion: const ScrollMotion(),
-                                        dismissible:
-                                            DismissiblePane(onDismissed: () {}),
-                                        dragDismissible: false,
-                                        extentRatio: 0.4,
-                                        children: [
-                                          Container(
-                                            color: Colors.amber,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  MainAssets.ic_downloaded,
-                                                  color: whiteColor,
-                                                ),
-                                                0.5.h.height,
-                                                Text("Download Video",
-                                                    style: boldTextStyle(
-                                                        color: whiteColor,
-                                                        size: 10.sp)),
-                                              ],
+                                    (e) => Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        commonCacheImageWidget(
+                                                e.thumbnails?[0].url.validate(),
+                                                width: 30.w,
+                                                // idcacheKey: element.idPlayList.validate(),
+                                                fit: BoxFit.cover,
+                                                isSquere: false)
+                                            .cornerRadiusWithClipRRect(3.w),
+                                        3.w.width,
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              e.title.validate(),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: boldTextStyle(),
                                             ),
-                                          ).expand(),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          commonCacheImageWidget(
-                                                  e.thumbnails?[0].url
-                                                      .validate(),
-                                                  width: 30.w,
-                                                  // idcacheKey: element.idPlayList.validate(),
-                                                  fit: BoxFit.cover,
-                                                  isSquere: false)
-                                              .cornerRadiusWithClipRRect(3.w),
-                                          3.w.width,
-                                          Text(
-                                            e.title.validate(),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: boldTextStyle(),
-                                          ).expand(),
-                                          SvgPicture.asset(
-                                                  MainAssets.ic_more_more,
-                                                  width: 4.w,
-                                                  height: 4.w,
-                                                  // ignore: unrelated_type_equality_checks
-                                                  color: greyColor)
-                                              .withWidth(10.w)
-                                        ],
-                                      ).onTap(() {
+                                            0.5.h.height,
+                                            Text(
+                                              e.duration.validate(),
+                                              style: secondaryTextStyle(),
+                                            ),
+                                          ],
+                                        ).expand(),
+                                        // SvgPicture.asset(
+                                        //         MainAssets.ic_more_more,
+                                        //         width: 4.w,
+                                        //         height: 4.w,
+                                        //         // ignore: unrelated_type_equality_checks
+                                        //         color: greyColor)
+                                        //     .withWidth(10.w)
+                                      ],
+                                    ).onTap(() async {
+                                      if (await isNetworkAvailable()) {
                                         Get.toNamed(
                                           Routes.DETAIL_VIDEO,
                                           arguments: {
                                             "video": e,
                                           },
                                         );
-                                      }),
-                                    ).marginOnly(bottom: 1.h),
+                                        Future.delayed(
+                                            const Duration(seconds: 1), () {
+                                          openAdShowReward();
+                                        });
+                                      } else {
+                                        toast("Not internet connection");
+                                      }
+                                    }).marginOnly(bottom: 1.h),
                                   )
                                   .toList(),
                             ).withScroll(

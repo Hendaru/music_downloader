@@ -21,6 +21,7 @@ import 'package:music_download_youtube/app/utils/extensions/int_extensions.dart'
 import 'package:music_download_youtube/app/utils/extensions/share_pref.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
+import 'package:music_download_youtube/app/utils/unity_ads.dart';
 import 'package:music_download_youtube/main.dart';
 import 'package:music_download_youtube/r.dart';
 
@@ -353,29 +354,29 @@ bool inPlaying(String idMusic, ResMusicDataModel detailMusic) {
   }
 }
 
-openAdShowReward() {
-  int ad = getIntAsync(adShowreward).validate();
-  int adCount = ad + 1;
+// openAdShowReward() {
+//   int ad = getIntAsync(adShowreward).validate();
+//   int adCount = ad + 1;
 
-  if (adCount == 4) {
-    adShowrewardedAd();
-    setValue("adShowreward", 0);
-  } else {
-    setValue("adShowreward", adCount);
-  }
-}
+//   if (adCount == 4) {
+//     adShowrewardedAd();
+//     setValue("adShowreward", 0);
+//   } else {
+//     setValue("adShowreward", adCount);
+//   }
+// }
 
-openAdShow() {
-  int ad = getIntAsync(adShowSimple).validate();
-  int adCount = ad + 1;
+// openAdShow() {
+//   int ad = getIntAsync(adShowSimple).validate();
+//   int adCount = ad + 1;
 
-  if (adCount == 5) {
-    adShow();
-    setValue(adShowSimple, 0);
-  } else {
-    setValue(adShowSimple, adCount);
-  }
-}
+//   if (adCount == 5) {
+//     adShow();
+//     setValue(adShowSimple, 0);
+//   } else {
+//     setValue(adShowSimple, adCount);
+//   }
+// }
 
 // String filterArtists(String idArtist) {
 //   var listArtistString = getStringAsync(listArtistPref);
@@ -394,6 +395,24 @@ openAdShow() {
 //   }
 //   return "";
 // }
+
+openAdShowReward() {
+  int ad = getIntAsync(adShowreward).validate();
+  int adCount = ad + 1;
+
+  if (adCount == 4) {
+    UnityInitializerController controllerUnity =
+        Get.put(UnityInitializerController());
+
+    controllerUnity.placements[AdManager.rewardedVideoAdPlacementId] == true
+        ? controllerUnity.showAd(AdManager.rewardedVideoAdPlacementId)
+        : null;
+
+    setValue("adShowreward", 0);
+  } else {
+    setValue("adShowreward", adCount);
+  }
+}
 
 List<ResMusicDataModel> getMusicListFromSharePref() {
   List<ResMusicDataModel> listMusic = [];
@@ -560,22 +579,31 @@ void copyFileAudio(ResDownloadedModel detailVideoData) async {
   }
 }
 
-void delFileAudioVideo(ResDownloadedModel detailVideoData) async {
+// ignore: prefer_generic_function_type_aliases
+typedef void DeleteFileAudioCallback(bool isDelete);
+
+void delFileAudioVideo(ResDownloadedModel detailVideoData,
+    {required DeleteFileAudioCallback deleteFileAudioCallback}) async {
   var statusForder = await Permission.storage.status;
   if (statusForder.isDenied) {
     await Permission.storage.request();
+    deleteFileAudioCallback(false);
   } else if (statusForder.isGranted) {
     File(detailVideoData.path ?? "").delete().then((value) {
       toast("File deleted");
       deleteDataCache(detailVideoData);
+      deleteFileAudioCallback(true);
+    }).onError((error, stackTrace) {
+      deleteFileAudioCallback(false);
     });
   } else if (statusForder.isPermanentlyDenied) {
     await openAppSettings();
+    deleteFileAudioCallback(false);
   }
 }
 
-void deleteDataCache(ResDownloadedModel detailVideoData) {
+void deleteDataCache(ResDownloadedModel detailVideoData) async {
   var listDownloaded = getDownloadedListFromSharePref();
   listDownloaded.removeWhere((element) => element.id == detailVideoData.id);
-  setValue(downloadedListLocal, jsonEncode(listDownloaded));
+  await setValue(downloadedListLocal, jsonEncode(listDownloaded));
 }

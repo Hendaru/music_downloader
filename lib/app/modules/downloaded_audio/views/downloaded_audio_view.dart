@@ -92,10 +92,16 @@ class DownloadedAudioView extends GetView<DownloadedAudioController> {
                               ).onTap(() {
                                 showDialogBox(
                                   Get.context,
-                                  "Detete audio",
+                                  "Delete audio",
                                   "Are you sure want to delete this audio?",
                                   onCall: () {
-                                    delFileAudioVideo(e);
+                                    delFileAudioVideo(e,
+                                        deleteFileAudioCallback: (e) {
+                                      if (e) {
+                                        controller.init();
+                                        Get.back();
+                                      }
+                                    });
                                   },
                                   onCancelCall: () {
                                     Get.back();
@@ -162,6 +168,9 @@ class DownloadedAudioView extends GetView<DownloadedAudioController> {
                                   .withWidth(10.w)
                             ],
                           ).onTap(() {
+                            Future.delayed(const Duration(seconds: 1), () {
+                              openAdShowReward();
+                            });
                             controllerDasboard.initPlaylist(
                                 // listSound: [e.value],
                                 id: e.id,
