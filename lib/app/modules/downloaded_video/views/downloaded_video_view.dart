@@ -158,12 +158,11 @@ class DownloadedVideoView extends GetView<DownloadedVideoController> {
                                   ),
                                 ],
                               ).expand(),
-                              SvgPicture.asset(MainAssets.ic_more_more,
-                                      width: 4.w,
-                                      height: 4.w,
-                                      // ignore: unrelated_type_equality_checks
-                                      color: greyColor)
-                                  .withWidth(10.w)
+                              SvgPicture.asset(MainAssets.ic_arrow_left,
+                                  width: 12.w,
+
+                                  // ignore: unrelated_type_equality_checks
+                                  color: greyColor)
                             ],
                           ).onTap(() {
                             Future.delayed(const Duration(seconds: 1), () {

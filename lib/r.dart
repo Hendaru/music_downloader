@@ -57,6 +57,8 @@ class MainAssets {
 
   static const ic_video_error = 'assets/ic_video_error.svg';
 
+  static const ic_arrow_left = 'assets/ic_arrow_left.svg';
+
   static const logo_music = 'assets/logo_music.svg';
 
   static const ic_youtube = 'assets/ic_youtube.svg';
