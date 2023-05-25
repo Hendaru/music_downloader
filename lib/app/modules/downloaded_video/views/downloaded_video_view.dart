@@ -20,6 +20,7 @@ class DownloadedVideoView extends GetView<DownloadedVideoController> {
   const DownloadedVideoView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    controller.init();
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

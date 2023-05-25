@@ -69,12 +69,13 @@ class DetailDownloadedVideoView
                 controller.shareFileVideo();
               }),
               2.h.height,
-              Text(
-                controller.detailVideoData?.title.validate() ?? "",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: boldTextStyle(),
-              ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
+              Obx(() => Text(
+                    controller.detailVideoData?.value?.title.validate() ?? "",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: boldTextStyle(),
+                  ).paddingSymmetric(
+                      horizontal: defaultPaddingHorizontalGlobal)),
               1.h.height,
               const Divider(
                 thickness: 4.0,
@@ -235,7 +236,7 @@ class DetailDownloadedVideoView
                                 });
                                 controller.videoPlayerController!.pause();
 
-                                controller.detailVideoData = e;
+                                controller.detailVideoData?.value = e;
 
                                 controller.getDetailVideo();
                                 controller.chewieController!.refresh();

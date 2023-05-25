@@ -1,6 +1,8 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager_ext.dart';
 import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -21,217 +23,234 @@ class TrendingView extends GetView<TrendingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Obx(() => CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                SliverAppBar(
-                  leading: const SizedBox(),
-                  excludeHeaderSemantics: true,
-                  expandedHeight: 17.h,
-                  pinned: false,
-                  stretch: true,
-                  floating: true,
-                  backgroundColor: Theme.of(context).colorScheme.onBackground,
-                  snap: true,
-                  elevation: 0.0,
-                  flexibleSpace: FlexibleSpaceBar(
-                      stretchModes: const [
-                        StretchMode.zoomBackground,
-                      ],
-                      collapseMode: CollapseMode.parallax,
-                      background: Column(
-                        children: [
-                          RawAutocomplete(
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              return controller.autoCompleteSuggestions(
-                                  textEditingValue.text);
-                            },
-                            fieldViewBuilder: (context, textEditingController,
-                                focusNode, onFieldSubmitted) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Find Your Favorite",
-                                      style: extraBoldTextStyle(size: 18.sp)),
-                                  2.h.height,
-                                  TextField(
-                                    decoration: inputDecoration(context,
-                                        hintText: "Search all of videos",
-                                        prefixIcon: Icon(
-                                          Icons.search,
-                                          color: primaryColor,
-                                        ),
-                                        suffixIcon: Obx(() => controller
-                                                    .clearText.value ==
-                                                true
-                                            ? Icon(
-                                                Icons.close,
-                                                color: primaryColor,
-                                              ).onTap(() {
-                                                // controller.clearSearch(
-                                                //     textEditingController);
-                                                // controller
-                                                //         .videosTemporary.value =
-                                                //     controller.videosTrending;
-
-                                                controller
-                                                        .videosTemporary.value =
-                                                    controller.videosTrending;
-
-                                                controller.clearText.value =
-                                                    false;
-                                                textEditingController.clear();
-
-                                                hideKeyboard();
-                                              })
-                                            : SizedBox()),
-                                        fillColor: Theme.of(context)
-                                            .colorScheme
-                                            .onTertiary,
-                                        borderColor: whiteColor),
-                                    controller: textEditingController,
-                                    focusNode: focusNode,
-                                    onSubmitted: (String value) {},
-                                  ),
-                                ],
-                              ).marginOnly(top: 3.h);
-                            },
-                            optionsViewBuilder: (context, onSelected, options) {
-                              return Align(
-                                alignment: Alignment.topLeft,
-                                child: Material(
-                                  child: Container(
-                                    width: 90.w,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onTertiary,
-                                    child: ListView.builder(
-                                      physics: BouncingScrollPhysics(),
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: false,
-                                      itemCount: options.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final option = options.elementAt(index);
-                                        return ListTile(
-                                          title: Text(option),
-                                          onTap: () {
-                                            onSelected(option);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            onSelected: (option) =>
-                                controller.searchResult(option),
-                          ),
-                        ],
-                      )),
-                ),
-                SliverToBoxAdapter(
-                  child: controller.loadingTreading.value
-                      ? Center(
-                          child: Column(
-                          children: [
-                            3.h.height,
-                            SkeletonWidget(height: 8.h, width: 100.w),
-                            3.h.height,
-                            SkeletonWidget(height: 8.h, width: 100.w),
-                            3.h.height,
-                            SkeletonWidget(height: 8.h, width: 100.w),
-                            3.h.height,
-                            SkeletonWidget(height: 8.h, width: 100.w),
-                            3.h.height,
-                            SkeletonWidget(height: 8.h, width: 100.w),
-                            3.h.height,
-                            SkeletonWidget(height: 8.h, width: 100.w),
-                            3.h.height,
-                          ],
-                        )).withHeight(90.h)
-                      : Obx(() => controller.videosTemporary.isEmpty
-                          ? Center(
-                              child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+        body: SafeArea(
+      child: Obx(() => CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                leading: const SizedBox(),
+                excludeHeaderSemantics: true,
+                expandedHeight: 17.h,
+                pinned: false,
+                stretch: true,
+                floating: true,
+                backgroundColor: Theme.of(context).colorScheme.onBackground,
+                snap: true,
+                elevation: 0.0,
+                flexibleSpace: FlexibleSpaceBar(
+                    stretchModes: const [
+                      StretchMode.zoomBackground,
+                    ],
+                    collapseMode: CollapseMode.parallax,
+                    background: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RawAutocomplete(
+                          optionsBuilder: (TextEditingValue textEditingValue) {
+                            return controller
+                                .autoCompleteSuggestions(textEditingValue.text);
+                          },
+                          fieldViewBuilder: (context, textEditingController,
+                              focusNode, onFieldSubmitted) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SvgPicture.asset(
-                                  MainAssets.empty_sound3,
-                                  width: 15.w,
-                                  height: 15.w,
-                                ),
+                                Text("Find Your Favorite",
+                                    style: extraBoldTextStyle(size: 18.sp)),
                                 2.h.height,
-                                Text("No Data Found", style: boldTextStyle())
+                                TextField(
+                                  decoration: inputDecoration(context,
+                                      hintText: "Search all of videos",
+                                      prefixIcon: Icon(
+                                        Icons.search,
+                                        color: primaryColor,
+                                      ),
+                                      suffixIcon: Obx(() =>
+                                          controller.clearText.value == true
+                                              ? Icon(
+                                                  Icons.close,
+                                                  color: primaryColor,
+                                                ).onTap(() {
+                                                  controller.videosTemporary
+                                                          .value =
+                                                      controller.videosTrending;
+
+                                                  controller.clearText.value =
+                                                      false;
+                                                  textEditingController.clear();
+
+                                                  hideKeyboard();
+                                                })
+                                              : SizedBox()),
+                                      fillColor: Theme.of(context)
+                                          .colorScheme
+                                          .onTertiary,
+                                      borderColor: whiteColor),
+                                  controller: textEditingController,
+                                  focusNode: focusNode,
+                                  keyboardType: TextInputType.text,
+                                  onSubmitted: (String value) {
+                                    controller.searchResult(value);
+                                  },
+                                ),
                               ],
-                            )).withHeight(90.h)
-                          : Column(
-                              children: controller.videosTemporary
-                                  .map(
-                                    (e) => Row(
+                            ).marginOnly(top: 3.h);
+                          },
+                          optionsViewBuilder: (context, onSelected, options) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.w)),
+                                child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        maxHeight: 50.h, maxWidth: 90.w),
+                                    child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        commonCacheImageWidget(
-                                                e.thumbnails?[0].url.validate(),
-                                                width: 30.w,
-                                                // idcacheKey: element.idPlayList.validate(),
-                                                fit: BoxFit.cover,
-                                                isSquere: false)
-                                            .cornerRadiusWithClipRRect(3.w),
-                                        3.w.width,
-                                        Column(
+                                          CrossAxisAlignment.start,
+                                      children: options.map((e) {
+                                        return Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              e.title.validate(),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
+                                              e,
                                               style: boldTextStyle(),
                                             ),
-                                            0.5.h.height,
-                                            Text(
-                                              e.duration.validate(),
-                                              style: secondaryTextStyle(),
-                                            ),
+                                            Divider(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground,
+                                              thickness: 0.5,
+                                            )
                                           ],
-                                        ).expand(),
-                                        // SvgPicture.asset(
-                                        //         MainAssets.ic_more_more,
-                                        //         width: 4.w,
-                                        //         height: 4.w,
-                                        //         // ignore: unrelated_type_equality_checks
-                                        //         color: greyColor)
-                                        //     .withWidth(10.w)
-                                      ],
-                                    ).onTap(() async {
-                                      if (await isNetworkAvailable()) {
-                                        Get.toNamed(
-                                          Routes.DETAIL_VIDEO,
-                                          arguments: {
-                                            "video": e,
-                                          },
-                                        );
-                                        Future.delayed(
-                                            const Duration(seconds: 1), () {
-                                          openAdShowReward();
+                                        )
+                                            .paddingSymmetric(
+                                                vertical: 1.h, horizontal: 4.w)
+                                            .onTap(() {
+                                          onSelected(e);
                                         });
-                                      } else {
-                                        toast("Not internet connection");
-                                      }
-                                    }).marginOnly(bottom: 1.h),
-                                  )
-                                  .toList(),
-                            ).withScroll(
-                              physics: BouncingScrollPhysics(),
-                              reverse: false,
-                              padding: EdgeInsets.symmetric(vertical: 1.h))),
-                )
-              ],
-            ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)));
+                                      }).toList(),
+                                    ).withScroll(
+                                        reverse: false,
+                                        physics: BouncingScrollPhysics())),
+                              ),
+                            );
+                          },
+                          onSelected: (option) {
+                            if (option.isNotEmpty) {
+                              controller.searchResult(option);
+                            } else {
+                              controller.videosTemporary.value =
+                                  controller.videosTrending;
+
+                              controller.clearText.value = false;
+                            }
+                          },
+                        ),
+                      ],
+                    )),
+              ),
+              SliverToBoxAdapter(
+                child: controller.loadingTreading.value
+                    ? Center(
+                        child: Column(
+                        children: [
+                          1.h.height,
+                          SkeletonWidget(height: 8.h, width: 100.w),
+                          2.h.height,
+                          SkeletonWidget(height: 8.h, width: 100.w),
+                          2.h.height,
+                          SkeletonWidget(height: 8.h, width: 100.w),
+                          2.h.height,
+                          SkeletonWidget(height: 8.h, width: 100.w),
+                          2.h.height,
+                          SkeletonWidget(height: 8.h, width: 100.w),
+                          2.h.height,
+                          SkeletonWidget(height: 8.h, width: 100.w),
+                          2.h.height,
+                        ],
+                      )).withHeight(90.h)
+                    : Obx(() => controller.videosTemporary.isEmpty
+                        ? Center(
+                            child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                MainAssets.empty_sound3,
+                                width: 15.w,
+                                height: 15.w,
+                              ),
+                              2.h.height,
+                              Text("No Data Found", style: boldTextStyle())
+                            ],
+                          )).withHeight(90.h)
+                        : Column(
+                            children: controller.videosTemporary
+                                .map(
+                                  (e) => Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      commonCacheImageWidget(
+                                              e.thumbnails?[0].url.validate(),
+                                              width: 30.w,
+                                              // idcacheKey: element.idPlayList.validate(),
+                                              fit: BoxFit.cover,
+                                              isSquere: false)
+                                          .cornerRadiusWithClipRRect(3.w),
+                                      3.w.width,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            e.title.validate(),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: boldTextStyle(),
+                                          ),
+                                          0.5.h.height,
+                                          Text(
+                                            e.duration.validate(),
+                                            style: secondaryTextStyle(),
+                                          ),
+                                        ],
+                                      ).expand(),
+                                      // SvgPicture.asset(
+                                      //         MainAssets.ic_more_more,
+                                      //         width: 4.w,
+                                      //         height: 4.w,
+                                      //         // ignore: unrelated_type_equality_checks
+                                      //         color: greyColor)
+                                      //     .withWidth(10.w)
+                                    ],
+                                  ).onTap(() async {
+                                    if (await isNetworkAvailable()) {
+                                      Get.toNamed(
+                                        Routes.DETAIL_VIDEO,
+                                        arguments: {
+                                          "video": e,
+                                        },
+                                      );
+                                      Future.delayed(const Duration(seconds: 1),
+                                          () {
+                                        openAdShowReward();
+                                      });
+                                    } else {
+                                      toast("Not internet connection");
+                                    }
+                                  }).marginOnly(bottom: 1.h),
+                                )
+                                .toList(),
+                          ).withScroll(
+                            physics: BouncingScrollPhysics(),
+                            reverse: false,
+                            padding: EdgeInsets.symmetric(vertical: 1.h))),
+              )
+            ],
+          ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)),
+    ));
   }
 }

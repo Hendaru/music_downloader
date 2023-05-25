@@ -11,21 +11,14 @@ import 'package:music_download_youtube/app/data/models/models_commons/progress_b
 import 'package:music_download_youtube/app/data/models/response/res_downloaded_model/res_downloaded_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_playlist_model/res_playlist_model.dart';
-import 'package:music_download_youtube/app/modules/downloaded/views/downloaded_view.dart';
-import 'package:music_download_youtube/app/modules/downloaded_audio/controllers/downloaded_audio_controller.dart';
 import 'package:music_download_youtube/app/modules/downloaded_audio/views/downloaded_audio_view.dart';
-import 'package:music_download_youtube/app/modules/downloaded_video/controllers/downloaded_video_controller.dart';
 import 'package:music_download_youtube/app/modules/downloaded_video/views/downloaded_video_view.dart';
 import 'package:music_download_youtube/app/modules/home/controllers/home_controller.dart';
-import 'package:music_download_youtube/app/modules/home/views/home_view.dart';
-import 'package:music_download_youtube/app/modules/like/views/like_view.dart';
-import 'package:music_download_youtube/app/modules/playList/views/play_list_view.dart';
 import 'package:music_download_youtube/app/modules/settings/views/settings_view.dart';
 import 'package:music_download_youtube/app/modules/trending/views/trending_view.dart';
 import 'package:music_download_youtube/app/notifiers/play_button_notifier.dart';
 import 'package:music_download_youtube/app/notifiers/repeat_button_notifier.dart';
 
-import 'package:music_download_youtube/app/utils/admob.dart';
 import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/enums.dart';
@@ -118,6 +111,10 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
 
   void setCurrentIndex(int index) {
     currentIndex.value = index;
+    if (currentIndex.value != 2) {
+      audioPlayer.stop();
+      currentSongTitleNotifier.value = "";
+    }
   }
 
   //player func
@@ -651,15 +648,15 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
     newlistDownloaded.add(abc);
 
     setValue(downloadedListLocal, jsonEncode(newlistDownloaded));
-    if (downloadFrom.value) {
-      DownloadedVideoController controllerVideo =
-          Get.put(DownloadedVideoController());
-      controllerVideo.init();
-    } else {
-      DownloadedAudioController controllerAudio =
-          Get.put(DownloadedAudioController());
-      controllerAudio.init();
-    }
+    // if (downloadFrom.value) {
+    //   DownloadedVideoController controllerVideo =
+    //       Get.put(DownloadedVideoController());
+    //   controllerVideo.init();
+    // } else {
+    //   DownloadedAudioController controllerAudio =
+    //       Get.put(DownloadedAudioController());
+    //   controllerAudio.init();
+    // }
   }
 
   @override

@@ -23,6 +23,7 @@ class DownloadedAudioView extends GetView<DownloadedAudioController> {
   @override
   Widget build(BuildContext context) {
     DasboardController controllerDasboard = Get.put(DasboardController());
+    controller.init();
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

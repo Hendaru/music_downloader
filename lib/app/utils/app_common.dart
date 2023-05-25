@@ -607,3 +607,17 @@ void deleteDataCache(ResDownloadedModel detailVideoData) async {
   listDownloaded.removeWhere((element) => element.id == detailVideoData.id);
   await setValue(downloadedListLocal, jsonEncode(listDownloaded));
 }
+
+Future<bool> getFileExistMp4(String id) async {
+  String dir = (await getApplicationDocumentsDirectory()).path;
+  File file = File('$dir/$id.mp4');
+  bool fileExists = await file.exists();
+  return fileExists;
+}
+
+Future<bool> getFileExistMp3(String id) async {
+  String dir = (await getApplicationDocumentsDirectory()).path;
+  File file = File('$dir/$id.mp3');
+  bool fileExists = await file.exists();
+  return fileExists;
+}

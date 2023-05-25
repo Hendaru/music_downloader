@@ -27,7 +27,10 @@ class TrendingController extends GetxController {
   final getVersionDownloadEvent = InitializeEvent<ResVersionDownloadModel>();
   final InAppReview _inAppReview = InAppReview.instance;
 
+  TextEditingController textSearchController = TextEditingController();
+
   List<Video> videosTrending = [];
+  final suggestionsPrimary = <String>[];
   final videosTemporary = <Video>[].obs;
   var loadingTreading = true.obs;
   var clearText = false.obs;

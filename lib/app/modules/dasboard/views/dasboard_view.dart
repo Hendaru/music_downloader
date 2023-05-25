@@ -117,7 +117,7 @@ class DasboardView extends GetView<DasboardController> {
                         ),
                       )
                     : const SizedBox(),
-                controller.currentSongTitleNotifier.value.isEmptyOrNull
+                !controller.audioPlayer.playing
                     ? const SizedBox()
                     : Dismissible(
                         key: UniqueKey(),
@@ -126,8 +126,8 @@ class DasboardView extends GetView<DasboardController> {
                         secondaryBackground:
                             const ColoredBox(color: Colors.transparent),
                         onDismissed: (direction) {
-                          controller.audioPlayer.stop();
                           controller.currentSongTitleNotifier.value = "";
+                          controller.audioPlayer.stop();
                         },
                         child: Container(
                           color: Theme.of(context).scaffoldBackgroundColor,
@@ -192,15 +192,19 @@ class DasboardView extends GetView<DasboardController> {
                             ],
                           ),
                         ).onTap(() {
-                          if (controller.playButtonNotifier.value ==
-                              ButtonState.loading) {
-                            toast("Please wait...");
-                          } else {
-                            Get.to(
-                              const PlayerViewDasboard(),
-                              opaque: false,
-                            );
-                          }
+                          controller.audioPlayer.playing
+                              ? controller.audioPlayer.pause()
+                              : controller.audioPlayer.play();
+
+                          // if (controller.playButtonNotifier.value ==
+                          //     ButtonState.loading) {
+                          //   toast("Please wait...");
+                          // } else {
+                          //   Get.to(
+                          //     const PlayerViewDasboard(),
+                          //     opaque: false,
+                          //   );
+                          // }
                         }).paddingSymmetric(
                             horizontal: defaultPaddingHorizontalGlobal),
                       ),
