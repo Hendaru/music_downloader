@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
-import 'package:music_download_youtube/app/modules/dasboard/views/player_dasboard_view.dart';
 import 'package:music_download_youtube/app/modules/dasboard/widgets/menu_dasboard.dart';
 import 'package:music_download_youtube/app/notifiers/play_button_notifier.dart';
 import 'package:music_download_youtube/app/notifiers/repeat_button_notifier.dart';
@@ -12,7 +11,7 @@ import 'package:music_download_youtube/app/utils/app_constants.dart';
 import 'package:music_download_youtube/app/utils/app_text_style.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
-import 'package:music_download_youtube/app/utils/widgets/item_music_widget/controllers/item_music_widget_controller.dart';
+import 'package:music_download_youtube/app/utils/unity_ads.dart';
 import 'package:music_download_youtube/app/utils/widgets/running_text_widget.dart';
 import 'package:music_download_youtube/r.dart';
 import 'package:lottie/lottie.dart';
@@ -30,6 +29,9 @@ class DasboardView extends GetView<DasboardController> {
             Get.isDarkMode ? Brightness.dark : Brightness.light,
         statusBarBrightness:
             Get.isDarkMode ? Brightness.dark : Brightness.light));
+
+    UnityInitializerController controllerUnity =
+        Get.put(UnityInitializerController());
 
     return Scaffold(
       bottomNavigationBar: Obx(() => SizedBox(
@@ -117,97 +119,88 @@ class DasboardView extends GetView<DasboardController> {
                         ),
                       )
                     : const SizedBox(),
-                !controller.audioPlayer.playing
+                !controller.songPlay.value
                     ? const SizedBox()
-                    : Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.down,
-                        background: ColoredBox(color: Colors.transparent),
-                        secondaryBackground:
-                            const ColoredBox(color: Colors.transparent),
-                        onDismissed: (direction) {
-                          controller.currentSongTitleNotifier.value = "";
-                          controller.audioPlayer.stop();
-                        },
-                        child: Container(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          width: 100.w,
-                          height: 12.h,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              1.h.height,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  commonCacheImageWidget(
-                                          controller
-                                              .currentSongImageNotifier.value,
-                                          width: 12.w,
-                                          idcacheKey: controller
-                                              .currentSongIdNotifier.value,
-                                          fit: BoxFit.cover,
-                                          isSquere: true)
-                                      .cornerRadiusWithClipRRect(2.w),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      MarqueeWidget(
-                                        direction: Axis.horizontal,
-                                        child: Text(
-                                            controller
-                                                .currentSongTitleNotifier.value
-                                                .validate(),
-                                            style: boldTextStyle()),
-                                      )
-                                          .withSize(width: 100.w, height: 2.5.h)
-                                          .paddingOnly(left: 2.w),
-                                      1.h.height,
-                                      Text(
+                    : Container(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        width: 100.w,
+                        height: 12.h,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            1.h.height,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                commonCacheImageWidget(
                                         controller
-                                            .currentSongDurationNotifier.value
-                                            .validate(),
-                                        style: secondaryTextStyle(),
-                                      ),
-                                    ],
-                                  ).expand(),
-                                  playBtn(context),
-                                ],
-                              ),
-                              1.h.height,
-                              Expanded(
-                                  child: ProgressBar(
-                                      progress: controller
-                                          .progressNotifier.value.current,
-                                      buffered: controller
-                                          .progressNotifier.value.buffered,
-                                      total: controller
-                                          .progressNotifier.value.total,
-                                      // onSeek: controller.seek,
-                                      thumbCanPaintOutsideBar: false,
-                                      thumbRadius: 1.0,
-                                      timeLabelLocation:
-                                          TimeLabelLocation.none)),
-                            ],
-                          ),
-                        ).onTap(() {
-                          controller.audioPlayer.playing
-                              ? controller.audioPlayer.pause()
-                              : controller.audioPlayer.play();
+                                            .currentSongImageNotifier.value,
+                                        width: 12.w,
+                                        idcacheKey: controller
+                                            .currentSongIdNotifier.value,
+                                        fit: BoxFit.cover,
+                                        isSquere: true)
+                                    .cornerRadiusWithClipRRect(2.w),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    MarqueeWidget(
+                                      direction: Axis.horizontal,
+                                      child: Text(
+                                          controller
+                                              .currentSongTitleNotifier.value
+                                              .validate(),
+                                          style: boldTextStyle()),
+                                    )
+                                        .withSize(width: 100.w, height: 2.5.h)
+                                        .paddingOnly(left: 2.w),
+                                    1.h.height,
+                                    Text(
+                                      controller
+                                          .currentSongDurationNotifier.value
+                                          .validate(),
+                                      style: secondaryTextStyle(),
+                                    ),
+                                  ],
+                                ).expand(),
+                                playBtn(context),
+                              ],
+                            ),
+                            1.h.height,
+                            Expanded(
+                                child: ProgressBar(
+                                    progress: controller
+                                        .progressNotifier.value.current,
+                                    buffered: controller
+                                        .progressNotifier.value.buffered,
+                                    total:
+                                        controller.progressNotifier.value.total,
+                                    onSeek: controller.seek,
+                                    thumbCanPaintOutsideBar: false,
+                                    thumbRadius: 5.0,
+                                    timeLabelLocation: TimeLabelLocation.none)),
+                            // Obx(() => controllerUnity
+                            //     .banner2(BannerSize.iabStandard)
+                            //     .visible(controllerUnity
+                            //         .bannerProgressDetailvisible.value)),
+                          ],
+                        ),
+                      ).onTap(() {
+                        controller.audioPlayer.playing
+                            ? controller.audioPlayer.pause()
+                            : controller.audioPlayer.play();
 
-                          // if (controller.playButtonNotifier.value ==
-                          //     ButtonState.loading) {
-                          //   toast("Please wait...");
-                          // } else {
-                          //   Get.to(
-                          //     const PlayerViewDasboard(),
-                          //     opaque: false,
-                          //   );
-                          // }
-                        }).paddingSymmetric(
-                            horizontal: defaultPaddingHorizontalGlobal),
-                      ),
+                        // if (controller.playButtonNotifier.value ==
+                        //     ButtonState.loading) {
+                        //   toast("Please wait...");
+                        // } else {
+                        //   Get.to(
+                        //     const PlayerViewDasboard(),
+                        //     opaque: false,
+                        //   );
+                        // }
+                      }).paddingSymmetric(
+                        horizontal: defaultPaddingHorizontalGlobal),
               ],
             )),
       ),

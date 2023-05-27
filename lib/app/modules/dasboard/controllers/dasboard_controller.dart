@@ -18,6 +18,7 @@ import 'package:music_download_youtube/app/modules/settings/views/settings_view.
 import 'package:music_download_youtube/app/modules/trending/views/trending_view.dart';
 import 'package:music_download_youtube/app/notifiers/play_button_notifier.dart';
 import 'package:music_download_youtube/app/notifiers/repeat_button_notifier.dart';
+import 'package:music_download_youtube/app/routes/app_pages.dart';
 
 import 'package:music_download_youtube/app/utils/app_common.dart';
 import 'package:music_download_youtube/app/utils/app_constants.dart';
@@ -58,6 +59,7 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
   final isShuffleModeEnabledNotifier = false.obs;
   final isFirstSongNotifier = true.obs;
   final isLastSongNotifier = true.obs;
+  final songPlay = false.obs;
   late ConcatenatingAudioSource playlist;
   late LockCachingAudioSource playCache;
 
@@ -110,11 +112,11 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
   }
 
   void setCurrentIndex(int index) {
-    currentIndex.value = index;
-    if (currentIndex.value != 2) {
+    if (index != 2) {
+      songPlay.value = false;
       audioPlayer.stop();
-      currentSongTitleNotifier.value = "";
     }
+    currentIndex.value = index;
   }
 
   //player func
@@ -552,6 +554,11 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
             }
           },
         ).then((value) {
+          if (Get.currentRoute != Routes.DETAIL_DOWNLOADED_VIDEO) {
+            Get.back();
+            currentIndex.value = 1;
+          }
+
           setCacheDownload(
               id: id.validate(),
               path: file.path,
@@ -612,6 +619,11 @@ class DasboardController extends GetxController with WidgetsBindingObserver {
             }
           },
         ).then((value) {
+          if (Get.currentRoute != Routes.DETAIL_DOWNLOADED_VIDEO) {
+            Get.back();
+            currentIndex.value = 2;
+          }
+
           setCacheDownload(
               id: id.validate(),
               path: file.path,

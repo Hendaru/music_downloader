@@ -30,7 +30,7 @@ TextStyle extraBoldTextStyle({
       textBaseline: textBaseline,
       backgroundColor: backgroundColor,
       height: height,
-      color: color ?? textPrimaryColor);
+      color: color);
 }
 
 TextStyle boldTextStyle({

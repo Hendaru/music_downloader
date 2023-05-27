@@ -89,6 +89,7 @@ class TrendingView extends GetView<TrendingController> {
                                   controller: textEditingController,
                                   focusNode: focusNode,
                                   keyboardType: TextInputType.text,
+                                  style: boldTextStyle(color: primaryColor),
                                   onSubmitted: (String value) {
                                     controller.searchResult(value);
                                   },

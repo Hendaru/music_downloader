@@ -168,6 +168,7 @@ class DownloadedAudioView extends GetView<DownloadedAudioController> {
                                   color: greyColor)
                             ],
                           ).onTap(() {
+                            controllerDasboard.songPlay.value = true;
                             Future.delayed(const Duration(seconds: 1), () {
                               openAdShowReward();
                             });

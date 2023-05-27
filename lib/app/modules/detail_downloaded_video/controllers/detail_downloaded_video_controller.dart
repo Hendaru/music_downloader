@@ -150,7 +150,7 @@ class DetailDownloadedVideoController extends FullLifeCycleController
 
   @override
   void onInactive() {
-    print("onInactive");
+    print("-------------------onInactive----------------------");
   }
 
   @override

@@ -174,7 +174,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
         showDialogBox(
           Get.context,
           "Update app version",
-          "Please update app to version $version",
+          "Please update app to $version version",
           onCall: () {
             openStoreListing();
           },
