@@ -47,6 +47,7 @@ dependencies:
   permission_handler: 10.2.0
   flutter_slidable: 3.0.0
   unity_ads_plugin: 0.3.8
+  flutter_dotenv: 5.1.0
   flutter: 
     sdk: flutter
 
@@ -63,5 +64,6 @@ dev_dependencies:
 flutter: 
   assets: 
     - assets/
+    - .env
   uses-material-design: true
 

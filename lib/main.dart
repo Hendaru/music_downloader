@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:get/get.dart';
 
@@ -27,6 +28,7 @@ Future<void> main() async {
   UnityInitializerController controllerUnity =
       Get.put(UnityInitializerController());
   controllerUnity.init();
+  await dotenv.load();
   runApp(
     Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
