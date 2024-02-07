@@ -78,9 +78,9 @@ class DownloadPageView extends GetView<DownloadPageController> {
                     text: controller.progreesDouble.value != null
                         ? "${controller.progrees.value}%"
                         : "Download",
-                    color: Theme.of(context).colorScheme.primaryVariant,
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                     textStyle: boldTextStyle(
-                        color: Theme.of(context).colorScheme.secondaryVariant),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
                     width: 30.w,
                     enableScaleAnimation: false,
                     // loadingColor: primaryColor,

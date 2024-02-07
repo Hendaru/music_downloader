@@ -27,8 +27,8 @@ ThemeData lightThemeData(BuildContext context) {
           surface: btnLightColor,
           onSurface: primaryColor,
           onTertiary: btnDarkColor,
-          primaryVariant: Color(0xFF1F2633),
-          secondaryVariant: Colors.white),
+          surfaceVariant: Color(0xFF1F2633),
+          onSurfaceVariant: Colors.white),
       // checkboxTheme: CheckboxThemeData(
       //   shape: RoundedRectangleBorder(
       //       borderRadius: radius(20), side: const BorderSide(width: 1)),
@@ -70,8 +70,8 @@ ThemeData darkThemeData(BuildContext context) {
         surface: btnDarkColor,
         onSurface: whiteColor,
         onTertiary: whiteColor,
-        primaryVariant: Color(0xFFF5EBEB),
-        secondaryVariant: Colors.black),
+        surfaceVariant: Color(0xFFF5EBEB),
+        onSurfaceVariant: Colors.black),
     appBarTheme: const AppBarTheme(backgroundColor: scaffoldDarkColor),
     dividerColor: viewLineDarkColor,
     textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme).apply(

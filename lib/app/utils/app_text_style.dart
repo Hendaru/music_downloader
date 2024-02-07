@@ -19,7 +19,7 @@ TextStyle extraBoldTextStyle({
   Color? backgroundColor,
   double? height,
 }) {
-  return GoogleFonts.poppins(
+  return GoogleFonts.getFont("Poppins",
       fontWeight: weight ?? fontWeightBoldGlobal,
       fontSize: size != null ? size.toDouble() : textBoldSizeGlobal,
       decorationStyle: textDecorationStyle,
@@ -31,6 +31,39 @@ TextStyle extraBoldTextStyle({
       backgroundColor: backgroundColor,
       height: height,
       color: color);
+}
+
+TextStyle mediumTextStyle({
+  double? size,
+  Color? color,
+  FontWeight? weight,
+  String? fontFamily,
+  double? letterSpacing,
+  FontStyle? fontStyle,
+  double? wordSpacing,
+  TextDecoration? decoration,
+  TextDecorationStyle? textDecorationStyle,
+  TextBaseline? textBaseline,
+  Color? decorationColor,
+  Color? backgroundColor,
+  double? height,
+}) {
+  return GoogleFonts.getFont(
+    "Poppins",
+    fontSize: size != null ? size.toDouble() : textBoldSizeGlobal,
+    color: color ?? Colors.black,
+    fontWeight: weight ?? fontWeightMediumGlobal,
+    // fontFamily: fontFamily ?? fontFamilyBoldGlobal,
+    letterSpacing: letterSpacing,
+    fontStyle: fontStyle,
+    decoration: decoration,
+    decorationStyle: textDecorationStyle,
+    decorationColor: decorationColor,
+    wordSpacing: wordSpacing,
+    textBaseline: textBaseline,
+    backgroundColor: backgroundColor,
+    height: height,
+  );
 }
 
 TextStyle boldTextStyle({

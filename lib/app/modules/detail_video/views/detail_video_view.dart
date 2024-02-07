@@ -122,11 +122,11 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                         : "${dasboardController.progreesVideo.value}%",
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .primaryVariant,
+                                    .surfaceVariant,
                                 textStyle: boldTextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .secondaryVariant),
+                                        .onSurfaceVariant),
 
                                 padding: EdgeInsets.symmetric(vertical: 1.h),
                                 enableScaleAnimation: false,
@@ -161,11 +161,11 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                         : "${dasboardController.progreesAudio.value}%",
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .primaryVariant,
+                                    .surfaceVariant,
                                 textStyle: boldTextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .secondaryVariant),
+                                        .onSurfaceVariant),
                                 padding: EdgeInsets.symmetric(vertical: 1.h),
                                 enableScaleAnimation: false,
                                 enabled: !controller.errorVideo.value,

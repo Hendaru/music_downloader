@@ -26,6 +26,9 @@ Color textSecondaryColorGlobal = textSecondaryColor;
 FontWeight fontWeightBoldGlobal = FontWeight.bold;
 FontWeight fontWeightPrimaryGlobal = FontWeight.normal;
 FontWeight fontWeightSecondaryGlobal = FontWeight.normal;
+
+FontWeight fontWeightMediumGlobal = FontWeight.w600;
+
 double textBoldSizeGlobal = 12.sp;
 double textPrimarySizeGlobal = 12.sp;
 double textSecondarySizeGlobal = 10.sp;

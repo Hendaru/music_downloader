@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:get/get.dart';
@@ -28,6 +30,10 @@ Future<void> main() async {
   UnityInitializerController controllerUnity =
       Get.put(UnityInitializerController());
   controllerUnity.init();
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
   await dotenv.load();
   runApp(
     Sizer(builder: (context, orientation, deviceType) {
