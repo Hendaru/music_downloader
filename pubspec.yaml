@@ -3,7 +3,7 @@ version: 1.0.1+4
 publish_to: none
 description: Video Mp3 Downloader
 environment: 
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.0.5 <4.0.0'
 
 dependencies: 
   cupertino_icons: ^1.0.2
@@ -32,12 +32,12 @@ dependencies:
   in_app_review: 2.0.8
   rating_dialog: 2.0.4
   url_launcher: 6.2.4
-  receive_sharing_intent: 1.4.5
+  receive_sharing_intent: 1.6.7
   package_info_plus: 4.2.0
   flutter_file_dialog: 3.0.2
   chunked_downloader: 0.0.2
   async: 2.11.0
-  flutter_youtube_downloader: 0.0.5
+  # flutter_youtube_downloader: 0.0.5
   youtube_data_api: 1.0.4
   youtube_player_flutter: 8.1.2
   video_player: 2.8.2

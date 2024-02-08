@@ -8,7 +8,7 @@ import 'package:chunked_downloader/chunked_downloader.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_youtube_downloader/flutter_youtube_downloader.dart';
+// import 'package:flutter_youtube_downloader/flutter_youtube_downloader.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -73,9 +73,9 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   @override
   void onInit() {
     _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
+        ReceiveSharingIntent.getMediaStream().listen((value) {
       Future.delayed(const Duration(seconds: 1), () {
-        downloadYoutube.text = value.validate();
+        downloadYoutube.text = value.first.path;
       });
     }, onError: (err) {
       print("getLinkStream error: $err");
@@ -112,9 +112,9 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   @override
   void onResumed() {
     _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
+        ReceiveSharingIntent.getMediaStream().listen((value) {
       Future.delayed(const Duration(seconds: 1), () {
-        downloadYoutube.text = value.validate();
+        downloadYoutube.text = value.first.path;
       });
     }, onError: (err) {
       print("getLinkStream error: $err");
@@ -307,13 +307,13 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
       loadingBtn.value = false;
     } else {
       print("-------------Masuk download---------------");
-      String? link;
-      try {
-        link = await FlutterYoutubeDownloader.extractYoutubeLink(
-            url.validate(), 140);
-      } on PlatformException {
-        link = 'Failed to Extract YouTube Video Link.';
-      }
+      // String? link;
+      // try {
+      //   link = await FlutterYoutubeDownloader.extractYoutubeLink(
+      //       url.validate(), 140);
+      // } on PlatformException {
+      //   link = 'Failed to Extract YouTube Video Link.';
+      // }
 
       // try {
       //   int offset = 0;

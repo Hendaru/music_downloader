@@ -37,12 +37,15 @@ class DownloadPageController extends FullLifeCycleController
 
   StreamSubscription? _intentDataStreamSubscription;
 
+  final _sharedFiles = <SharedMediaFile>[];
+
   @override
   void onInit() {
     _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
+        ReceiveSharingIntent.getMediaStream().listen((value) {
       Future.delayed(const Duration(seconds: 1), () {
-        downloadYoutube.text = value.validate();
+        _sharedFiles.clear();
+        downloadYoutube.text = value.first.path;
       });
     }, onError: (err) {
       print("getLinkStream error: $err");
@@ -78,9 +81,9 @@ class DownloadPageController extends FullLifeCycleController
   @override
   void onResumed() {
     _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
+        ReceiveSharingIntent.getMediaStream().listen((value) {
       Future.delayed(const Duration(seconds: 1), () {
-        downloadYoutube.text = value.validate();
+        downloadYoutube.text = value.first.path;
       });
     }, onError: (err) {
       print("getLinkStream error: $err");
