@@ -49,6 +49,8 @@ dependencies:
   unity_ads_plugin: 0.3.8
   flutter_dotenv: 5.1.0
   build_runner: 2.4.5
+  path: ^1.8.3
+  youtube_explode_dart: 
   flutter: 
     sdk: flutter
 

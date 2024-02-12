@@ -14,7 +14,10 @@ import 'package:music_download_youtube/app/utils/extensions/widget_extensions.da
 import 'package:music_download_youtube/app/utils/network_utils.dart';
 import 'package:music_download_youtube/app/utils/widgets/shimmer/skeleton_widget.dart';
 import 'package:music_download_youtube/r.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:path/path.dart' as path;
 
 import '../controllers/trending_controller.dart';
 
