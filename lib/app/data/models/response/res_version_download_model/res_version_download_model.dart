@@ -7,7 +7,8 @@ part 'res_version_download_model.g.dart';
 @freezed
 class ResVersionDownloadModel with _$ResVersionDownloadModel {
   const factory ResVersionDownloadModel(
-      {ResMusicMetaModel? meta,
+      {String? message,
+      int? code,
       List<DataVersionDownloadModel>? data}) = _ResVersionModel;
 
   factory ResVersionDownloadModel.fromJson(Map<String, dynamic> json) =>
@@ -17,9 +18,21 @@ class ResVersionDownloadModel with _$ResVersionDownloadModel {
 @freezed
 class DataVersionDownloadModel with _$DataVersionDownloadModel {
   const factory DataVersionDownloadModel({
-    @JsonKey(name: "version_name") String? versionName,
+    @JsonKey(name: "name") String? nameVersion,
+    @JsonKey(name: "app_name") String? appName,
+    @JsonKey(name: "id") int? id,
   }) = _DataVersionDownloadModel;
 
   factory DataVersionDownloadModel.fromJson(Map<String, dynamic> json) =>
       _$DataVersionDownloadModelFromJson(json);
 }
+
+// @freezed
+// class DataVersionDownloadModel with _$DataVersionDownloadModel {
+//   const factory DataVersionDownloadModel({
+//     @JsonKey(name: "version_name") String? versionName,
+//   }) = _DataVersionDownloadModel;
+
+//   factory DataVersionDownloadModel.fromJson(Map<String, dynamic> json) =>
+//       _$DataVersionDownloadModelFromJson(json);
+// }

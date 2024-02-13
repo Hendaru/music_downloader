@@ -21,6 +21,7 @@ import 'package:music_download_youtube/app/utils/widgets/error_page_widget.dart'
 import 'package:music_download_youtube/app/utils/widgets/shimmer/skeleton_widget.dart';
 import 'package:music_download_youtube/r.dart';
 import 'package:sizer/sizer.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../controllers/detail_video_controller.dart';
 
@@ -55,27 +56,40 @@ class DetailVideoView extends GetView<DetailVideoController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() => controller.errorVideo.value
-            ? Container(
-                width: 100.w,
-                height: 25.h,
-                color: greyBgLightColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(MainAssets.ic_video_error, width: 15.w),
-                    Text("Video not found", style: boldTextStyle())
-                  ],
-                ),
-              )
-            : controller.chewieController?.value != null
-                ? Chewie(
-                    controller: controller.chewieController!.value!,
-                  ).withSize(height: 30.h, width: 100.w)
-                : SkeletonWidget(
-                    height: 25.h,
+                ? Container(
                     width: 100.w,
-                  ).paddingSymmetric(
-                    horizontal: defaultPaddingHorizontalGlobal)),
+                    height: 25.h,
+                    color: greyBgLightColor,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(MainAssets.ic_video_error,
+                            width: 15.w),
+                        Text("Video not found", style: boldTextStyle())
+                      ],
+                    ),
+                  )
+                : YoutubePlayer(
+                    controller: controller.ytController,
+                    showVideoProgressIndicator: true,
+                    progressIndicatorColor: Colors.red,
+                    progressColors: ProgressBarColors(
+                      playedColor: Colors.red,
+                      handleColor: Colors.red,
+                    ),
+                  )
+            // controller.ytController != null
+            //     ?
+
+            //     // Chewie(
+            //     //     controller: controller.chewieController!.value!,
+            //     //   ).withSize(height: 30.h, width: 100.w)
+            //     : SkeletonWidget(
+            //         height: 25.h,
+            //         width: 100.w,
+            //       ).paddingSymmetric(
+            //         horizontal: defaultPaddingHorizontalGlobal)
+            ),
         2.h.height,
         Text(
           controller.detailVideoData.value?.title.validate() ?? "",
@@ -83,176 +97,170 @@ class DetailVideoView extends GetView<DetailVideoController> {
         ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal),
         2.h.height,
         Obx(() => controller.loadingTranding.value
-                ? Center(
-                    child: Column(
+            ? Center(
+                child: Column(
+                children: [
+                  SkeletonWidget(height: 5.h, width: 100.w),
+                  3.h.height,
+                  SkeletonWidget(height: 5.h, width: 100.w),
+                  3.h.height,
+                  SkeletonWidget(height: 5.h, width: 100.w),
+                ],
+              ))
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      SkeletonWidget(height: 5.h, width: 100.w),
-                      3.h.height,
-                      SkeletonWidget(height: 5.h, width: 100.w),
-                      3.h.height,
-                      SkeletonWidget(height: 5.h, width: 100.w),
-                    ],
-                  ))
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Obx(() => AppButtonWidget(
-                                onTap: () {
-                                  if (dasboardController.progreesDouble.value ==
-                                      null) {
-                                    Future.delayed(const Duration(seconds: 1),
-                                        () {
-                                      openAdShowReward();
-                                    });
-                                    controller
-                                        .downloadVideo(dasboardController);
-                                  } else {
-                                    toast("Please wait download finish");
-                                  }
-                                },
-                                text: dasboardController.idDownload !=
-                                        controller
-                                            .detailVideoData.value?.videoId
+                      Obx(() => AppButtonWidget(
+                            onTap: () {
+                              if (dasboardController.progreesDouble.value ==
+                                  null) {
+                                Future.delayed(const Duration(seconds: 1), () {
+                                  openAdShowReward();
+                                });
+                                controller.downloadVideo(dasboardController);
+                              } else {
+                                toast("Please wait download finish");
+                              }
+                            },
+                            text: dasboardController.idDownload !=
+                                    controller.detailVideoData.value?.videoId
+                                ? "Download Video"
+                                : dasboardController.progreesVideo.value.isEmpty
                                     ? "Download Video"
-                                    : dasboardController
-                                            .progreesVideo.value.isEmpty
-                                        ? "Download Video"
-                                        : "${dasboardController.progreesVideo.value}%",
+                                    : "${dasboardController.progreesVideo.value}%",
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                            textStyle: boldTextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .surfaceVariant,
-                                textStyle: boldTextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant),
+                                    .onSurfaceVariant),
 
-                                padding: EdgeInsets.symmetric(vertical: 1.h),
-                                enableScaleAnimation: false,
-                                enabled: !controller.errorVideo.value,
-                                // loadingColor: primaryColor,
-                                loading: controller.loadingVideo.value,
-                                shapeBorder: RoundedRectangleBorder(
-                                    borderRadius: radius(defaultRadius)),
-                              )).expand(),
-                          2.w.width,
-                          Obx(() => AppButtonWidget(
-                                onTap: () {
-                                  if (dasboardController.progreesDouble.value ==
-                                      null) {
-                                    Future.delayed(const Duration(seconds: 1),
-                                        () {
-                                      openAdShowReward();
-                                    });
-                                    controller
-                                        .downloadAudio(dasboardController);
-                                  } else {
-                                    toast("Please wait download finish");
-                                  }
-                                },
-                                text: dasboardController.idDownload !=
-                                        controller
-                                            .detailVideoData.value?.videoId
+                            padding: EdgeInsets.symmetric(vertical: 1.h),
+                            enableScaleAnimation: false,
+                            enabled: !controller.errorVideo.value,
+                            // loadingColor: primaryColor,
+                            loading: controller.loadingVideo.value,
+                            shapeBorder: RoundedRectangleBorder(
+                                borderRadius: radius(defaultRadius)),
+                          )).expand(),
+                      2.w.width,
+                      Obx(() => AppButtonWidget(
+                            onTap: () {
+                              if (dasboardController.progreesDouble.value ==
+                                  null) {
+                                Future.delayed(const Duration(seconds: 1), () {
+                                  openAdShowReward();
+                                });
+                                controller.downloadAudio(dasboardController);
+                              } else {
+                                toast("Please wait download finish");
+                              }
+                            },
+                            text: dasboardController.idDownload !=
+                                    controller.detailVideoData.value?.videoId
+                                ? "Download Audio"
+                                : dasboardController.progreesAudio.value.isEmpty
                                     ? "Download Audio"
-                                    : dasboardController
-                                            .progreesAudio.value.isEmpty
-                                        ? "Download Audio"
-                                        : "${dasboardController.progreesAudio.value}%",
+                                    : "${dasboardController.progreesAudio.value}%",
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                            textStyle: boldTextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .surfaceVariant,
-                                textStyle: boldTextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant),
-                                padding: EdgeInsets.symmetric(vertical: 1.h),
-                                enableScaleAnimation: false,
-                                enabled: !controller.errorVideo.value,
-                                loading: controller.loadingAudio.value,
-                                shapeBorder: RoundedRectangleBorder(
-                                    borderRadius: radius(defaultRadius)),
-                              )).expand(),
-                        ],
-                      ),
-                      1.h.height,
-                      Obx(
-                        () => dasboardController.idDownload !=
-                                controller.detailVideoData.value?.videoId
+                                    .onSurfaceVariant),
+                            padding: EdgeInsets.symmetric(vertical: 1.h),
+                            enableScaleAnimation: false,
+                            enabled: !controller.errorVideo.value,
+                            loading: controller.loadingAudio.value,
+                            shapeBorder: RoundedRectangleBorder(
+                                borderRadius: radius(defaultRadius)),
+                          )).expand(),
+                    ],
+                  ),
+                  1.h.height,
+                  Obx(
+                    () => dasboardController.idDownload !=
+                            controller.detailVideoData.value?.videoId
+                        ? Divider(
+                            thickness: 4.0,
+                          )
+                        : dasboardController.progreesDouble.value == null
                             ? Divider(
                                 thickness: 4.0,
                               )
-                            : dasboardController.progreesDouble.value == null
-                                ? Divider(
-                                    thickness: 4.0,
-                                  )
-                                : LinearProgressIndicator(
-                                    value:
-                                        dasboardController.progreesDouble.value,
-                                    valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
-                                            Colors.amber),
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                  ),
-                      ),
-                      1.h.height,
-                      Text(
-                        "Popular Videos",
-                        style: boldTextStyle(),
-                      ),
-                      1.h.height,
-                      Column(
-                        children: controller.videosTrending
-                            .map(
-                              (e) => Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  commonCacheImageWidget(
-                                          e.thumbnails?[0].url.validate(),
-                                          width: 30.w,
-                                          // idcacheKey: element.idPlayList.validate(),
-                                          fit: BoxFit.cover,
-                                          isSquere: false)
-                                      .cornerRadiusWithClipRRect(3.w),
-                                  3.w.width,
-                                  Text(
-                                    e.title.validate(),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: boldTextStyle(),
-                                  ).expand(),
-                                  SvgPicture.asset(MainAssets.ic_more_more,
-                                          width: 4.w,
-                                          height: 4.w,
-                                          // ignore: unrelated_type_equality_checks
-                                          color: greyColor)
-                                      .withWidth(10.w)
-                                ],
-                              ).marginOnly(bottom: 2.h).onTap(() {
-                                if (controller.videoPlayerController != null) {
-                                  controller.videoPlayerController!.dispose();
-                                  controller.chewieController?.value?.dispose();
-                                }
-                                controller.chewieController?.value = null;
-                                controller.detailVideoData.value = e;
-                                controller.getUrlVideoController(
-                                    e.videoId.validate(), 18);
-                                controller.errorVideo.value = false;
-                              }),
-                            )
-                            .toList(),
-                      ),
-                    ],
-                  ))
-            .withScroll(
-                physics: BouncingScrollPhysics(),
-                reverse: false,
-                padding: EdgeInsets.symmetric(vertical: 1.h))
-            .paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)
-            .expand()
+                            : LinearProgressIndicator(
+                                value: dasboardController.progreesDouble.value,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Colors.amber),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.background,
+                              ),
+                  ),
+                  1.h.height,
+                  Text(
+                    "Popular Videos",
+                    style: boldTextStyle(),
+                  ),
+                  1.h.height,
+                  Column(
+                    children: controller.videosTrending
+                        .map(
+                          (e) => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              commonCacheImageWidget(
+                                      e.thumbnails?[0].url.validate(),
+                                      width: 30.w,
+                                      // idcacheKey: element.idPlayList.validate(),
+                                      fit: BoxFit.cover,
+                                      isSquere: false)
+                                  .cornerRadiusWithClipRRect(3.w),
+                              3.w.width,
+                              Text(
+                                e.title.validate(),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: boldTextStyle(),
+                              ).expand(),
+                              SvgPicture.asset(MainAssets.ic_more_more,
+                                      width: 4.w,
+                                      height: 4.w,
+                                      // ignore: unrelated_type_equality_checks
+                                      color: greyColor)
+                                  .withWidth(10.w)
+                            ],
+                          ).marginOnly(bottom: 2.h).onTap(() {
+                            // if (controller.videoPlayerController != null) {
+                            //   controller.videoPlayerController!.dispose();
+                            //   controller.chewieController?.value?.dispose();
+                            // }
+                            // if (controller.ytController != null) {
+                            //   controller.videoPlayerController!.dispose();
+                            //   controller.chewieController?.value?.dispose();
+                            // }
+                            // controller.ytController.reload();
+                            // controller.ytController.dispose();
+                            controller.detailVideoData.value = e;
+
+                            // controller.youtubePlayerCon();
+                            controller.ytController.load(e.videoId ?? "");
+                            // controller.getUrlVideoController(
+                            //     e.videoId.validate(), 18);
+                            controller.errorVideo.value = false;
+                            controller.scrollController.animateTo(0.0,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 300));
+                          }),
+                        )
+                        .toList(),
+                  ),
+                ],
+              )).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)
       ],
-    );
+    ).withScroll(
+        physics: BouncingScrollPhysics(),
+        reverse: false,
+        controller: controller.scrollController,
+        padding: EdgeInsets.symmetric(vertical: 1.h));
   }
 }

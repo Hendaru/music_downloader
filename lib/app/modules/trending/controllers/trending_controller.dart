@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -72,7 +73,10 @@ class TrendingController extends GetxController {
       if (p0.status == Status.SUCCESS) {
         if (p0.data != null) {
           if (p0.data!.data != null) {
-            getVersion(p0.data?.data?.first.versionName.validate() ?? "");
+            DataVersionDownloadModel? version = p0.data?.data
+                ?.firstWhereOrNull((v) => v.appName == "MUSIC_DOWNLOAD_1");
+
+            getVersion(version);
           }
         }
       } else if (p0.status == Status.LOADING) {
@@ -80,12 +84,14 @@ class TrendingController extends GetxController {
     });
   }
 
-  Future<void> getVersion(String version) async {
+  Future<void> getVersion(DataVersionDownloadModel? version) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String versionInfo = packageInfo.version;
 
-    if (version.isNotEmpty) {
-      if (version != versionInfo) {
+    log(version.toString());
+
+    if (version != null) {
+      if (version.nameVersion != versionInfo) {
         showDialogBox(
           Get.context,
           "Update app version",

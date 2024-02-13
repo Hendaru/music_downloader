@@ -29,6 +29,13 @@ class MusicRepository {
     );
   }
 
+  EventManager getUrlNewRepository(String id, String type) {
+    return NetworkOnlyResource<ResUrlVideoModel, ResUrlVideoModel>(
+      createCall: () => _service.getUrlNewService(id, type),
+      handleCallResult: (item) => Future.value(item),
+    );
+  }
+
   EventManager getVersionRepository() {
     return NetworkOnlyResource<ResVersionModel, ResVersionModel>(
       createCall: () => _service.getVersionService(),

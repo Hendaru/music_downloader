@@ -12,7 +12,7 @@ class DioModule with DioMixin implements Dio {
       connectTimeout: Duration(minutes: 3),
       sendTimeout: Duration(minutes: 3),
       receiveTimeout: Duration(minutes: 3),
-      baseUrl: "$baseUrl/api/v1",
+      baseUrl: "$baseUrl",
     );
 
     options = newOptions;

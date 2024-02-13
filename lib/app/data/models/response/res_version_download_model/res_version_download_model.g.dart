@@ -8,9 +8,8 @@ part of 'res_version_download_model.dart';
 
 _$_ResVersionModel _$$_ResVersionModelFromJson(Map<String, dynamic> json) =>
     _$_ResVersionModel(
-      meta: json['meta'] == null
-          ? null
-          : ResMusicMetaModel.fromJson(json['meta'] as Map<String, dynamic>),
+      message: json['message'] as String?,
+      code: json['code'] as int?,
       data: (json['data'] as List<dynamic>?)
           ?.map((e) =>
               DataVersionDownloadModel.fromJson(e as Map<String, dynamic>))
@@ -19,18 +18,23 @@ _$_ResVersionModel _$$_ResVersionModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_ResVersionModelToJson(_$_ResVersionModel instance) =>
     <String, dynamic>{
-      'meta': instance.meta,
+      'message': instance.message,
+      'code': instance.code,
       'data': instance.data,
     };
 
 _$_DataVersionDownloadModel _$$_DataVersionDownloadModelFromJson(
         Map<String, dynamic> json) =>
     _$_DataVersionDownloadModel(
-      versionName: json['version_name'] as String?,
+      nameVersion: json['name'] as String?,
+      appName: json['app_name'] as String?,
+      id: json['id'] as int?,
     );
 
 Map<String, dynamic> _$$_DataVersionDownloadModelToJson(
         _$_DataVersionDownloadModel instance) =>
     <String, dynamic>{
-      'version_name': instance.versionName,
+      'name': instance.nameVersion,
+      'app_name': instance.appName,
+      'id': instance.id,
     };

@@ -14,6 +14,7 @@ import 'package:music_download_youtube/app/utils/extensions/string_extensions.da
 import 'package:video_player/video_player.dart';
 import 'package:youtube_data_api/models/video.dart';
 import 'package:youtube_data_api/youtube_data_api.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailVideoController extends GetxController {
   YoutubeDataApi youtubeDataApi = YoutubeDataApi();
@@ -38,7 +39,7 @@ class DetailVideoController extends GetxController {
 
   Rxn<ResUrlVideoModel> resUrlVideoModel = Rxn<ResUrlVideoModel>();
   Rxn<ResUrlVideoModel> resUrlAudioModel = Rxn<ResUrlVideoModel>();
-
+  final scrollController = ScrollController();
   String? urlVideo;
   String? urlDownloaded;
   String? idVideo;
@@ -46,6 +47,7 @@ class DetailVideoController extends GetxController {
   final videoDownload = false.obs;
 
   DasboardController? dasboardController;
+  late YoutubePlayerController ytController;
 
   @override
   void onInit() {
@@ -58,8 +60,10 @@ class DetailVideoController extends GetxController {
     observer();
     if (detailVideoData.value != null) {
       initialLoading.value = true;
-      getUrlVideoController(
-          detailVideoData.value?.videoId.validate() ?? "", 18);
+      youtubePlayerCon();
+
+      // getUrlVideoController(
+      //     detailVideoData.value?.videoId.validate() ?? "", 18);
       getSuggestions();
     }
   }
@@ -83,7 +87,7 @@ class DetailVideoController extends GetxController {
             loadingAudio.value = false;
 
             if (downloadLoad.value) {
-              urlDownloaded = p0.data!.data!.url.validate();
+              urlDownloaded = p0.data?.data?.url ?? "";
               if (videoDownload.value) {
                 dasboardController!.downloadFileVideo(
                   id: idVideo.validate(),
@@ -131,10 +135,13 @@ class DetailVideoController extends GetxController {
     });
   }
 
-  void getUrlVideoController(String id, int tag) {
+  void getUrlVideoController(String id, String type) {
     _musicRepository
-        .getUrlRepository(id, tag)
+        .getUrlNewRepository(id, type)
         .addEvent(event: getUrlVideoEvent);
+    // _musicRepository
+    //     .getUrlRepository(id, tag)
+    //     .addEvent(event: getUrlVideoEvent);
   }
 
   // void getUrlAudioController(String id, int tag) {
@@ -194,6 +201,32 @@ class DetailVideoController extends GetxController {
     }
   }
 
+  youtubePlayerCon() async {
+    ytController = await YoutubePlayerController(
+      initialVideoId: detailVideoData.value?.videoId ?? "",
+      flags: const YoutubePlayerFlags(
+        mute: false,
+        autoPlay: false,
+        disableDragSeek: false,
+        showLiveFullscreenButton: false,
+        loop: false,
+        isLive: false,
+        forceHD: false,
+        enableCaption: false,
+      ),
+    );
+    initialLoading.value = false;
+  }
+
+  //  void listener() {
+  //   if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+  //     setState(() {
+  //       _playerState = _controller.value.playerState;
+  //       _videoMetaData = _controller.metadata;
+  //     });
+  //   }
+  // }
+
   void downloadVideo(DasboardController dasboardControllerOk) {
     downloadLoad.value = true;
     loadingVideo.value = true;
@@ -202,7 +235,8 @@ class DetailVideoController extends GetxController {
     idOriginal = detailVideoData.value?.videoId.validate() ?? "";
     idVideo = "video-${detailVideoData.value?.videoId.validate() ?? ""}";
 
-    getUrlVideoController(detailVideoData.value?.videoId.validate() ?? "", 22);
+    getUrlVideoController(
+        detailVideoData.value?.videoId.validate() ?? "", "video");
   }
 
   void downloadAudio(DasboardController dasboardControllerOk) {
@@ -213,12 +247,14 @@ class DetailVideoController extends GetxController {
     idOriginal = detailVideoData.value?.videoId.validate() ?? "";
 
     idVideo = "audio-${detailVideoData.value?.videoId.validate() ?? ""}";
-    getUrlVideoController(detailVideoData.value?.videoId.validate() ?? "", 140);
+    getUrlVideoController(
+        detailVideoData.value?.videoId.validate() ?? "", "audio");
   }
 
   @override
   void onClose() {
     // ytCtrl.dispose();
+    ytController.dispose();
     if (videoPlayerController != null) {
       videoPlayerController!.dispose();
       chewieController?.value?.dispose();

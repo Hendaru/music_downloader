@@ -21,7 +21,8 @@ ResVersionDownloadModel _$ResVersionDownloadModelFromJson(
 
 /// @nodoc
 mixin _$ResVersionDownloadModel {
-  ResMusicMetaModel? get meta => throw _privateConstructorUsedError;
+  String? get message => throw _privateConstructorUsedError;
+  int? get code => throw _privateConstructorUsedError;
   List<DataVersionDownloadModel>? get data =>
       throw _privateConstructorUsedError;
 
@@ -37,9 +38,7 @@ abstract class $ResVersionDownloadModelCopyWith<$Res> {
           $Res Function(ResVersionDownloadModel) then) =
       _$ResVersionDownloadModelCopyWithImpl<$Res, ResVersionDownloadModel>;
   @useResult
-  $Res call({ResMusicMetaModel? meta, List<DataVersionDownloadModel>? data});
-
-  $ResMusicMetaModelCopyWith<$Res>? get meta;
+  $Res call({String? message, int? code, List<DataVersionDownloadModel>? data});
 }
 
 /// @nodoc
@@ -56,31 +55,24 @@ class _$ResVersionDownloadModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? meta = freezed,
+    Object? message = freezed,
+    Object? code = freezed,
     Object? data = freezed,
   }) {
     return _then(_value.copyWith(
-      meta: freezed == meta
-          ? _value.meta
-          : meta // ignore: cast_nullable_to_non_nullable
-              as ResMusicMetaModel?,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+      code: freezed == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as int?,
       data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
               as List<DataVersionDownloadModel>?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ResMusicMetaModelCopyWith<$Res>? get meta {
-    if (_value.meta == null) {
-      return null;
-    }
-
-    return $ResMusicMetaModelCopyWith<$Res>(_value.meta!, (value) {
-      return _then(_value.copyWith(meta: value) as $Val);
-    });
   }
 }
 
@@ -92,10 +84,7 @@ abstract class _$$_ResVersionModelCopyWith<$Res>
       __$$_ResVersionModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ResMusicMetaModel? meta, List<DataVersionDownloadModel>? data});
-
-  @override
-  $ResMusicMetaModelCopyWith<$Res>? get meta;
+  $Res call({String? message, int? code, List<DataVersionDownloadModel>? data});
 }
 
 /// @nodoc
@@ -109,14 +98,19 @@ class __$$_ResVersionModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? meta = freezed,
+    Object? message = freezed,
+    Object? code = freezed,
     Object? data = freezed,
   }) {
     return _then(_$_ResVersionModel(
-      meta: freezed == meta
-          ? _value.meta
-          : meta // ignore: cast_nullable_to_non_nullable
-              as ResMusicMetaModel?,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+      code: freezed == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as int?,
       data: freezed == data
           ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
@@ -129,14 +123,16 @@ class __$$_ResVersionModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ResVersionModel implements _ResVersionModel {
   const _$_ResVersionModel(
-      {this.meta, final List<DataVersionDownloadModel>? data})
+      {this.message, this.code, final List<DataVersionDownloadModel>? data})
       : _data = data;
 
   factory _$_ResVersionModel.fromJson(Map<String, dynamic> json) =>
       _$$_ResVersionModelFromJson(json);
 
   @override
-  final ResMusicMetaModel? meta;
+  final String? message;
+  @override
+  final int? code;
   final List<DataVersionDownloadModel>? _data;
   @override
   List<DataVersionDownloadModel>? get data {
@@ -149,7 +145,7 @@ class _$_ResVersionModel implements _ResVersionModel {
 
   @override
   String toString() {
-    return 'ResVersionDownloadModel(meta: $meta, data: $data)';
+    return 'ResVersionDownloadModel(message: $message, code: $code, data: $data)';
   }
 
   @override
@@ -157,14 +153,15 @@ class _$_ResVersionModel implements _ResVersionModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ResVersionModel &&
-            (identical(other.meta, meta) || other.meta == meta) &&
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.code, code) || other.code == code) &&
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, meta, const DeepCollectionEquality().hash(_data));
+      runtimeType, message, code, const DeepCollectionEquality().hash(_data));
 
   @JsonKey(ignore: true)
   @override
@@ -182,14 +179,17 @@ class _$_ResVersionModel implements _ResVersionModel {
 
 abstract class _ResVersionModel implements ResVersionDownloadModel {
   const factory _ResVersionModel(
-      {final ResMusicMetaModel? meta,
+      {final String? message,
+      final int? code,
       final List<DataVersionDownloadModel>? data}) = _$_ResVersionModel;
 
   factory _ResVersionModel.fromJson(Map<String, dynamic> json) =
       _$_ResVersionModel.fromJson;
 
   @override
-  ResMusicMetaModel? get meta;
+  String? get message;
+  @override
+  int? get code;
   @override
   List<DataVersionDownloadModel>? get data;
   @override
@@ -205,8 +205,12 @@ DataVersionDownloadModel _$DataVersionDownloadModelFromJson(
 
 /// @nodoc
 mixin _$DataVersionDownloadModel {
-  @JsonKey(name: "version_name")
-  String? get versionName => throw _privateConstructorUsedError;
+  @JsonKey(name: "name")
+  String? get nameVersion => throw _privateConstructorUsedError;
+  @JsonKey(name: "app_name")
+  String? get appName => throw _privateConstructorUsedError;
+  @JsonKey(name: "id")
+  int? get id => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -220,7 +224,10 @@ abstract class $DataVersionDownloadModelCopyWith<$Res> {
           $Res Function(DataVersionDownloadModel) then) =
       _$DataVersionDownloadModelCopyWithImpl<$Res, DataVersionDownloadModel>;
   @useResult
-  $Res call({@JsonKey(name: "version_name") String? versionName});
+  $Res call(
+      {@JsonKey(name: "name") String? nameVersion,
+      @JsonKey(name: "app_name") String? appName,
+      @JsonKey(name: "id") int? id});
 }
 
 /// @nodoc
@@ -237,13 +244,23 @@ class _$DataVersionDownloadModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? versionName = freezed,
+    Object? nameVersion = freezed,
+    Object? appName = freezed,
+    Object? id = freezed,
   }) {
     return _then(_value.copyWith(
-      versionName: freezed == versionName
-          ? _value.versionName
-          : versionName // ignore: cast_nullable_to_non_nullable
+      nameVersion: freezed == nameVersion
+          ? _value.nameVersion
+          : nameVersion // ignore: cast_nullable_to_non_nullable
               as String?,
+      appName: freezed == appName
+          ? _value.appName
+          : appName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -257,7 +274,10 @@ abstract class _$$_DataVersionDownloadModelCopyWith<$Res>
       __$$_DataVersionDownloadModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(name: "version_name") String? versionName});
+  $Res call(
+      {@JsonKey(name: "name") String? nameVersion,
+      @JsonKey(name: "app_name") String? appName,
+      @JsonKey(name: "id") int? id});
 }
 
 /// @nodoc
@@ -272,13 +292,23 @@ class __$$_DataVersionDownloadModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? versionName = freezed,
+    Object? nameVersion = freezed,
+    Object? appName = freezed,
+    Object? id = freezed,
   }) {
     return _then(_$_DataVersionDownloadModel(
-      versionName: freezed == versionName
-          ? _value.versionName
-          : versionName // ignore: cast_nullable_to_non_nullable
+      nameVersion: freezed == nameVersion
+          ? _value.nameVersion
+          : nameVersion // ignore: cast_nullable_to_non_nullable
               as String?,
+      appName: freezed == appName
+          ? _value.appName
+          : appName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -287,18 +317,26 @@ class __$$_DataVersionDownloadModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_DataVersionDownloadModel implements _DataVersionDownloadModel {
   const _$_DataVersionDownloadModel(
-      {@JsonKey(name: "version_name") this.versionName});
+      {@JsonKey(name: "name") this.nameVersion,
+      @JsonKey(name: "app_name") this.appName,
+      @JsonKey(name: "id") this.id});
 
   factory _$_DataVersionDownloadModel.fromJson(Map<String, dynamic> json) =>
       _$$_DataVersionDownloadModelFromJson(json);
 
   @override
-  @JsonKey(name: "version_name")
-  final String? versionName;
+  @JsonKey(name: "name")
+  final String? nameVersion;
+  @override
+  @JsonKey(name: "app_name")
+  final String? appName;
+  @override
+  @JsonKey(name: "id")
+  final int? id;
 
   @override
   String toString() {
-    return 'DataVersionDownloadModel(versionName: $versionName)';
+    return 'DataVersionDownloadModel(nameVersion: $nameVersion, appName: $appName, id: $id)';
   }
 
   @override
@@ -306,13 +344,15 @@ class _$_DataVersionDownloadModel implements _DataVersionDownloadModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DataVersionDownloadModel &&
-            (identical(other.versionName, versionName) ||
-                other.versionName == versionName));
+            (identical(other.nameVersion, nameVersion) ||
+                other.nameVersion == nameVersion) &&
+            (identical(other.appName, appName) || other.appName == appName) &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, versionName);
+  int get hashCode => Object.hash(runtimeType, nameVersion, appName, id);
 
   @JsonKey(ignore: true)
   @override
@@ -331,15 +371,22 @@ class _$_DataVersionDownloadModel implements _DataVersionDownloadModel {
 
 abstract class _DataVersionDownloadModel implements DataVersionDownloadModel {
   const factory _DataVersionDownloadModel(
-          {@JsonKey(name: "version_name") final String? versionName}) =
-      _$_DataVersionDownloadModel;
+      {@JsonKey(name: "name") final String? nameVersion,
+      @JsonKey(name: "app_name") final String? appName,
+      @JsonKey(name: "id") final int? id}) = _$_DataVersionDownloadModel;
 
   factory _DataVersionDownloadModel.fromJson(Map<String, dynamic> json) =
       _$_DataVersionDownloadModel.fromJson;
 
   @override
-  @JsonKey(name: "version_name")
-  String? get versionName;
+  @JsonKey(name: "name")
+  String? get nameVersion;
+  @override
+  @JsonKey(name: "app_name")
+  String? get appName;
+  @override
+  @JsonKey(name: "id")
+  int? get id;
   @override
   @JsonKey(ignore: true)
   _$$_DataVersionDownloadModelCopyWith<_$_DataVersionDownloadModel>

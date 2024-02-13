@@ -36,13 +36,17 @@ class _MusicService implements MusicService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ResMusicModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<ResUrlVideoModel> getUrlVideoService(id) async {
+  Future<ResUrlVideoModel> getUrlVideoService(String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -59,15 +63,19 @@ class _MusicService implements MusicService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ResUrlVideoModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<ResUrlVideoModel> getUrlService(
-    id,
-    tag,
+    String id,
+    int tag,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -88,7 +96,41 @@ class _MusicService implements MusicService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResUrlVideoModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ResUrlVideoModel> getUrlNewService(
+    String id,
+    String type,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ResUrlVideoModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '//ytdl/info/${id}/${type}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ResUrlVideoModel.fromJson(_result.data!);
     return value;
   }
@@ -111,7 +153,11 @@ class _MusicService implements MusicService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ResVersionModel.fromJson(_result.data!);
     return value;
   }
@@ -130,11 +176,15 @@ class _MusicService implements MusicService {
     )
             .compose(
               _dio.options,
-              '/versiondownloadapp',
+              '/version',
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ResVersionDownloadModel.fromJson(_result.data!);
     return value;
   }
@@ -150,5 +200,22 @@ class _MusicService implements MusicService {
       }
     }
     return requestOptions;
+  }
+
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
+      return dioBaseUrl;
+    }
+
+    final url = Uri.parse(baseUrl);
+
+    if (url.isAbsolute) {
+      return url.toString();
+    }
+
+    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
