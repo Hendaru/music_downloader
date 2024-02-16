@@ -1,9 +1,12 @@
 import 'package:music_download_youtube/app/core/modules/dio_modules.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager.dart';
+import 'package:music_download_youtube/app/data/models/response/error/res_error.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_version_download_model/res_version_download_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_version_model/res_version_model.dart';
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 
 class MusicRepository {
   final _service = DioModule().musicService;
@@ -34,6 +37,30 @@ class MusicRepository {
       createCall: () => _service.getUrlNewService(id, type),
       handleCallResult: (item) => Future.value(item),
     );
+  }
+
+  Future<Either<Failure, ResUrlVideoModel>> getUrlNew2Repository(
+      String id, String type) async {
+    try {
+      final result = await _service.getUrlNewService(id, type);
+
+      if (result.data == null) {
+        return left(Failure(
+          status: 401,
+          message: "Video error",
+        ));
+      }
+
+      return right(result);
+    } on DioError catch (e) {
+      final code = e.response?.statusCode;
+      final msg = e.response?.statusMessage;
+
+      return left(Failure(
+        status: code,
+        message: msg,
+      ));
+    }
   }
 
   EventManager getVersionRepository() {

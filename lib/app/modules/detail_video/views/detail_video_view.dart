@@ -56,40 +56,37 @@ class DetailVideoView extends GetView<DetailVideoController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() => controller.errorVideo.value
-                ? Container(
-                    width: 100.w,
+            ? Container(
+                width: 100.w,
+                height: 25.h,
+                color: greyBgLightColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(MainAssets.ic_video_error, width: 15.w),
+                    Text("Video not found", style: boldTextStyle())
+                  ],
+                ),
+              )
+            :
+            // YoutubePlayer(
+            //     controller: controller.ytController,
+            //     showVideoProgressIndicator: true,
+            //     progressIndicatorColor: Colors.red,
+            //     progressColors: ProgressBarColors(
+            //       playedColor: Colors.red,
+            //       handleColor: Colors.red,
+            //     ),
+            //   )
+            controller.chewieController?.value != null
+                ? Chewie(
+                    controller: controller.chewieController!.value!,
+                  ).withSize(height: 30.h, width: 100.w)
+                : SkeletonWidget(
                     height: 25.h,
-                    color: greyBgLightColor,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(MainAssets.ic_video_error,
-                            width: 15.w),
-                        Text("Video not found", style: boldTextStyle())
-                      ],
-                    ),
-                  )
-                : YoutubePlayer(
-                    controller: controller.ytController,
-                    showVideoProgressIndicator: true,
-                    progressIndicatorColor: Colors.red,
-                    progressColors: ProgressBarColors(
-                      playedColor: Colors.red,
-                      handleColor: Colors.red,
-                    ),
-                  )
-            // controller.ytController != null
-            //     ?
-
-            //     // Chewie(
-            //     //     controller: controller.chewieController!.value!,
-            //     //   ).withSize(height: 30.h, width: 100.w)
-            //     : SkeletonWidget(
-            //         height: 25.h,
-            //         width: 100.w,
-            //       ).paddingSymmetric(
-            //         horizontal: defaultPaddingHorizontalGlobal)
-            ),
+                    width: 100.w,
+                  ).paddingSymmetric(
+                    horizontal: defaultPaddingHorizontalGlobal)),
         2.h.height,
         Text(
           controller.detailVideoData.value?.title.validate() ?? "",

@@ -25,7 +25,7 @@ abstract class MusicService {
     @Query('tag') int tag,
   );
 
-  @GET("//ytdl/info/{id}/{type}")
+  @GET("/ytdl/info/{id}/{type}")
   Future<ResUrlVideoModel> getUrlNewService(
     @Path('id') String id,
     @Path('type') String type,

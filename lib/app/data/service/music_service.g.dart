@@ -122,7 +122,7 @@ class _MusicService implements MusicService {
     )
             .compose(
               _dio.options,
-              '//ytdl/info/${id}/${type}',
+              '/ytdl/info/${id}/${type}',
               queryParameters: queryParameters,
               data: _data,
             )

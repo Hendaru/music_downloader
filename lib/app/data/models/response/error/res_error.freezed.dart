@@ -165,3 +165,169 @@ abstract class _ResError implements ResError {
   _$$_ResErrorCopyWith<_$_ResError> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+Failure _$FailureFromJson(Map<String, dynamic> json) {
+  return _Failure.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Failure {
+  int? get status => throw _privateConstructorUsedError;
+  String? get message => throw _privateConstructorUsedError;
+  String? get error => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $FailureCopyWith<Failure> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FailureCopyWith<$Res> {
+  factory $FailureCopyWith(Failure value, $Res Function(Failure) then) =
+      _$FailureCopyWithImpl<$Res, Failure>;
+  @useResult
+  $Res call({int? status, String? message, String? error});
+}
+
+/// @nodoc
+class _$FailureCopyWithImpl<$Res, $Val extends Failure>
+    implements $FailureCopyWith<$Res> {
+  _$FailureCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? status = freezed,
+    Object? message = freezed,
+    Object? error = freezed,
+  }) {
+    return _then(_value.copyWith(
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as int?,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_FailureCopyWith<$Res> implements $FailureCopyWith<$Res> {
+  factory _$$_FailureCopyWith(
+          _$_Failure value, $Res Function(_$_Failure) then) =
+      __$$_FailureCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int? status, String? message, String? error});
+}
+
+/// @nodoc
+class __$$_FailureCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$_Failure>
+    implements _$$_FailureCopyWith<$Res> {
+  __$$_FailureCopyWithImpl(_$_Failure _value, $Res Function(_$_Failure) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? status = freezed,
+    Object? message = freezed,
+    Object? error = freezed,
+  }) {
+    return _then(_$_Failure(
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as int?,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_Failure implements _Failure {
+  const _$_Failure({this.status, this.message, this.error});
+
+  factory _$_Failure.fromJson(Map<String, dynamic> json) =>
+      _$$_FailureFromJson(json);
+
+  @override
+  final int? status;
+  @override
+  final String? message;
+  @override
+  final String? error;
+
+  @override
+  String toString() {
+    return 'Failure(status: $status, message: $message, error: $error)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_Failure &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.error, error) || other.error == error));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, status, message, error);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_FailureCopyWith<_$_Failure> get copyWith =>
+      __$$_FailureCopyWithImpl<_$_Failure>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_FailureToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Failure implements Failure {
+  const factory _Failure(
+      {final int? status,
+      final String? message,
+      final String? error}) = _$_Failure;
+
+  factory _Failure.fromJson(Map<String, dynamic> json) = _$_Failure.fromJson;
+
+  @override
+  int? get status;
+  @override
+  String? get message;
+  @override
+  String? get error;
+  @override
+  @JsonKey(ignore: true)
+  _$$_FailureCopyWith<_$_Failure> get copyWith =>
+      throw _privateConstructorUsedError;
+}
