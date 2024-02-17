@@ -17,7 +17,7 @@ class UnityInitializerController extends GetxController {
   Future<void> init() async {
     await UnityAds.init(
         gameId: AdManager.gameId,
-        testMode: true,
+        testMode: false,
         onComplete: () => _loadAds(),
         onFailed: (error, message) {
           bannerDetailVideovisible.value = false;
