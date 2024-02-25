@@ -189,6 +189,47 @@ class _MusicService implements MusicService {
     return value;
   }
 
+  @override
+  Future<ResSearchModel> getVideolistRealService(
+    String part,
+    String maxResults,
+    String query,
+    String key,
+    String regionCode,
+    String type,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'part': part,
+      r'maxResults': maxResults,
+      r'q': query,
+      r'key': key,
+      r'regionCode': regionCode,
+      r'type': type,
+    };
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ResSearchModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'https://youtube.googleapis.com/youtube/v3/search',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ResSearchModel.fromJson(_result.data!);
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

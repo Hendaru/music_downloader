@@ -16,11 +16,13 @@ import 'package:music_download_youtube/app/utils/app_decoration.dart';
 import 'package:music_download_youtube/app/utils/app_text_style.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
+import 'package:music_download_youtube/app/utils/unity_ads.dart';
 import 'package:music_download_youtube/app/utils/widgets/app_bar_custom_widget.dart';
 import 'package:music_download_youtube/app/utils/widgets/error_page_widget.dart';
 import 'package:music_download_youtube/app/utils/widgets/shimmer/skeleton_widget.dart';
 import 'package:music_download_youtube/r.dart';
 import 'package:sizer/sizer.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../controllers/detail_video_controller.dart';
@@ -30,6 +32,11 @@ class DetailVideoView extends GetView<DetailVideoController> {
   @override
   Widget build(BuildContext context) {
     DasboardController dasboardController = Get.put(DasboardController());
+    UnityInitializerController controllerUnity =
+        Get.put(UnityInitializerController());
+    Future.delayed(Duration(seconds: 2), () {
+      controllerUnity.bannerDetailVideovisible.value = true;
+    });
     return Scaffold(
         appBar: const AppBarCustomWidget(
           title: "Detail Video",
@@ -47,11 +54,11 @@ class DetailVideoView extends GetView<DetailVideoController> {
                   SkeletonWidget(height: 5.h, width: 100.w),
                 ],
               ).paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)
-            : contentWidget(dasboardController, context)));
+            : contentWidget(dasboardController, context, controllerUnity)));
   }
 
-  Widget contentWidget(
-      DasboardController dasboardController, BuildContext context) {
+  Widget contentWidget(DasboardController dasboardController,
+      BuildContext context, UnityInitializerController controllerUnity) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -193,6 +200,10 @@ class DetailVideoView extends GetView<DetailVideoController> {
                                     Theme.of(context).colorScheme.background,
                               ),
                   ),
+                  Obx(() => controllerUnity
+                      .banner(BannerSize.leaderboard)
+                      .marginOnly(bottom: 1.h)
+                      .visible(controllerUnity.bannerDetailVideovisible.value)),
                   1.h.height,
                   Text(
                     "Popular Videos",

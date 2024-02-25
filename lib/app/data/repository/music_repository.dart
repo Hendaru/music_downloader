@@ -2,6 +2,7 @@ import 'package:music_download_youtube/app/core/modules/dio_modules.dart';
 import 'package:music_download_youtube/app/core/utils/event_manager.dart';
 import 'package:music_download_youtube/app/data/models/response/error/res_error.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
+import 'package:music_download_youtube/app/data/models/response/res_search_model/res_search_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_version_download_model/res_version_download_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_version_model/res_version_model.dart';
@@ -76,5 +77,42 @@ class MusicRepository {
       createCall: () => _service.getVersionDownloadService(),
       handleCallResult: (item) => Future.value(item),
     );
+  }
+
+  Future<Either<Failure, List<ResSearchItemModel>>> getVideolistRealRepository({
+    required String part,
+    required String maxResults,
+    required String query,
+    required String key,
+    required String regionCode,
+    required String type,
+  }) async {
+    try {
+      final result = await _service.getVideolistRealService(
+        part,
+        maxResults,
+        query,
+        key,
+        regionCode,
+        type,
+      );
+
+      if (result.items.isEmpty) {
+        return left(Failure(
+          status: 401,
+          message: "Video error",
+        ));
+      }
+
+      return right(result.items);
+    } on DioError catch (e) {
+      final code = e.response?.statusCode;
+      final msg = e.response?.statusMessage;
+
+      return left(Failure(
+        status: code,
+        message: msg,
+      ));
+    }
   }
 }

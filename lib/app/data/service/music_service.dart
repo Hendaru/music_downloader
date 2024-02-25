@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:music_download_youtube/app/data/models/response/res_music_model/res_music_model.dart';
+import 'package:music_download_youtube/app/data/models/response/res_search_model/res_search_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_url_video_model/res_url_video_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_version_download_model/res_version_download_model.dart';
 import 'package:music_download_youtube/app/data/models/response/res_version_model/res_version_model.dart';
@@ -36,4 +37,14 @@ abstract class MusicService {
 
   @GET("/version")
   Future<ResVersionDownloadModel> getVersionDownloadService();
+
+  @GET("https://youtube.googleapis.com/youtube/v3/search")
+  Future<ResSearchModel> getVideolistRealService(
+    @Query('part') String part,
+    @Query('maxResults') String maxResults,
+    @Query('q') String query,
+    @Query('key') String key,
+    @Query('regionCode') String regionCode,
+    @Query('type') String type,
+  );
 }

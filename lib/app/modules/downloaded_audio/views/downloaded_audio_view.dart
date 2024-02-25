@@ -13,8 +13,10 @@ import 'package:music_download_youtube/app/utils/app_text_style.dart';
 import 'package:music_download_youtube/app/utils/enums.dart';
 import 'package:music_download_youtube/app/utils/extensions/string_extensions.dart';
 import 'package:music_download_youtube/app/utils/extensions/widget_extensions.dart';
+import 'package:music_download_youtube/app/utils/unity_ads.dart';
 import 'package:music_download_youtube/r.dart';
 import 'package:sizer/sizer.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 import '../controllers/downloaded_audio_controller.dart';
 
@@ -24,6 +26,11 @@ class DownloadedAudioView extends GetView<DownloadedAudioController> {
   Widget build(BuildContext context) {
     DasboardController controllerDasboard = Get.put(DasboardController());
     controller.init();
+    UnityInitializerController controllerUnity =
+        Get.put(UnityInitializerController());
+    Future.delayed(Duration(seconds: 2), () {
+      controllerUnity.bannerDetailVideovisible.value = true;
+    });
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,6 +40,11 @@ class DownloadedAudioView extends GetView<DownloadedAudioController> {
             "Audio Downloaded",
             style: extraBoldTextStyle(size: 18.sp),
           ).paddingOnly(left: defaultPaddingHorizontalGlobal, right: 2.w),
+          Obx(() => controllerUnity
+              .banner(BannerSize.leaderboard)
+              .marginOnly(bottom: 1.h)
+              .paddingSymmetric(horizontal: defaultPaddingHorizontalGlobal)
+              .visible(controllerUnity.bannerDetailVideovisible.value)),
           1.h.height,
           Obx(() => controller.newlistAudioDownloaded.isEmpty
               ? Center(

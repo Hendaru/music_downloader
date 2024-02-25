@@ -16,6 +16,7 @@ import 'package:music_download_youtube/app/utils/extensions/string_extensions.da
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:youtube_data_api/models/channel.dart';
 import 'package:youtube_data_api/models/playlist.dart';
+import 'package:youtube_data_api/models/thumbnail.dart';
 import 'package:youtube_data_api/models/video.dart';
 import 'package:youtube_data_api/youtube_data_api.dart';
 import 'package:http/http.dart' as http;
@@ -119,28 +120,57 @@ class TrendingController extends GetxController {
     hideKeyboard();
     loadingTreading.value = true;
 
-    try {
-      List<dynamic> videoResult =
-          await youtubeDataApi.fetchSearchVideo(value, youtubeToken);
-      videosTemporary.value = [];
-      videoResult.forEach((element) {
-        if (element is Video) {
-          Video video = element;
-          videosTemporary.add(video);
-        } else if (element is Channel) {
-          Channel channel = element;
-        } else if (element is PlayList) {
-          PlayList playList = element;
-        }
-      });
-    } catch (e) {
+    // try {
+    //   List<dynamic> videoResult =
+    //       await youtubeDataApi.fetchSearchVideo(value, youtubeToken);
+    //   videosTemporary.value = [];
+    //   videoResult.forEach((element) {
+    //     if (element is Video) {
+    //       Video video = element;
+    //       videosTemporary.add(video);
+    //     } else if (element is Channel) {
+    //       Channel channel = element;
+    //     } else if (element is PlayList) {
+    //       PlayList playList = element;
+    //     }
+    //   });
+    // } catch (e) {
+    //   videosTemporary.value = videosTrending;
+    //   toast("Please search more specific keyword");
+
+    //   print(e);
+    // }
+
+    final data = await _musicRepository.getVideolistRealRepository(
+      part: "snippet",
+      maxResults: "15",
+      query: value,
+      key: youtubeToken,
+      regionCode: "ID",
+      type: "video",
+    );
+
+    data.fold((l) async {
+      loadingTreading.value = false;
       videosTemporary.value = videosTrending;
       toast("Please search more specific keyword");
-
-      print(e);
-    }
-
-    loadingTreading.value = false;
+    }, (r) async {
+      videosTemporary.value = [];
+      r.forEach((element) async {
+        // var playlist = await yt.videos.get(element.id?.videoId);
+        videosTemporary.add(Video(
+            videoId: element.id?.videoId,
+            duration: "0",
+            // duration: printDuration(playlist.duration ?? Duration(minutes: 2)),
+            title: element.snippet?.title,
+            channelName: "",
+            views: "",
+            thumbnails: [
+              Thumbnail(url: element.snippet?.thumbnails?.medium?.url ?? "")
+            ]));
+      });
+      loadingTreading.value = false;
+    });
   }
 
   void clearSearch(TextEditingController textEditingController) {
